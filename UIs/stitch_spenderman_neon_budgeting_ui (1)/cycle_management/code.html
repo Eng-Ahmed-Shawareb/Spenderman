@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Spenderman - Cycle Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary": "#68000a",
+                    "surface-container-lowest": "#060e20",
+                    "on-secondary-fixed": "#111c2d",
+                    "on-secondary-fixed-variant": "#3c475a",
+                    "surface-container-low": "#131b2e",
+                    "primary-container": "#4d8eff",
+                    "inverse-on-surface": "#283044",
+                    "surface": "#0b1326",
+                    "on-primary": "#002e6a",
+                    "tertiary-container": "#ff5451",
+                    "tertiary-fixed": "#ffdad7",
+                    "tertiary": "#ffb3ad",
+                    "on-primary-container": "#00285d",
+                    "secondary-fixed-dim": "#bcc7de",
+                    "on-surface-variant": "#c2c6d6",
+                    "secondary-container": "#3e495d",
+                    "on-primary-fixed-variant": "#004395",
+                    "on-error-container": "#ffdad6",
+                    "on-tertiary-fixed": "#410004",
+                    "on-error": "#690005",
+                    "primary-fixed": "#d8e2ff",
+                    "surface-container": "#171f33",
+                    "secondary-fixed": "#d8e3fb",
+                    "on-primary-fixed": "#001a42",
+                    "surface-bright": "#31394d",
+                    "inverse-primary": "#005ac2",
+                    "on-secondary-container": "#aeb9d0",
+                    "error": "#ffb4ab",
+                    "surface-dim": "#0b1326",
+                    "on-tertiary-container": "#5c0008",
+                    "secondary": "#bcc7de",
+                    "surface-tint": "#adc6ff",
+                    "inverse-surface": "#dae2fd",
+                    "primary": "#adc6ff",
+                    "outline-variant": "#424754",
+                    "on-background": "#dae2fd",
+                    "on-secondary": "#263143",
+                    "primary-fixed-dim": "#adc6ff",
+                    "tertiary-fixed-dim": "#ffb3ad",
+                    "outline": "#8c909f",
+                    "surface-container-high": "#222a3d",
+                    "background": "#0b1326",
+                    "surface-variant": "#2d3449",
+                    "error-container": "#93000a",
+                    "on-surface": "#dae2fd",
+                    "surface-container-highest": "#2d3449",
+                    "on-tertiary-fixed-variant": "#930013"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-[#0b1326] text-[#dae2fd] h-screen flex overflow-hidden">
+<!-- SideNavBar -->
+<nav class="bg-[#131b2e] text-[#adc6ff] docked vertical left-0 h-screen w-64 flex flex-col py-6 shrink-0 z-20">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-black text-[#adc6ff] tracking-tight">Spenderman</h1>
+<p class="font-['Inter'] text-xs font-semibold uppercase tracking-wider text-[#94a3b8] mt-1">Executive Utility</p>
+</div>
+<ul class="flex-1 space-y-2">
+<li>
+<a class="flex items-center px-4 py-3 mx-2 text-[#94a3b8] hover:text-white hover:bg-[#171f33] transition-all duration-200 ease-in-out font-['Inter'] text-xs font-semibold uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="dashboard">dashboard</span>
+                    Dashboard
+                </a>
+</li>
+<li>
+<a class="flex items-center px-4 py-3 mx-2 text-[#94a3b8] hover:text-white hover:bg-[#171f33] transition-all duration-200 ease-in-out font-['Inter'] text-xs font-semibold uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="receipt_long">receipt_long</span>
+                    Transactions
+                </a>
+</li>
+<li>
+<a class="flex items-center px-4 py-3 mx-2 bg-[#222a3d] text-[#adc6ff] rounded-lg transition-all duration-200 ease-in-out font-['Inter'] text-xs font-semibold uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="account_balance_wallet" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+                    Budget
+                </a>
+</li>
+<li>
+<a class="flex items-center px-4 py-3 mx-2 text-[#94a3b8] hover:text-white hover:bg-[#171f33] transition-all duration-200 ease-in-out font-['Inter'] text-xs font-semibold uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="analytics">analytics</span>
+                    Reports
+                </a>
+</li>
+</ul>
+<ul class="space-y-2 mt-auto">
+<li>
+<a class="flex items-center px-4 py-3 mx-2 text-[#94a3b8] hover:text-white hover:bg-[#171f33] transition-all duration-200 ease-in-out font-['Inter'] text-xs font-semibold uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="settings">settings</span>
+                    Settings
+                </a>
+</li>
+<li>
+<a class="flex items-center px-4 py-3 mx-2 text-[#94a3b8] hover:text-white hover:bg-[#171f33] transition-all duration-200 ease-in-out font-['Inter'] text-xs font-semibold uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="person">person</span>
+                    Profile
+                </a>
+</li>
+<li>
+<a class="flex items-center px-4 py-3 mx-2 text-[#94a3b8] hover:text-white hover:bg-[#171f33] transition-all duration-200 ease-in-out font-['Inter'] text-xs font-semibold uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="help">help</span>
+                    Help
+                </a>
+</li>
+</ul>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+<!-- TopAppBar -->
+<header class="bg-[#0b1326] text-[#adc6ff] flex justify-between items-center px-6 h-14 w-full shrink-0 z-10 border-b border-[#131b2e] shadow-sm">
+<div class="flex items-center">
+<!-- Search input omitted for simplicity as it's 'on_right' in JSON but contextually less important than title here -->
+<span class="font-['Inter'] tracking-tight text-sm font-medium">Cycle Management</span>
+</div>
+<div class="flex items-center space-x-2 text-[#94a3b8]">
+<button class="p-2 hover:bg-[#222a3d] transition-colors rounded-full active:scale-95 duration-150">
+<span class="material-symbols-outlined text-[20px]" data-icon="minimize">minimize</span>
+</button>
+<button class="p-2 hover:bg-[#222a3d] transition-colors rounded-full active:scale-95 duration-150">
+<span class="material-symbols-outlined text-[20px]" data-icon="fullscreen">fullscreen</span>
+</button>
+<button class="p-2 hover:bg-[#222a3d] transition-colors rounded-full active:scale-95 duration-150">
+<span class="material-symbols-outlined text-[20px]" data-icon="close">close</span>
+</button>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 overflow-y-auto p-8 relative">
+<div class="max-w-6xl mx-auto space-y-8 relative z-10">
+<header class="mb-10">
+<h2 class="text-3xl font-bold tracking-tight text-on-surface mb-2">Budget Cycle</h2>
+<p class="text-on-surface-variant text-sm">Manage your current spending period and establish new fiscal boundaries.</p>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Left Column: Active Cycle Details -->
+<div class="lg:col-span-2 space-y-8">
+<!-- Safe Daily Limit Card (Primary Focus) -->
+<div class="bg-surface-container rounded-lg p-8 relative overflow-hidden group">
+<!-- Background glow effect -->
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-primary rounded-full blur-[80px] opacity-10 group-hover:opacity-20 transition-opacity duration-500"></div>
+<div class="relative z-10">
+<h3 class="text-on-surface-variant font-medium text-sm tracking-wide uppercase mb-6 flex items-center">
+<span class="material-symbols-outlined mr-2 text-primary" data-icon="verified_user">verified_user</span>
+                                    Safe Daily Limit
+                                </h3>
+<div class="flex items-baseline space-x-2 mb-2">
+<span class="text-5xl font-black tracking-tighter text-on-surface">$124</span>
+<span class="text-on-surface-variant text-lg">.50</span>
+</div>
+<p class="text-surface-tint text-sm mb-8">Amount available to spend today without breaking your cycle goal.</p>
+<!-- Cycle Progress -->
+<div class="space-y-4">
+<div>
+<div class="flex justify-between text-xs text-on-surface-variant mb-2">
+<span>Cycle Progress (Day 14 of 30)</span>
+<span>46% remaining</span>
+</div>
+<div class="h-2 bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 54%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs text-on-surface-variant mb-2">
+<span>Budget Consumption</span>
+<span class="text-tertiary">62% used</span>
+</div>
+<div class="h-2 bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-container rounded-full" style="width: 62%"></div>
+</div>
+</div>
+<div class="pt-2 flex items-center text-xs text-tertiary">
+<span class="material-symbols-outlined text-[16px] mr-1" data-icon="warning">warning</span>
+                                        Spending is outpacing time elapsed.
+                                    </div>
+</div>
+</div>
+</div>
+<!-- Cycle Details Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-surface-container-low rounded-lg p-6">
+<p class="text-on-surface-variant text-xs uppercase tracking-wider font-semibold mb-1">Total Cycle Budget</p>
+<p class="text-xl font-bold text-on-surface">$4,500.00</p>
+</div>
+<div class="bg-surface-container-low rounded-lg p-6">
+<p class="text-on-surface-variant text-xs uppercase tracking-wider font-semibold mb-1">Remaining Budget</p>
+<p class="text-xl font-bold text-on-surface">$1,710.00</p>
+</div>
+<div class="bg-surface-container-low rounded-lg p-6">
+<p class="text-on-surface-variant text-xs uppercase tracking-wider font-semibold mb-1">Start Date</p>
+<p class="text-lg text-on-surface">Oct 01, 2023</p>
+</div>
+<div class="bg-surface-container-low rounded-lg p-6">
+<p class="text-on-surface-variant text-xs uppercase tracking-wider font-semibold mb-1">End Date</p>
+<p class="text-lg text-on-surface">Oct 31, 2023</p>
+</div>
+</div>
+</div>
+<!-- Right Column: Add New Cycle Form -->
+<div class="lg:col-span-1">
+<div class="bg-surface-container rounded-lg p-6 sticky top-8">
+<h3 class="text-lg font-semibold text-on-surface mb-6 border-b border-surface-container-lowest pb-4">Establish New Cycle</h3>
+<form class="space-y-5">
+<div>
+<label class="block text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-2">Cycle Amount</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant font-medium">$</span>
+<input class="w-full bg-surface-container-lowest text-on-surface border-0 rounded-md pl-8 pr-4 py-3 focus:ring-2 focus:ring-primary/30 transition-shadow outline-none placeholder-outline" placeholder="0.00" type="number"/>
+</div>
+</div>
+<div>
+<label class="block text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-2">Start Date</label>
+<input class="w-full bg-surface-container-lowest text-on-surface border-0 rounded-md px-4 py-3 focus:ring-2 focus:ring-primary/30 transition-shadow outline-none [color-scheme:dark]" type="date"/>
+</div>
+<div>
+<label class="block text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-2">End Date</label>
+<input class="w-full bg-surface-container-lowest text-on-surface border-0 rounded-md px-4 py-3 focus:ring-2 focus:ring-primary/30 transition-shadow outline-none [color-scheme:dark]" type="date"/>
+</div>
+<div class="pt-4">
+<button class="w-full bg-primary-container text-on-primary-container font-semibold rounded-md py-3 hover:bg-primary-fixed transition-colors flex justify-center items-center" type="button">
+<span class="material-symbols-outlined mr-2 text-[20px]" data-icon="add_circle">add_circle</span>
+                                        Initialize Cycle
+                                    </button>
+</div>
+</form>
+<div class="mt-6 p-4 rounded-md bg-surface-container-lowest border border-outline-variant/15 flex items-start">
+<span class="material-symbols-outlined text-surface-tint mr-3 text-[20px]" data-icon="info">info</span>
+<p class="text-xs text-on-surface-variant leading-relaxed">Initializing a new cycle will automatically archive your current active cycle. Ensure all pending transactions are categorized.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

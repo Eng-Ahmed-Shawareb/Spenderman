@@ -30,7 +30,7 @@ skinparam shadowing false
 skinparam roundcorner 6
 skinparam arrowThickness 1.2
 
-title <color:#0550AE><size:16><b>Spenderman — Full UML Class Diagram  v3</b></size></color>\n<size:11><color:#57606A>Design Patterns: Singleton · DAO · Observer     |     SOLID: SRP · OCP · DIP</color></size>
+title <color:#0550AE><size:16><b>Spenderman — Full UML Class Diagram  v4</b></size></color>\n<size:11><color:#57606A>Design Patterns: Singleton · DAO · Observer     |     SOLID: SRP · OCP · DIP</color></size>
 
 ' ============================================================
 '  LAYER 1 — MODEL
@@ -475,12 +475,50 @@ package "JavaFX GUI Layer" <<Frame>> {
     - passwordField  : PasswordField
     - loginButton    : Button
     - errorLabel     : Label
+    - goSignUpLink   : Hyperlink
     --
     + initialize()                               : void
     + handleLogin()                              : void
+    + handleGoSignUp()                           : void
     + refreshData()                              : void
     + update(eventType : String, data : Object)  : void
   }
+
+  note right of LoginController
+    <b><color:#0550AE>Login screen</color></b>
+    Validates username + password.
+    "Create one" link navigates
+    to SignUpController via
+    SceneManager.switchTo().
+  end note
+
+  class SignUpController {
+    - userService          : UserService
+    - firstNameField       : TextField
+    - lastNameField        : TextField
+    - usernameField        : TextField
+    - passwordField        : PasswordField
+    - signUpButton         : Button
+    - errorLabel           : Label
+    - goLoginLink          : Hyperlink
+    --
+    + initialize()                               : void
+    + handleSignUp()                             : void
+    + handleGoLogin()                            : void
+    + refreshData()                              : void
+    + update(eventType : String, data : Object)  : void
+  }
+
+  note right of SignUpController
+    <b><color:#0550AE>Sign Up screen</color></b>
+    Collects: firstName, lastName,
+    username, password.
+    Calls UserService.register()
+    on submit. On success, navigates
+    to Dashboard via SceneManager.
+    "Sign in" link navigates back
+    to LoginController.
+  end note
 
   class DashboardController {
     - walletService       : WalletService
@@ -634,6 +672,7 @@ package "JavaFX GUI Layer" <<Frame>> {
 
   ' Inheritance
   LoginController       --|> BaseController
+  SignUpController      --|> BaseController
   DashboardController   --|> BaseController
   TransactionController --|> BaseController
   WalletController      --|> BaseController
@@ -644,6 +683,7 @@ package "JavaFX GUI Layer" <<Frame>> {
 
   ' Observer subscriptions
   LoginController       ..|> IObserver
+  SignUpController      ..|> IObserver
   DashboardController   ..|> IObserver
   TransactionController ..|> IObserver
   WalletController      ..|> IObserver
@@ -658,6 +698,7 @@ package "JavaFX GUI Layer" <<Frame>> {
 
   ' Controllers → Services
   LoginController       --> UserService
+  SignUpController      --> UserService
   DashboardController   --> WalletService
   DashboardController   --> TransactionService
   DashboardController   --> CycleService
@@ -671,6 +712,10 @@ package "JavaFX GUI Layer" <<Frame>> {
   CycleController       --> CycleService
   SavingGoalController  --> SavingGoalService
   SettingsController    --> UserService
+
+  ' Navigation between auth screens
+  LoginController  ..> SignUpController : navigates to\n(SceneManager) >
+  SignUpController ..> LoginController  : navigates to\n(SceneManager) >
 
   ' Controllers subscribe to EventBus
   BaseController --> AppEventBus : subscribes >

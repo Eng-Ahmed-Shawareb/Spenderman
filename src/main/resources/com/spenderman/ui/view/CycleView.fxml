@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.spenderman.ui.controller.CycleController"
+      spacing="12" styleClass="bg-root">
+    <padding><Insets top="0" right="0" bottom="16" left="0"/></padding>
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <Label text="Budget Cycles" styleClass="page-title" HBox.hgrow="ALWAYS"/>
+        <Button text="+ New Cycle" styleClass="btn-small" onAction="#toggleForm"/>
+    </HBox>
+
+    <!-- ═══ ADD CYCLE FORM ═══ -->
+    <VBox fx:id="formPanel" styleClass="card-form" spacing="10" visible="false" managed="false">
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <Label text="New Budget Cycle" styleClass="section-title" HBox.hgrow="ALWAYS"/>
+            <Button text="×" styleClass="btn-close" onAction="#toggleForm"/>
+        </HBox>
+        <VBox spacing="4" styleClass="bg-transparent">
+            <Label text="TOTAL BUDGET (EGP)" styleClass="field-label"/>
+            <TextField fx:id="budgetField" promptText="0.00"/>
+        </VBox>
+        <HBox spacing="10">
+            <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="bg-transparent">
+                <Label text="START DATE" styleClass="field-label"/>
+                <DatePicker fx:id="startPicker" maxWidth="Infinity"/>
+            </VBox>
+            <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="bg-transparent">
+                <Label text="END DATE" styleClass="field-label"/>
+                <DatePicker fx:id="endPicker" maxWidth="Infinity"/>
+            </VBox>
+        </HBox>
+        <HBox spacing="8" alignment="CENTER_RIGHT">
+            <Button text="Cancel" styleClass="btn-outline" onAction="#toggleForm"/>
+            <Button text="Create Cycle" styleClass="btn-primary" onAction="#handleAddCycle"/>
+        </HBox>
+    </VBox>
+
+    <!-- ═══ CYCLE LIST ═══ -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
+        <VBox fx:id="cycleList" spacing="10"/>
+    </ScrollPane>
+</VBox>

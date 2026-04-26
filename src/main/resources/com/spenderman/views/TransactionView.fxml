@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.spenderman.ui.controller.TransactionController"
+      spacing="12" styleClass="bg-root">
+    <padding><Insets top="0" right="0" bottom="16" left="0"/></padding>
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <Label text="Transactions" styleClass="page-title" HBox.hgrow="ALWAYS"/>
+        <Button text="+ Add" styleClass="btn-small" onAction="#toggleForm"/>
+    </HBox>
+
+    <!-- ═══ ADD TRANSACTION FORM (hidden by default) ═══ -->
+    <VBox fx:id="formPanel" styleClass="card-form" spacing="10" visible="false" managed="false">
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <Label text="New Transaction" styleClass="section-title" HBox.hgrow="ALWAYS"/>
+            <Button text="×" styleClass="btn-close" onAction="#toggleForm"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="bg-transparent">
+                <Label text="AMOUNT (EGP)" styleClass="field-label"/>
+                <TextField fx:id="amountField" promptText="0.00"/>
+            </VBox>
+            <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="bg-transparent">
+                <Label text="TYPE" styleClass="field-label"/>
+                <HBox spacing="6" styleClass="bg-transparent">
+                    <ToggleButton fx:id="expenseToggle" text="Expense" styleClass="type-toggle-expense" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                    <ToggleButton fx:id="depositToggle" text="Deposit" styleClass="type-toggle-deposit" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                </HBox>
+            </VBox>
+        </HBox>
+
+        <VBox spacing="4" styleClass="bg-transparent">
+            <Label text="TARGET" styleClass="field-label"/>
+            <HBox spacing="6" styleClass="bg-transparent">
+                <ToggleButton fx:id="targetWallet" text="◈ Wallet" styleClass="target-toggle" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <ToggleButton fx:id="targetGoal" text="◇ Saving Goal" styleClass="target-toggle" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            </HBox>
+            <ComboBox fx:id="targetCombo" maxWidth="Infinity" promptText="Select target..."/>
+        </VBox>
+
+        <HBox spacing="10">
+            <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="bg-transparent">
+                <Label text="CATEGORY" styleClass="field-label"/>
+                <ComboBox fx:id="categoryCombo" maxWidth="Infinity" promptText="Select category..."/>
+            </VBox>
+            <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="bg-transparent">
+                <Label text="DATE" styleClass="field-label"/>
+                <DatePicker fx:id="datePicker" maxWidth="Infinity"/>
+            </VBox>
+        </HBox>
+
+        <VBox spacing="4" styleClass="bg-transparent">
+            <Label text="NOTE (OPTIONAL)" styleClass="field-label"/>
+            <TextArea fx:id="noteArea" promptText="Add a note…" prefHeight="52" wrapText="true"/>
+        </VBox>
+
+        <HBox spacing="8" alignment="CENTER_RIGHT">
+            <Button text="Cancel" styleClass="btn-outline" onAction="#toggleForm"/>
+            <Button text="Save Transaction" styleClass="btn-primary" onAction="#handleAddTransaction"/>
+        </HBox>
+    </VBox>
+
+    <!-- ═══ TRANSACTION TABLE ═══ -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
+        <VBox fx:id="transactionTable" styleClass="card" spacing="0">
+            <padding><Insets top="0" right="0" bottom="0" left="0"/></padding>
+            <!-- Table header -->
+            <HBox styleClass="table-header">
+                <Label text="Description" styleClass="table-header-cell" prefWidth="180"/>
+                <Label text="Target" styleClass="table-header-cell" prefWidth="140"/>
+                <Label text="Category" styleClass="table-header-cell" prefWidth="110"/>
+                <Label text="Type" styleClass="table-header-cell" prefWidth="90"/>
+                <Label text="Amount" styleClass="table-header-cell" prefWidth="120"/>
+                <Label text="Date" styleClass="table-header-cell" prefWidth="100"/>
+            </HBox>
+            <!-- Rows will be added dynamically by the controller -->
+            <VBox fx:id="transactionRows" spacing="0"/>
+        </VBox>
+    </ScrollPane>
+</VBox>

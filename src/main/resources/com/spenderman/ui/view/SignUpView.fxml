@@ -10,13 +10,13 @@
       alignment="CENTER"
       fillWidth="true">
 
-    <VBox styleClass="auth-card" spacing="16" maxWidth="360">
+    <!-- Header: Logo + subtitle (above the card) -->
+    <VBox styleClass="auth-header" alignment="TOP_CENTER" spacing="4">
+        <Label text="\$penderman" styleClass="app-logo"/>
+        <Label text="Create your account" styleClass="text-muted"/>
+    </VBox>
 
-        <!-- Header: Logo + subtitle -->
-        <VBox styleClass="auth-header" alignment="TOP_CENTER" spacing="4">
-            <Label text="$penderman" styleClass="app-logo"/>
-            <Label text="Create your account" styleClass="text-muted"/>
-        </VBox>
+    <VBox styleClass="auth-card" spacing="16" maxWidth="360">
 
         <!-- Title -->
         <Label text="Create account" styleClass="page-title"/>

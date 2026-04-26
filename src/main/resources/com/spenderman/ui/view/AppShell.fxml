@@ -14,7 +14,7 @@
 
         <!-- Logo section -->
         <VBox styleClass="sidebar-logo" spacing="2">
-            <Label text="$penderman" styleClass="app-logo-sidebar"/>
+            <Label text="\$penderman" styleClass="app-logo-sidebar"/>
             <Label text="Personal Finance" styleClass="text-muted"/>
         </VBox>
 

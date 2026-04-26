@@ -738,6 +738,7 @@
     -fx-background-color: -sp-bg;
     -fx-alignment: center;
     -fx-padding: 20;
+    -fx-spacing: 20;
 }
 
 .auth-card {
@@ -756,6 +757,7 @@
     -fx-alignment: top-center;
     -fx-spacing: 4;
     -fx-background-color: transparent;
+    -fx-padding: 0 0 0 0;
 }
 
 /* ─── CONTENT AREA ───────────────────────────────────────────────────────────── */

@@ -1,0 +1,739 @@
+@startuml Spenderman_System_v3
+
+' ============================================================
+'  THEME & STYLING — LIGHT MODE
+' ============================================================
+skinparam backgroundColor #FFFFFF
+skinparam classBackgroundColor #F8F9FA
+skinparam classBorderColor #D0D7DE
+skinparam classArrowColor #57606A
+skinparam classFontColor #1F2328
+skinparam classFontSize 11
+skinparam classAttributeFontSize 10
+skinparam classHeaderBackgroundColor #EFF1F3
+skinparam packageBackgroundColor #FFFFFF
+skinparam packageBorderColor #D0D7DE
+skinparam packageFontColor #0550AE
+skinparam packageFontSize 12
+skinparam packageFontStyle bold
+skinparam noteBorderColor #D0D7DE
+skinparam noteBackgroundColor #FFF8C5
+skinparam noteFontColor #57606A
+skinparam noteFontSize 10
+skinparam stereotypeCBackgroundColor #1A7F37
+skinparam stereotypeIBackgroundColor #0550AE
+skinparam stereotypeABackgroundColor #953800
+skinparam stereotypeEBackgroundColor #6639BA
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam arrowThickness 1.2
+
+title <color:#0550AE><size:16><b>Spenderman — Full UML Class Diagram  v4</b></size></color>\n<size:11><color:#57606A>Design Patterns: Singleton · DAO · Observer     |     SOLID: SRP · OCP · DIP</color></size>
+
+' ============================================================
+'  LAYER 1 — MODEL
+' ============================================================
+package "Model Layer" <<Frame>> {
+
+  class User {
+    - userID       : int
+    - firstName    : String
+    - lastName     : String
+    - username     : String
+    - passwordHash : String
+    - theme        : ThemeEnum
+    - createdDate  : LocalDateTime
+    + getters / setters
+  }
+
+  class Wallet {
+    - walletID : int
+    - userID   : int
+    - name     : String
+    - balance  : double
+    + getters / setters
+  }
+
+  class Category {
+    - categoryID : int
+    - userID     : int
+    - name       : String
+    - hexColor   : String
+    - type       : CategoryTypeEnum
+    + getters / setters
+  }
+
+  class Transaction {
+    - transactionID  : int
+    - walletID       : Integer
+    - savingGoalID   : Integer
+    - categoryID     : int
+    - categoryLabel  : String
+    - amount         : double
+    - dateTime       : LocalDateTime
+    - type           : TransactionTypeEnum
+    - note           : String
+    + getters / setters
+  }
+
+  note right of Transaction
+    <b><color:#953800>Design note</color></b>
+    walletID and savingGoalID are
+    both nullable (Integer not int).
+    Exactly one must be non-null —
+    a transaction targets either a
+    Wallet OR a SavingGoal, never both.
+    categoryLabel stores the category
+    name as a snapshot so history is
+    preserved if the category is
+    later renamed or deleted.
+  end note
+
+  class Cycle {
+    - cycleID      : int
+    - userID       : int
+    - budgetAmount : double
+    - startDate    : LocalDate
+    - endDate      : LocalDate
+    - state        : CycleStateEnum
+    + getters / setters
+  }
+
+  class SavingGoal {
+    - goalID       : int
+    - userID       : int
+    - name         : String
+    - targetAmount : double
+    - currentSaved : double
+    - targetDate   : LocalDate
+    - status       : GoalStatusEnum
+    + getters / setters
+  }
+
+  enum ThemeEnum {
+    DARK
+    LIGHT
+  }
+
+  enum CategoryTypeEnum {
+    EXPENSE
+    DEPOSIT
+  }
+
+  enum TransactionTypeEnum {
+    EXPENSE
+    DEPOSIT
+  }
+
+  enum CycleStateEnum {
+    ACTIVE
+    PAST
+  }
+
+  enum GoalStatusEnum {
+    ACTIVE
+    COMPLETED
+    CANCELLED
+  }
+
+  ' ── Composition: child cannot exist without parent ──
+  User        "1" *-- "0..*" Wallet      : owns >
+  User        "1" *-- "0..*" Category    : creates >
+  User        "1" *-- "0..*" Cycle       : defines >
+  User        "1" *-- "0..*" SavingGoal  : creates >
+
+  ' ── Wallet → Transaction: COMPOSITION ──
+  ' Wallet deleted → its transactions deleted (CASCADE)
+  Wallet      "1" *-- "0..*" Transaction : records >
+
+  ' ── SavingGoal → Transaction: COMPOSITION ──
+  ' SavingGoal deleted → its transactions deleted (CASCADE)
+  SavingGoal  "1" *-- "0..*" Transaction : funds >
+
+  ' ── Category → Transaction: AGGREGATION ──
+  ' Category deleted → transaction preserved via categoryLabel snapshot
+  Category    "1" o-- "0..*" Transaction : classifies >
+}
+
+' ============================================================
+'  LAYER 2 — DATABASE (Singleton + DAO Pattern)
+' ============================================================
+package "Database Layer  [Singleton + DAO Pattern]" <<Frame>> {
+
+  class DatabaseConnection <<Singleton>> {
+    - {static} instance   : DatabaseConnection
+    - connection          : Connection
+    - {static} DB_URL     : String = "jdbc:sqlite:spenderman.db"
+    - DatabaseConnection()
+    --
+    + {static} getInstance() : DatabaseConnection
+    + getConnection()         : Connection
+    + closeConnection()       : void
+  }
+
+  note right of DatabaseConnection
+    <b><color:#1A7F37>«Singleton Pattern»</color></b>
+    Only one DB connection exists
+    across the entire application.
+    Private constructor + static
+    getInstance() enforces this.
+  end note
+
+  interface IRepository<T> <<interface>> {
+    + findById(id : int)  : Optional<T>
+    + findAll()           : List<T>
+    + save(entity : T)    : boolean
+    + update(entity : T)  : boolean
+    + delete(id : int)    : boolean
+  }
+
+  note top of IRepository
+    <b><color:#1A7F37>«DAO Pattern»</color></b>
+    <b><color:#0550AE>OCP:</color></b> New DAOs extend this interface
+    without modifying existing code.
+    <b><color:#0550AE>DIP:</color></b> High-level Services depend on
+    this abstraction, not concrete DAOs.
+  end note
+
+  class UserDAO {
+    - db : DatabaseConnection
+    --
+    + findById(id : int)                   : Optional<User>
+    + findAll()                            : List<User>
+    + findByUsername(username : String)    : Optional<User>
+    + save(user : User)                    : boolean
+    + update(user : User)                  : boolean
+    + delete(id : int)                     : boolean
+  }
+
+  class WalletDAO {
+    - db : DatabaseConnection
+    --
+    + findById(id : int)                   : Optional<Wallet>
+    + findAll()                            : List<Wallet>
+    + findByUserId(userID : int)           : List<Wallet>
+    + save(wallet : Wallet)                : boolean
+    + update(wallet : Wallet)              : boolean
+    + delete(id : int)                     : boolean
+  }
+
+  class CategoryDAO {
+    - db : DatabaseConnection
+    --
+    + findById(id : int)                   : Optional<Category>
+    + findAll()                            : List<Category>
+    + findByUserId(userID : int)           : List<Category>
+    + save(category : Category)            : boolean
+    + update(category : Category)          : boolean
+    + delete(id : int)                     : boolean
+  }
+
+  class TransactionDAO {
+    - db : DatabaseConnection
+    --
+    + findById(id : int)                   : Optional<Transaction>
+    + findAll()                            : List<Transaction>
+    + findByWalletId(walletID : int)       : List<Transaction>
+    + findByGoalId(goalID : int)           : List<Transaction>
+    + findByUserId(userID : int)           : List<Transaction>
+    + save(transaction : Transaction)      : boolean
+    + update(transaction : Transaction)    : boolean
+    + delete(id : int)                     : boolean
+  }
+
+  class CycleDAO {
+    - db : DatabaseConnection
+    --
+    + findById(id : int)                   : Optional<Cycle>
+    + findAll()                            : List<Cycle>
+    + findByUserId(userID : int)           : List<Cycle>
+    + findActiveCycle(userID : int)        : Optional<Cycle>
+    + save(cycle : Cycle)                  : boolean
+    + update(cycle : Cycle)                : boolean
+    + delete(id : int)                     : boolean
+  }
+
+  class SavingGoalDAO {
+    - db : DatabaseConnection
+    --
+    + findById(id : int)                   : Optional<SavingGoal>
+    + findAll()                            : List<SavingGoal>
+    + findByUserId(userID : int)           : List<SavingGoal>
+    + save(goal : SavingGoal)              : boolean
+    + update(goal : SavingGoal)            : boolean
+    + delete(id : int)                     : boolean
+  }
+
+  UserDAO        ..|> IRepository
+  WalletDAO      ..|> IRepository
+  CategoryDAO    ..|> IRepository
+  TransactionDAO ..|> IRepository
+  CycleDAO       ..|> IRepository
+  SavingGoalDAO  ..|> IRepository
+
+  UserDAO        --> DatabaseConnection : uses
+  WalletDAO      --> DatabaseConnection : uses
+  CategoryDAO    --> DatabaseConnection : uses
+  TransactionDAO --> DatabaseConnection : uses
+  CycleDAO       --> DatabaseConnection : uses
+  SavingGoalDAO  --> DatabaseConnection : uses
+}
+
+' ============================================================
+'  LAYER 3 — SERVICE (Business Logic — SRP)
+' ============================================================
+package "Service Layer  [SRP]" <<Frame>> {
+
+  note as SRPNote
+    <b><color:#0550AE>«Single Responsibility Principle»</color></b>
+    Each Service owns exactly one
+    business domain. No service
+    bleeds into another's logic.
+  end note
+
+  class UserService {
+    - userDAO : IRepository<User>
+    + UserService(dao : IRepository<User>)
+    --
+    + login(username : String, password : String)                     : Optional<User>
+    + register(user : User)                                           : boolean
+    + updateTheme(userID : int, theme : ThemeEnum)                    : boolean
+    + changePassword(userID : int, oldPw : String, newPw : String)   : boolean
+    + logout()                                                        : void
+  }
+
+  class WalletService {
+    - walletDAO : IRepository<Wallet>
+    + WalletService(dao : IRepository<Wallet>)
+    --
+    + getByUser(userID : int)                         : List<Wallet>
+    + getTotalBalance(userID : int)                   : double
+    + createWallet(wallet : Wallet)                   : boolean
+    + updateBalance(walletID : int, amt : double)     : boolean
+    + deleteWallet(walletID : int)                    : boolean
+  }
+
+  class TransactionService {
+    - transactionDAO : IRepository<Transaction>
+    - walletService  : WalletService
+    - goalService    : SavingGoalService
+    + TransactionService(dao : IRepository<Transaction>, ws : WalletService, gs : SavingGoalService)
+    --
+    + addTransaction(tx : Transaction)              : boolean
+    + getByWallet(walletID : int)                   : List<Transaction>
+    + getByGoal(goalID : int)                       : List<Transaction>
+    + getByUser(userID : int)                       : List<Transaction>
+    + deleteTransaction(txID : int)                 : boolean
+    + groupByCategory(txList : List<Transaction>)   : Map<String, Double>
+    + groupByWallet(userID : int)                   : Map<String, Double>
+  }
+
+  note right of TransactionService
+    <b><color:#0550AE>Design note</color></b>
+    addTransaction() checks whether
+    walletID or savingGoalID is set
+    and delegates the balance update
+    to the correct service.
+    groupByCategory() powers the
+    expense and deposit pie charts.
+    groupByWallet() powers the
+    wallet pie chart.
+  end note
+
+  class CategoryService {
+    - categoryDAO : IRepository<Category>
+    + CategoryService(dao : IRepository<Category>)
+    --
+    + getByUser(userID : int)             : List<Category>
+    + createCategory(cat : Category)      : boolean
+    + updateCategory(cat : Category)      : boolean
+    + deleteCategory(categoryID : int)    : boolean
+  }
+
+  class CycleService {
+    - cycleDAO : IRepository<Cycle>
+    + CycleService(dao : IRepository<Cycle>)
+    --
+    + getActiveCycle(userID : int)        : Optional<Cycle>
+    + getByUser(userID : int)             : List<Cycle>
+    + createCycle(cycle : Cycle)          : boolean
+    + closeCycle(cycleID : int)           : boolean
+    + getTotalSpent(cycleID : int)        : double
+    + getRemainingBudget(cycleID : int)   : double
+    + getSpentPercentage(cycleID : int)   : double
+  }
+
+  class SavingGoalService {
+    - goalDAO : IRepository<SavingGoal>
+    + SavingGoalService(dao : IRepository<SavingGoal>)
+    --
+    + getByUser(userID : int)                         : List<SavingGoal>
+    + createGoal(goal : SavingGoal)                   : boolean
+    + addAmount(goalID : int, amount : double)         : boolean
+    + updateStatus(goalID : int, s : GoalStatusEnum)  : boolean
+  }
+
+  UserService        ..> IRepository : <<uses via DIP>>
+  WalletService      ..> IRepository : <<uses via DIP>>
+  TransactionService ..> IRepository : <<uses via DIP>>
+  CategoryService    ..> IRepository : <<uses via DIP>>
+  CycleService       ..> IRepository : <<uses via DIP>>
+  SavingGoalService  ..> IRepository : <<uses via DIP>>
+
+  TransactionService --> WalletService     : delegates wallet\nbalance update
+  TransactionService --> SavingGoalService : delegates goal\namount update
+}
+
+' ============================================================
+'  LAYER 4 — OBSERVER PATTERN
+' ============================================================
+package "Observer Pattern" <<Frame>> {
+
+  interface IObserver <<interface>> {
+    + update(eventType : String, data : Object) : void
+  }
+
+  interface IObservable <<interface>> {
+    + addObserver(o : IObserver)    : void
+    + removeObserver(o : IObserver) : void
+    + notifyObservers(eventType : String, data : Object) : void
+  }
+
+  class AppEventBus <<Singleton>> {
+    - {static} instance  : AppEventBus
+    - observers          : List<IObserver>
+    - AppEventBus()
+    --
+    + {static} getInstance()                             : AppEventBus
+    + addObserver(o : IObserver)                         : void
+    + removeObserver(o : IObserver)                      : void
+    + notifyObservers(eventType : String, data : Object) : void
+  }
+
+  note right of AppEventBus
+    <b><color:#1A7F37>«Observer Pattern»</color></b>
+    Services publish events to the bus.
+    All subscribed GUI Controllers are
+    notified and refresh automatically.
+    Event types:
+      "TRANSACTION_ADDED"
+      "WALLET_UPDATED"
+      "CYCLE_CLOSED"
+      "GOAL_COMPLETED"
+      "THEME_CHANGED"
+      "PASSWORD_CHANGED"
+  end note
+
+  AppEventBus ..|> IObservable
+  AppEventBus "1" --> "0..*" IObserver : notifies >
+}
+
+' ============================================================
+'  LAYER 5 — JAVAFX GUI LAYER
+' ============================================================
+package "JavaFX GUI Layer" <<Frame>> {
+
+  class App {
+    + {static} main(args : String[]) : void
+    + start(primaryStage : Stage)    : void
+  }
+
+  class SceneManager <<Singleton>> {
+    - {static} instance   : SceneManager
+    - primaryStage        : Stage
+    - controllerCache     : Map<String, BaseController>
+    - SceneManager()
+    --
+    + {static} getInstance()          : SceneManager
+    + switchTo(fxmlPath : String)     : void
+    + showDialog(fxmlPath : String)   : void
+    + getController(key : String)     : BaseController
+  }
+
+  abstract class BaseController {
+    # currentUser  : User
+    # eventBus     : AppEventBus
+    # sceneManager : SceneManager
+    --
+    + setCurrentUser(user : User)  : void
+    + {abstract} initialize()      : void
+    + {abstract} refreshData()     : void
+  }
+
+  note right of BaseController
+    <b><color:#0550AE>«SRP»</color></b>
+    Each controller manages only
+    the UI logic of its own screen.
+    No business rules live here.
+  end note
+
+  class LoginController {
+    - userService    : UserService
+    - usernameField  : TextField
+    - passwordField  : PasswordField
+    - loginButton    : Button
+    - errorLabel     : Label
+    - goSignUpLink   : Hyperlink
+    --
+    + initialize()                               : void
+    + handleLogin()                              : void
+    + handleGoSignUp()                           : void
+    + refreshData()                              : void
+    + update(eventType : String, data : Object)  : void
+  }
+
+  note right of LoginController
+    <b><color:#0550AE>Login screen</color></b>
+    Validates username + password.
+    "Create one" link navigates
+    to SignUpController via
+    SceneManager.switchTo().
+  end note
+
+  class SignUpController {
+    - userService          : UserService
+    - firstNameField       : TextField
+    - lastNameField        : TextField
+    - usernameField        : TextField
+    - passwordField        : PasswordField
+    - signUpButton         : Button
+    - errorLabel           : Label
+    - goLoginLink          : Hyperlink
+    --
+    + initialize()                               : void
+    + handleSignUp()                             : void
+    + handleGoLogin()                            : void
+    + refreshData()                              : void
+    + update(eventType : String, data : Object)  : void
+  }
+
+  note right of SignUpController
+    <b><color:#0550AE>Sign Up screen</color></b>
+    Collects: firstName, lastName,
+    username, password.
+    Calls UserService.register()
+    on submit. On success, navigates
+    to Dashboard via SceneManager.
+    "Sign in" link navigates back
+    to LoginController.
+  end note
+
+  class DashboardController {
+    - walletService       : WalletService
+    - transactionService  : TransactionService
+    - cycleService        : CycleService
+    - goalService         : SavingGoalService
+    - totalBalanceLabel   : Label
+    - cyclePanel          : VBox
+    - cycleProgressBar    : ProgressBar
+    - cycleRemainingLabel : Label
+    - noCycleLabel        : Label
+    - expensePieChart     : PieChart
+    - depositPieChart     : PieChart
+    - walletPieChart      : PieChart
+    --
+    + initialize()            : void
+    + loadTotalBalance()      : void
+    + loadCycleSummary()      : void
+    + loadExpensePieChart()   : void
+    + loadDepositPieChart()   : void
+    + loadWalletPieChart()    : void
+    + refreshData()           : void
+    + update(eventType : String, data : Object) : void
+  }
+
+  note right of DashboardController
+    <b><color:#0550AE>Dashboard sections</color></b>
+    1. Total balance (sum of all wallets)
+    2. Active cycle panel:
+       — budget, spent, remaining, bar
+       — shows "No active cycle" if none
+    3. Expense pie chart
+       — expense transactions by category
+    4. Deposit pie chart
+       — deposit transactions by category
+    5. Wallet pie chart
+       — wallets grouped by balance amount
+  end note
+
+  class TransactionController {
+    - transactionService : TransactionService
+    - walletService      : WalletService
+    - categoryService    : CategoryService
+    - goalService        : SavingGoalService
+    - txTable            : TableView<Transaction>
+    - amountField        : TextField
+    - walletCombo        : ComboBox<Wallet>
+    - goalCombo          : ComboBox<SavingGoal>
+    - categoryCombo      : ComboBox<Category>
+    - typeCombo          : ComboBox<TransactionTypeEnum>
+    - noteArea           : TextArea
+    --
+    + initialize()               : void
+    + loadTransactions()         : void
+    + handleAddTransaction()     : void
+    + handleDeleteTransaction()  : void
+    + refreshData()              : void
+    + update(eventType : String, data : Object) : void
+  }
+
+  class WalletController {
+    - walletService  : WalletService
+    - walletListView : ListView<Wallet>
+    - nameField      : TextField
+    --
+    + initialize()         : void
+    + loadWallets()        : void
+    + handleAddWallet()    : void
+    + handleDeleteWallet() : void
+    + refreshData()        : void
+    + update(eventType : String, data : Object) : void
+  }
+
+  class CategoryController {
+    - categoryService  : CategoryService
+    - categoryListView : ListView<Category>
+    - nameField        : TextField
+    - colorPicker      : ColorPicker
+    - typeCombo        : ComboBox<CategoryTypeEnum>
+    --
+    + initialize()           : void
+    + loadCategories()       : void
+    + handleAddCategory()    : void
+    + handleDeleteCategory() : void
+    + refreshData()          : void
+    + update(eventType : String, data : Object) : void
+  }
+
+  class CycleController {
+    - cycleService   : CycleService
+    - cycleListView  : ListView<Cycle>
+    - budgetField    : TextField
+    - startPicker    : DatePicker
+    - endPicker      : DatePicker
+    - remainingLabel : Label
+    --
+    + initialize()       : void
+    + loadCycles()       : void
+    + handleAddCycle()   : void
+    + handleCloseCycle() : void
+    + refreshData()      : void
+    + update(eventType : String, data : Object) : void
+  }
+
+  class SavingGoalController {
+    - goalService      : SavingGoalService
+    - goalListView     : ListView<SavingGoal>
+    - nameField        : TextField
+    - targetField      : TextField
+    - targetDatePicker : DatePicker
+    - progressBar      : ProgressBar
+    --
+    + initialize()       : void
+    + loadGoals()        : void
+    + handleAddGoal()    : void
+    + handleCancelGoal() : void
+    + refreshData()      : void
+    + update(eventType : String, data : Object) : void
+  }
+
+  class SettingsController {
+    - userService          : UserService
+    - themeToggle          : ToggleButton
+    - oldPasswordField     : PasswordField
+    - newPasswordField     : PasswordField
+    - confirmPasswordField : PasswordField
+    - changePasswordButton : Button
+    - logoutButton         : Button
+    - feedbackLabel        : Label
+    --
+    + initialize()           : void
+    + handleThemeToggle()    : void
+    + handleChangePassword() : void
+    + handleLogout()         : void
+    + refreshData()          : void
+    + update(eventType : String, data : Object) : void
+  }
+
+  note right of SettingsController
+    <b><color:#0550AE>Settings screen</color></b>
+    1. Theme toggle (DARK ↔ LIGHT)
+       → calls UserService.updateTheme()
+       → publishes "THEME_CHANGED"
+    2. Change password
+       → validates old password first
+       → calls UserService.changePassword()
+    3. Logout
+       → calls UserService.logout()
+       → SceneManager switches to Login
+  end note
+
+  ' Inheritance
+  LoginController       --|> BaseController
+  SignUpController      --|> BaseController
+  DashboardController   --|> BaseController
+  TransactionController --|> BaseController
+  WalletController      --|> BaseController
+  CategoryController    --|> BaseController
+  CycleController       --|> BaseController
+  SavingGoalController  --|> BaseController
+  SettingsController    --|> BaseController
+
+  ' Observer subscriptions
+  LoginController       ..|> IObserver
+  SignUpController      ..|> IObserver
+  DashboardController   ..|> IObserver
+  TransactionController ..|> IObserver
+  WalletController      ..|> IObserver
+  CategoryController    ..|> IObserver
+  CycleController       ..|> IObserver
+  SavingGoalController  ..|> IObserver
+  SettingsController    ..|> IObserver
+
+  ' App wiring
+  App          --> SceneManager   : launches >
+  SceneManager --> BaseController : manages >
+
+  ' Controllers → Services
+  LoginController       --> UserService
+  SignUpController      --> UserService
+  DashboardController   --> WalletService
+  DashboardController   --> TransactionService
+  DashboardController   --> CycleService
+  DashboardController   --> SavingGoalService
+  TransactionController --> TransactionService
+  TransactionController --> WalletService
+  TransactionController --> CategoryService
+  TransactionController --> SavingGoalService
+  WalletController      --> WalletService
+  CategoryController    --> CategoryService
+  CycleController       --> CycleService
+  SavingGoalController  --> SavingGoalService
+  SettingsController    --> UserService
+
+  ' Navigation between auth screens
+  LoginController  ..> SignUpController : navigates to\n(SceneManager) >
+  SignUpController ..> LoginController  : navigates to\n(SceneManager) >
+
+  ' Controllers subscribe to EventBus
+  BaseController --> AppEventBus : subscribes >
+}
+
+' ============================================================
+'  DIP NOTE
+' ============================================================
+note as DIPNote
+  <b><color:#0550AE>«Dependency Inversion Principle»</color></b>
+  All Service constructors accept
+  IRepository<T>, not concrete DAOs.
+  Swap SQLite for any other storage
+  by writing a new DAO — zero changes
+  to any Service class required.
+  Example:
+    new WalletService(new WalletDAO())
+    new WalletService(new MockWalletDAO())
+end note
+
+@enduml

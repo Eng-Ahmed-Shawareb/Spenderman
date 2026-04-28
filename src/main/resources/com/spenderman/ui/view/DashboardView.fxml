@@ -5,7 +5,7 @@
 <?import javafx.geometry.Insets?>
 
 <ScrollPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.spenderman.ui.controller.DashboardController"
+            fx:controller="com.spenderman.ui.controller.ClsDashboardController"
             fitToWidth="true" fitToHeight="true"
             styleClass="scroll-pane">
 
@@ -18,7 +18,7 @@
         <!-- ═══ TOTAL BALANCE CARD ═══ -->
         <VBox styleClass="card-balance" spacing="10">
             <Label text="TOTAL BALANCE" styleClass="field-label"/>
-            <Label fx:id="totalBalanceLabel" text="EGP 58,450.00" styleClass="mono-large"/>
+            <Label fx:id="_totalBalanceLabel" text="EGP 58,450.00" styleClass="mono-large"/>
 
             <!-- Wallet breakdown row -->
             <HBox spacing="8" styleClass="bg-transparent">
@@ -38,39 +38,39 @@
         </VBox>
 
         <!-- ═══ ACTIVE CYCLE CARD ═══ -->
-        <VBox fx:id="cycleCard" styleClass="card" spacing="10">
+        <VBox fx:id="_cycleCard" styleClass="card" spacing="10">
             <!-- Cycle header -->
             <HBox spacing="12" alignment="CENTER_LEFT">
                 <VBox spacing="2" styleClass="bg-transparent" HBox.hgrow="ALWAYS">
                     <Label text="ACTIVE CYCLE" styleClass="field-label"/>
-                    <Label fx:id="cycleTitleLabel" text="April 2025" styleClass="section-title"/>
-                    <Label fx:id="cycleDateLabel" text="Apr 1 → Apr 30" styleClass="text-muted"/>
+                    <Label fx:id="_cycleTitleLabel" text="April 2025" styleClass="section-title"/>
+                    <Label fx:id="_cycleDateLabel" text="Apr 1 → Apr 30" styleClass="text-muted"/>
                 </VBox>
-                <Label fx:id="cycleStatusBadge" text="Active" styleClass="badge-green"/>
+                <Label fx:id="_cycleStatusBadge" text="Active" styleClass="badge-green"/>
             </HBox>
 
             <!-- Budget / Spent / Remaining -->
             <HBox spacing="8" styleClass="bg-transparent">
                 <VBox alignment="CENTER" HBox.hgrow="ALWAYS" styleClass="bg-transparent" spacing="2">
                     <Label text="Budget" styleClass="text-muted"/>
-                    <Label fx:id="cycleBudgetLabel" text="EGP 5,000" styleClass="mono-small"/>
+                    <Label fx:id="_cycleBudgetLabel" text="EGP 5,000" styleClass="mono-small"/>
                 </VBox>
                 <VBox alignment="CENTER" HBox.hgrow="ALWAYS" styleClass="bg-transparent" spacing="2">
                     <Label text="Spent" styleClass="text-muted"/>
-                    <Label fx:id="cycleSpentLabel" text="EGP 3,200" styleClass="mono-small, text-amber"/>
+                    <Label fx:id="_cycleSpentLabel" text="EGP 3,200" styleClass="mono-small, text-amber"/>
                 </VBox>
                 <VBox alignment="CENTER" HBox.hgrow="ALWAYS" styleClass="bg-transparent" spacing="2">
                     <Label text="Remaining" styleClass="text-muted"/>
-                    <Label fx:id="cycleRemainingLabel" text="EGP 1,800" styleClass="mono-small, text-green"/>
+                    <Label fx:id="_cycleRemainingLabel" text="EGP 1,800" styleClass="mono-small, text-green"/>
                 </VBox>
             </HBox>
 
-            <ProgressBar fx:id="cycleProgressBar" progress="0.64" maxWidth="Infinity" styleClass="progress-bar"/>
-            <Label fx:id="cyclePercentLabel" text="64% of budget used" styleClass="text-muted" style="-fx-font-size: 9px;"/>
+            <ProgressBar fx:id="_cycleProgressBar" progress="0.64" maxWidth="Infinity" styleClass="progress-bar"/>
+            <Label fx:id="_cyclePercentLabel" text="64% of budget used" styleClass="text-muted" style="-fx-font-size: 9px;"/>
         </VBox>
 
         <!-- No cycle placeholder (hidden by default) -->
-        <VBox fx:id="noCycleCard" styleClass="card" alignment="CENTER" spacing="4" visible="false" managed="false">
+        <VBox fx:id="_noCycleCard" styleClass="card" alignment="CENTER" spacing="4" visible="false" managed="false">
             <padding><Insets top="16" bottom="16"/></padding>
             <Label text="◎" styleClass="text-muted" style="-fx-font-size: 16px;"/>
             <Label text="No Active Cycle" styleClass="text-sub" style="-fx-font-weight: bold;"/>
@@ -82,15 +82,15 @@
             <VBox fx:id="expenseChartCard" styleClass="card" HBox.hgrow="ALWAYS" spacing="6">
                 <Label text="EXPENSES BY CATEGORY" styleClass="field-label"/>
                 <!-- Chart content injected dynamically -->
-                <HBox fx:id="expenseChartContent" spacing="8" alignment="CENTER_LEFT"/>
+                <HBox fx:id="_expenseChartContent" spacing="8" alignment="CENTER_LEFT"/>
             </VBox>
             <VBox fx:id="depositChartCard" styleClass="card" HBox.hgrow="ALWAYS" spacing="6">
                 <Label text="DEPOSITS BY CATEGORY" styleClass="field-label"/>
-                <HBox fx:id="depositChartContent" spacing="8" alignment="CENTER_LEFT"/>
+                <HBox fx:id="_depositChartContent" spacing="8" alignment="CENTER_LEFT"/>
             </VBox>
             <VBox fx:id="walletChartCard" styleClass="card" HBox.hgrow="ALWAYS" spacing="6">
                 <Label text="BALANCE BY WALLET" styleClass="field-label"/>
-                <HBox fx:id="walletChartContent" spacing="8" alignment="CENTER_LEFT"/>
+                <HBox fx:id="_walletChartContent" spacing="8" alignment="CENTER_LEFT"/>
             </VBox>
         </HBox>
 

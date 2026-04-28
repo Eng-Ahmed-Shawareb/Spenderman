@@ -5,14 +5,35 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8da6a0a9-7949-4391-91cc-db10c9b7b5fa" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/CycleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/CycleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/SavingGoalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/SavingGoalController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/TransactionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/TransactionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/style/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/style/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project Design/clean code style.md" beforeDir="false" afterPath="$PROJECT_DIR$/Project Design/clean code style.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/HelloApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/SpendermanApp.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/model/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/component/UIComponents.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/AppShellController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/BaseController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/CategoryController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/CycleController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/DashboardController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/LoginController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/SavingGoalController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/SettingsController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/SignUpController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/TransactionController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/WalletController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/manager/SceneManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/view/AppShell.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/view/AppShell.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/view/CategoryView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/view/CategoryView.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/view/CycleView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/view/CycleView.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/view/DashboardView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/view/DashboardView.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/view/GoalView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/view/GoalView.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/view/LoginView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/view/LoginView.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/view/SettingsView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/view/SettingsView.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/view/SignUpView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/view/SignUpView.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/view/TransactionView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/view/TransactionView.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/view/WalletView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/spenderman/ui/view/WalletView.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,23 +59,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.SpendermanApp.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/ahmed-shawareb/VSCode projects/Spenderman/src&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.ClsSpendermanApp.executor": "Run",
+    "Application.SpendermanApp.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/ahmed-shawareb/VSCode projects/Spenderman/src",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.keymap"
   }
-}</component>
+}]]></component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="8da6a0a9-7949-4391-91cc-db10c9b7b5fa" name="Changes" comment="" />

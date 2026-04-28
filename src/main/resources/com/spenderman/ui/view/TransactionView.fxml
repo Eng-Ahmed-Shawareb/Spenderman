@@ -5,33 +5,33 @@
 <?import javafx.geometry.Insets?>
 
 <VBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.spenderman.ui.controller.TransactionController"
+      fx:controller="com.spenderman.ui.controller.ClsTransactionController"
       spacing="12" styleClass="bg-root">
     <padding><Insets top="0" right="0" bottom="16" left="0"/></padding>
 
     <!-- Header -->
     <HBox alignment="CENTER_LEFT" spacing="12">
         <Label text="Transactions" styleClass="page-title" HBox.hgrow="ALWAYS"/>
-        <Button text="+ Add" styleClass="btn-small" onAction="#toggleForm"/>
+        <Button text="+ Add" styleClass="btn-small" onAction="#_toggleForm"/>
     </HBox>
 
     <!-- ═══ ADD TRANSACTION FORM (hidden by default) ═══ -->
-    <VBox fx:id="formPanel" styleClass="card-form" spacing="10" visible="false" managed="false">
+    <VBox fx:id="_formPanel" styleClass="card-form" spacing="10" visible="false" managed="false">
         <HBox alignment="CENTER_LEFT" spacing="12">
             <Label text="New Transaction" styleClass="section-title" HBox.hgrow="ALWAYS"/>
-            <Button text="×" styleClass="btn-close" onAction="#toggleForm"/>
+            <Button text="×" styleClass="btn-close" onAction="#_toggleForm"/>
         </HBox>
 
         <HBox spacing="10">
             <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="bg-transparent">
                 <Label text="AMOUNT (EGP)" styleClass="field-label"/>
-                <TextField fx:id="amountField" promptText="0.00"/>
+                <TextField fx:id="_amountField" promptText="0.00"/>
             </VBox>
             <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="bg-transparent">
                 <Label text="TYPE" styleClass="field-label"/>
                 <HBox spacing="6" styleClass="bg-transparent" alignment="CENTER_LEFT">
-                    <ToggleButton fx:id="expenseToggle" text="Expense" styleClass="type-toggle-expense" HBox.hgrow="ALWAYS" maxWidth="Infinity" minWidth="80"/>
-                    <ToggleButton fx:id="depositToggle" text="Deposit" styleClass="type-toggle-deposit" HBox.hgrow="ALWAYS" maxWidth="Infinity" minWidth="80"/>
+                    <ToggleButton fx:id="_expenseToggle" text="Expense" styleClass="type-toggle-expense" HBox.hgrow="ALWAYS" maxWidth="Infinity" minWidth="80"/>
+                    <ToggleButton fx:id="_depositToggle" text="Deposit" styleClass="type-toggle-deposit" HBox.hgrow="ALWAYS" maxWidth="Infinity" minWidth="80"/>
                 </HBox>
             </VBox>
         </HBox>
@@ -39,45 +39,45 @@
         <VBox spacing="4" styleClass="bg-transparent">
             <Label text="TARGET" styleClass="field-label"/>
             <HBox spacing="6" styleClass="bg-transparent">
-                <ToggleButton fx:id="targetWallet" text="◈ Wallet" styleClass="target-toggle" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                <ToggleButton fx:id="targetGoal" text="◇ Saving Goal" styleClass="target-toggle" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <ToggleButton fx:id="_targetWallet" text="◈ Wallet" styleClass="target-toggle" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <ToggleButton fx:id="_targetGoal" text="◇ Saving Goal" styleClass="target-toggle" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
             </HBox>
-            <ComboBox fx:id="targetCombo" maxWidth="Infinity" promptText="Select target..."/>
+            <ComboBox fx:id="_targetCombo" maxWidth="Infinity" promptText="Select target..."/>
         </VBox>
 
         <VBox spacing="4" styleClass="bg-transparent">
             <Label text="CATEGORY" styleClass="field-label"/>
-            <ComboBox fx:id="categoryCombo" maxWidth="Infinity" promptText="Select category..."/>
+            <ComboBox fx:id="_categoryCombo" maxWidth="Infinity" promptText="Select category..."/>
         </VBox>
 
         <VBox spacing="4" styleClass="bg-transparent">
             <Label text="NOTE (OPTIONAL)" styleClass="field-label"/>
-            <TextArea fx:id="noteArea" promptText="Add a note…" prefHeight="52" wrapText="true"/>
+            <TextArea fx:id="_noteArea" promptText="Add a note…" prefHeight="52" wrapText="true"/>
         </VBox>
 
         <HBox spacing="8" alignment="CENTER_RIGHT">
-            <Button text="Cancel" styleClass="btn-outline" onAction="#toggleForm"/>
-            <Button text="Save Transaction" styleClass="btn-primary" onAction="#handleAddTransaction"/>
+            <Button text="Cancel" styleClass="btn-outline" onAction="#_toggleForm"/>
+            <Button text="Save Transaction" styleClass="btn-primary" onAction="#_handleAddTransaction"/>
         </HBox>
     </VBox>
 
     <!-- ═══ EDIT TRANSACTION FORM (hidden by default) ═══ -->
-    <VBox fx:id="editFormPanel" styleClass="card-form" spacing="10" visible="false" managed="false">
+    <VBox fx:id="_editFormPanel" styleClass="card-form" spacing="10" visible="false" managed="false">
         <HBox alignment="CENTER_LEFT" spacing="12">
             <Label text="Edit Transaction" styleClass="section-title" HBox.hgrow="ALWAYS"/>
-            <Button text="×" styleClass="btn-close" onAction="#closeEditForm"/>
+            <Button text="×" styleClass="btn-close" onAction="#_closeEditForm"/>
         </HBox>
 
         <HBox spacing="10">
             <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="bg-transparent">
                 <Label text="AMOUNT (EGP)" styleClass="field-label"/>
-                <TextField fx:id="editAmountField" promptText="0.00"/>
+                <TextField fx:id="_editAmountField" promptText="0.00"/>
             </VBox>
             <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="bg-transparent">
                 <Label text="TYPE" styleClass="field-label"/>
                 <HBox spacing="6" styleClass="bg-transparent" alignment="CENTER_LEFT">
-                    <ToggleButton fx:id="editExpenseToggle" text="Expense" styleClass="type-toggle-expense" HBox.hgrow="ALWAYS" maxWidth="Infinity" minWidth="80"/>
-                    <ToggleButton fx:id="editDepositToggle" text="Deposit" styleClass="type-toggle-deposit" HBox.hgrow="ALWAYS" maxWidth="Infinity" minWidth="80"/>
+                    <ToggleButton fx:id="_editExpenseToggle" text="Expense" styleClass="type-toggle-expense" HBox.hgrow="ALWAYS" maxWidth="Infinity" minWidth="80"/>
+                    <ToggleButton fx:id="_editDepositToggle" text="Deposit" styleClass="type-toggle-deposit" HBox.hgrow="ALWAYS" maxWidth="Infinity" minWidth="80"/>
                 </HBox>
             </VBox>
         </HBox>
@@ -85,25 +85,25 @@
         <VBox spacing="4" styleClass="bg-transparent">
             <Label text="TARGET" styleClass="field-label"/>
             <HBox spacing="6" styleClass="bg-transparent">
-                <ToggleButton fx:id="editTargetWallet" text="◈ Wallet" styleClass="target-toggle" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                <ToggleButton fx:id="editTargetGoal" text="◇ Saving Goal" styleClass="target-toggle" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <ToggleButton fx:id="_editTargetWallet" text="◈ Wallet" styleClass="target-toggle" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <ToggleButton fx:id="_editTargetGoal" text="◇ Saving Goal" styleClass="target-toggle" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
             </HBox>
-            <ComboBox fx:id="editTargetCombo" maxWidth="Infinity" promptText="Select target..."/>
+            <ComboBox fx:id="_editTargetCombo" maxWidth="Infinity" promptText="Select target..."/>
         </VBox>
 
         <VBox spacing="4" styleClass="bg-transparent">
             <Label text="CATEGORY" styleClass="field-label"/>
-            <ComboBox fx:id="editCategoryCombo" maxWidth="Infinity" promptText="Select category..."/>
+            <ComboBox fx:id="_editCategoryCombo" maxWidth="Infinity" promptText="Select category..."/>
         </VBox>
 
         <VBox spacing="4" styleClass="bg-transparent">
             <Label text="NOTE (OPTIONAL)" styleClass="field-label"/>
-            <TextArea fx:id="editNoteArea" promptText="Add a note…" prefHeight="52" wrapText="true"/>
+            <TextArea fx:id="_editNoteArea" promptText="Add a note…" prefHeight="52" wrapText="true"/>
         </VBox>
 
         <HBox spacing="8" alignment="CENTER_RIGHT">
-            <Button text="Cancel" styleClass="btn-outline" onAction="#closeEditForm"/>
-            <Button text="Save Changes" styleClass="btn-primary" onAction="#handleSaveEdit"/>
+            <Button text="Cancel" styleClass="btn-outline" onAction="#_closeEditForm"/>
+            <Button text="Save Changes" styleClass="btn-primary" onAction="#_handleSaveEdit"/>
         </HBox>
     </VBox>
 
@@ -122,7 +122,7 @@
                 <Label text="Actions" styleClass="table-header-cell" prefWidth="120"/>
             </HBox>
             <!-- Rows will be added dynamically by the controller -->
-            <VBox fx:id="transactionRows" spacing="0"/>
+            <VBox fx:id="_transactionRows" spacing="0"/>
         </VBox>
     </ScrollPane>
 </VBox>

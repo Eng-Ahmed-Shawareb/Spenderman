@@ -2,43 +2,52 @@ package com.spenderman.ui.controller;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Separator;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.Priority;
 import javafx.scene.shape.Circle;
 
 /**
  * Wallets screen controller.
- * UML: WalletController extends BaseController implements IObserver
+ * UML: ClsWalletController extends ABaseController implements IObserver
  * Services: walletService
  */
-public class WalletController extends BaseController {
+public class ClsWalletController extends ABaseController {
 
-    @FXML private VBox formPanel;
-    @FXML private TextField nameField;
-    @FXML private GridPane walletGrid;
+    @FXML private VBox _formPanel;
+    @FXML private TextField _nameField;
+    @FXML private GridPane _walletGrid;
 
     @Override
     public void initialize() {
-        loadWallets();
+        _loadWallets();
     }
 
     @FXML
-    private void toggleForm() {
-        boolean show = !formPanel.isVisible();
-        formPanel.setVisible(show);
-        formPanel.setManaged(show);
+    private void _toggleForm() {
+        boolean show = !_formPanel.isVisible();
+        _formPanel.setVisible(show);
+        _formPanel.setManaged(show);
     }
 
     @FXML
-    private void handleAddWallet() {
+    private void _handleAddWallet() {
         // TODO: Call walletService.createWallet(wallet)
-        System.out.println("Create wallet: " + nameField.getText());
-        toggleForm();
-        loadWallets();
+        System.out.println("Create wallet: " + _nameField.getText());
+        _toggleForm();
+        _loadWallets();
     }
 
-    private void loadWallets() {
-        walletGrid.getChildren().clear();
+    private void _loadWallets() {
+        _walletGrid.getChildren().clear();
 
         // Dummy data matching React prototype
         String[][] wallets = {
@@ -90,18 +99,18 @@ public class WalletController extends BaseController {
 
             card.getChildren().addAll(top, name, amount, sep, txCount);
 
-            walletGrid.add(card, i % 2, i / 2);
+            _walletGrid.add(card, i % 2, i / 2);
             GridPane.setHgrow(card, Priority.ALWAYS);
         }
     }
 
     @FXML
-    private void handleDeleteWallet() {
+    private void _handleDeleteWallet() {
         // TODO: Call walletService.deleteWallet(walletId)
     }
 
     @Override
     public void refreshData() {
-        loadWallets();
+        _loadWallets();
     }
 }

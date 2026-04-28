@@ -2,63 +2,72 @@ package com.spenderman.ui.controller;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 /**
  * Categories screen controller.
- * UML: CategoryController extends BaseController implements IObserver
+ * UML: ClsCategoryController extends ABaseController implements IObserver
  * Services: categoryService
  */
-public class CategoryController extends BaseController {
+public class ClsCategoryController extends ABaseController {
 
-    @FXML private VBox formPanel;
-    @FXML private TextField nameField;
-    @FXML private ColorPicker colorPicker;
-    @FXML private ToggleButton expenseToggle;
-    @FXML private ToggleButton depositToggle;
-    @FXML private GridPane categoryGrid;
+    @FXML private VBox _formPanel;
+    @FXML private TextField _nameField;
+    @FXML private ColorPicker _colorPicker;
+    @FXML private ToggleButton _expenseToggle;
+    @FXML private ToggleButton _depositToggle;
+    @FXML private GridPane _categoryGrid;
 
-    private ToggleGroup typeGroup;
+    private ToggleGroup _typeGroup;
 
     @Override
     public void initialize() {
-        typeGroup = new ToggleGroup();
-        expenseToggle.setToggleGroup(typeGroup);
-        depositToggle.setToggleGroup(typeGroup);
-        expenseToggle.setSelected(true);
+        _typeGroup = new ToggleGroup();
+        _expenseToggle.setToggleGroup(_typeGroup);
+        _depositToggle.setToggleGroup(_typeGroup);
+        _expenseToggle.setSelected(true);
 
         // Default color: amber
-        colorPicker.setValue(Color.web("#F59E0B"));
+        _colorPicker.setValue(Color.web("#F59E0B"));
 
-        loadCategories();
+        _loadCategories();
     }
 
     @FXML
-    private void toggleForm() {
-        boolean show = !formPanel.isVisible();
-        formPanel.setVisible(show);
-        formPanel.setManaged(show);
+    private void _toggleForm() {
+        boolean show = !_formPanel.isVisible();
+        _formPanel.setVisible(show);
+        _formPanel.setManaged(show);
     }
 
     @FXML
-    private void handleAddCategory() {
+    private void _handleAddCategory() {
         // Convert ColorPicker value to hex string
-        Color c = colorPicker.getValue();
+        Color c = _colorPicker.getValue();
         String hex = String.format("#%02X%02X%02X",
                 (int) (c.getRed()   * 255),
                 (int) (c.getGreen() * 255),
                 (int) (c.getBlue()  * 255));
         // TODO: Call categoryService.createCategory(cat)
-        System.out.println("Create category: " + nameField.getText() + " color: " + hex);
-        toggleForm();
-        loadCategories();
+        System.out.println("Create category: " + _nameField.getText() + " color: " + hex);
+        _toggleForm();
+        _loadCategories();
     }
 
-    private void loadCategories() {
-        categoryGrid.getChildren().clear();
+    private void _loadCategories() {
+        _categoryGrid.getChildren().clear();
 
         // Dummy data matching React prototype
         String[][] categories = {
@@ -104,13 +113,13 @@ public class CategoryController extends BaseController {
             row.getChildren().addAll(colorDot, info, delBtn);
             card.getChildren().add(row);
 
-            categoryGrid.add(card, i % 3, i / 3);
+            _categoryGrid.add(card, i % 3, i / 3);
             GridPane.setHgrow(card, Priority.ALWAYS);
         }
     }
 
     @Override
     public void refreshData() {
-        loadCategories();
+        _loadCategories();
     }
 }

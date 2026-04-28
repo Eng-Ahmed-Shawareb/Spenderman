@@ -2,49 +2,55 @@ package com.spenderman.ui.controller;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 /**
  * Budget Cycles screen controller.
- * UML: CycleController extends BaseController implements IObserver
+ * UML: ClsCycleController extends ABaseController implements IObserver
  * Services: cycleService
  */
-public class CycleController extends BaseController {
+public class ClsCycleController extends ABaseController {
 
     @FXML
-    private VBox formPanel;
+    private VBox _formPanel;
     @FXML
-    private TextField budgetField;
+    private TextField _budgetField;
     @FXML
-    private DatePicker startPicker;
+    private DatePicker _startPicker;
     @FXML
-    private DatePicker endPicker;
+    private DatePicker _endPicker;
     @FXML
-    private VBox cycleList;
+    private VBox _cycleList;
 
     @Override
     public void initialize() {
-        loadCycles();
+        _loadCycles();
     }
 
     @FXML
-    private void toggleForm() {
-        boolean show = !formPanel.isVisible();
-        formPanel.setVisible(show);
-        formPanel.setManaged(show);
+    private void _toggleForm() {
+        boolean show = !_formPanel.isVisible();
+        _formPanel.setVisible(show);
+        _formPanel.setManaged(show);
     }
 
     @FXML
-    private void handleAddCycle() {
+    private void _handleAddCycle() {
         // TODO: Call cycleService.createCycle(cycle)
-        System.out.println("Create cycle: budget=" + budgetField.getText());
-        toggleForm();
-        loadCycles();
+        System.out.println("Create cycle: budget=" + _budgetField.getText());
+        _toggleForm();
+        _loadCycles();
     }
 
-    private void loadCycles() {
-        cycleList.getChildren().clear();
+    private void _loadCycles() {
+        _cycleList.getChildren().clear();
 
         // Dummy data matching React prototype
         String[][] cycles = {
@@ -85,7 +91,7 @@ public class CycleController extends BaseController {
             if (cy[3].equals("Active")) {
                 Button closeBtn = new Button("Close");
                 closeBtn.getStyleClass().add("btn-outline-small");
-                closeBtn.setOnAction(e -> handleCloseCycle());
+                closeBtn.setOnAction(e -> _handleCloseCycle());
                 badges.getChildren().add(closeBtn);
             }
 
@@ -122,17 +128,17 @@ public class CycleController extends BaseController {
                 card.getChildren().add(warning);
             }
 
-            cycleList.getChildren().add(card);
+            _cycleList.getChildren().add(card);
         }
     }
 
-    private void handleCloseCycle() {
+    private void _handleCloseCycle() {
         // TODO: Call cycleService.closeCycle(cycleId)
         System.out.println("Close active cycle");
     }
 
     @Override
     public void refreshData() {
-        loadCycles();
+        _loadCycles();
     }
 }

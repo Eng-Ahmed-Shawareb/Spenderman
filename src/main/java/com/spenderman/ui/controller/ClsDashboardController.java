@@ -14,91 +14,91 @@ import javafx.scene.text.TextAlignment;
 
 /**
  * Dashboard screen controller.
- * UML: DashboardController extends BaseController implements IObserver
+ * UML: ClsDashboardController extends ABaseController implements IObserver
  * Services: walletService, transactionService, cycleService, goalService
  */
-public class DashboardController extends BaseController {
+public class ClsDashboardController extends ABaseController {
 
-    @FXML private Label totalBalanceLabel;
-    @FXML private VBox cycleCard;
-    @FXML private VBox noCycleCard;
-    @FXML private Label cycleTitleLabel;
-    @FXML private Label cycleDateLabel;
-    @FXML private Label cycleStatusBadge;
-    @FXML private Label cycleBudgetLabel;
-    @FXML private Label cycleSpentLabel;
-    @FXML private Label cycleRemainingLabel;
-    @FXML private ProgressBar cycleProgressBar;
-    @FXML private Label cyclePercentLabel;
+    @FXML private Label _totalBalanceLabel;
+    @FXML private VBox _cycleCard;
+    @FXML private VBox _noCycleCard;
+    @FXML private Label _cycleTitleLabel;
+    @FXML private Label _cycleDateLabel;
+    @FXML private Label _cycleStatusBadge;
+    @FXML private Label _cycleBudgetLabel;
+    @FXML private Label _cycleSpentLabel;
+    @FXML private Label _cycleRemainingLabel;
+    @FXML private ProgressBar _cycleProgressBar;
+    @FXML private Label _cyclePercentLabel;
 
-    @FXML private HBox expenseChartContent;
-    @FXML private HBox depositChartContent;
-    @FXML private HBox walletChartContent;
+    @FXML private HBox _expenseChartContent;
+    @FXML private HBox _depositChartContent;
+    @FXML private HBox _walletChartContent;
 
     // Dummy data matching the React prototype
-    private static final double[][] EXPENSE_SEGS = {
+    private static final double[][] _EXPENSE_SEGS = {
             {35, 0xF5, 0xA6, 0x23}, // Food - Amber
             {20, 0x88, 0x75, 0xF5}, // Transport - Purple
             {15, 0xF4, 0x72, 0xB6}, // Utilities - Pink
             {18, 0x4B, 0x9E, 0xF8}, // Entertainment - Blue
             {12, 0x4A, 0x52, 0x68}, // Other - Muted
     };
-    private static final String[] EXPENSE_LABELS = {"Food", "Transport", "Utilities", "Entertainment", "Other"};
+    private static final String[] _EXPENSE_LABELS = {"Food", "Transport", "Utilities", "Entertainment", "Other"};
 
-    private static final double[][] DEPOSIT_SEGS = {
+    private static final double[][] _DEPOSIT_SEGS = {
             {72, 0x22, 0xC9, 0x7A}, // Salary - Green
             {18, 0x4B, 0x9E, 0xF8}, // Freelance - Blue
             {10, 0x4A, 0x52, 0x68}, // Other - Muted
     };
-    private static final String[] DEPOSIT_LABELS = {"Salary", "Freelance", "Other"};
+    private static final String[] _DEPOSIT_LABELS = {"Salary", "Freelance", "Other"};
 
-    private static final double[][] WALLET_SEGS = {
+    private static final double[][] _WALLET_SEGS = {
             {78, 0x88, 0x75, 0xF5}, // Business - Purple
             {21, 0x22, 0xC9, 0x7A}, // Main Bank - Green
             {1,  0x4B, 0x9E, 0xF8}, // Pocket Cash - Blue
     };
-    private static final String[] WALLET_LABELS = {"Business", "Main Bank", "Pocket Cash"};
+    private static final String[] _WALLET_LABELS = {"Business", "Main Bank", "Pocket Cash"};
 
     @Override
     public void initialize() {
-        loadTotalBalance();
-        loadCycleSummary();
-        loadExpensePieChart();
-        loadDepositPieChart();
-        loadWalletPieChart();
+        _loadTotalBalance();
+        _loadCycleSummary();
+        _loadExpensePieChart();
+        _loadDepositPieChart();
+        _loadWalletPieChart();
     }
 
-    private void loadTotalBalance() {
-        // TODO: totalBalanceLabel.setText("EGP " + walletService.getTotalBalance(userId));
-        totalBalanceLabel.setText("EGP 58,450.00");
+    private void _loadTotalBalance() {
+        // TODO: _totalBalanceLabel.setText("EGP " + walletService.getTotalBalance(userId));
+        _totalBalanceLabel.setText("EGP 58,450.00");
     }
 
-    private void loadCycleSummary() {
+    private void _loadCycleSummary() {
         // TODO: use cycleService.getActiveCycle(userId)
         boolean hasCycle = true;
-        cycleCard.setVisible(hasCycle);
-        cycleCard.setManaged(hasCycle);
-        noCycleCard.setVisible(!hasCycle);
-        noCycleCard.setManaged(!hasCycle);
+        _cycleCard.setVisible(hasCycle);
+        _cycleCard.setManaged(hasCycle);
+        _noCycleCard.setVisible(!hasCycle);
+        _noCycleCard.setManaged(!hasCycle);
     }
 
-    private void loadExpensePieChart() {
-        buildDonutChart(expenseChartContent, EXPENSE_SEGS, EXPENSE_LABELS);
+    private void _loadExpensePieChart() {
+        _buildDonutChart(_expenseChartContent, _EXPENSE_SEGS, _EXPENSE_LABELS);
     }
 
-    private void loadDepositPieChart() {
-        buildDonutChart(depositChartContent, DEPOSIT_SEGS, DEPOSIT_LABELS);
+    private void _loadDepositPieChart() {
+        _buildDonutChart(_depositChartContent, _DEPOSIT_SEGS, _DEPOSIT_LABELS);
     }
 
-    private void loadWalletPieChart() {
-        buildDonutChart(walletChartContent, WALLET_SEGS, WALLET_LABELS);
+    private void _loadWalletPieChart() {
+        _buildDonutChart(_walletChartContent, _WALLET_SEGS, _WALLET_LABELS);
     }
 
     /**
      * Build a donut chart using Canvas + legend labels.
      * Replicates the React Donut + Legend components.
      */
-    private void buildDonutChart(HBox container, double[][] segs, String[] labels) {
+    private void _buildDonutChart(HBox container, double[][] segs, String[] labels) {
         container.getChildren().clear();
 
         int size = 90;
@@ -157,7 +157,7 @@ public class DashboardController extends BaseController {
             javafx.scene.layout.Region dot = new javafx.scene.layout.Region();
             dot.getStyleClass().add("legend-dot");
             Color c = Color.rgb((int) segs[i][1], (int) segs[i][2], (int) segs[i][3]);
-            dot.setStyle("-fx-background-color: " + toHex(c) + ";");
+            dot.setStyle("-fx-background-color: " + _toHex(c) + ";");
 
             Label name = new Label(labels[i]);
             name.getStyleClass().add("legend-label");
@@ -172,7 +172,7 @@ public class DashboardController extends BaseController {
         container.getChildren().add(legend);
     }
 
-    private String toHex(Color c) {
+    private String _toHex(Color c) {
         return String.format("#%02X%02X%02X",
                 (int) (c.getRed() * 255),
                 (int) (c.getGreen() * 255),
@@ -181,10 +181,10 @@ public class DashboardController extends BaseController {
 
     @Override
     public void refreshData() {
-        loadTotalBalance();
-        loadCycleSummary();
-        loadExpensePieChart();
-        loadDepositPieChart();
-        loadWalletPieChart();
+        _loadTotalBalance();
+        _loadCycleSummary();
+        _loadExpensePieChart();
+        _loadDepositPieChart();
+        _loadWalletPieChart();
     }
 }

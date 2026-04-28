@@ -1,34 +1,34 @@
 package com.spenderman.ui.controller;
 
 import javafx.scene.layout.Pane;
-import com.spenderman.ui.manager.SceneManager;
-import com.spenderman.model.User;
+import com.spenderman.ui.manager.ClsSceneManager;
+import com.spenderman.model.ClsUser;
 
 /**
  * Abstract base class for all screen controllers.
- * Matches UML: BaseController with currentUser, eventBus, sceneManager.
+ * Matches UML: ABaseController with $currentUser, $eventBus, $sceneManager.
  * All controllers extend this and implement IObserver (when observer layer exists).
  */
-public abstract class BaseController {
-    protected SceneManager sceneManager;
-    protected User currentUser;
-    protected Pane root;
-    // protected AppEventBus eventBus; // TODO: wire when observer layer is implemented
+public abstract class ABaseController {
+    protected ClsSceneManager $sceneManager;
+    protected ClsUser $currentUser;
+    protected Pane $root;
+    // protected AppEventBus $eventBus; // TODO: wire when observer layer is implemented
 
-    public void setSceneManager(SceneManager sceneManager) {
-        this.sceneManager = sceneManager;
+    public void setSceneManager(ClsSceneManager $sceneManager) {
+        this.$sceneManager = $sceneManager;
     }
 
-    public void setCurrentUser(User user) {
-        this.currentUser = user;
+    public void setCurrentUser(ClsUser user) {
+        this.$currentUser = user;
     }
 
-    public User getCurrentUser() {
-        return currentUser;
+    public ClsUser getCurrentUser() {
+        return $currentUser;
     }
 
     public Pane getRoot() {
-        return root;
+        return $root;
     }
 
     /**

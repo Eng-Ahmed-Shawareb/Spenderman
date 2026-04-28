@@ -5,7 +5,7 @@
 <?import javafx.geometry.Insets?>
 
 <ScrollPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.spenderman.ui.controller.SettingsController"
+            fx:controller="com.spenderman.ui.controller.ClsSettingsController"
             fitToWidth="true" fitToHeight="true"
             styleClass="scroll-pane">
 
@@ -19,11 +19,11 @@
         <HBox styleClass="card" spacing="14" alignment="CENTER_LEFT">
             <StackPane prefWidth="44" prefHeight="44">
                 <javafx.scene.shape.Circle radius="22" styleClass="profile-avatar"/>
-                <Label fx:id="profileInitials" text="AH" styleClass="avatar-initials" style="-fx-font-size: 14px;"/>
+                <Label fx:id="_profileInitials" text="AH" styleClass="avatar-initials" style="-fx-font-size: 14px;"/>
             </StackPane>
             <VBox spacing="2" styleClass="bg-transparent">
-                <Label fx:id="profileNameLabel" text="Ahmed Hassan" styleClass="section-title" style="-fx-font-size: 14px;"/>
-                <Label fx:id="profileSubLabel" text="@ahmed · Member since Jan 2025" styleClass="text-muted"/>
+                <Label fx:id="_profileNameLabel" text="Ahmed Hassan" styleClass="section-title" style="-fx-font-size: 14px;"/>
+                <Label fx:id="_profileSubLabel" text="@ahmed · Member since Jan 2025" styleClass="text-muted"/>
             </VBox>
         </HBox>
 
@@ -36,11 +36,11 @@
                 <HBox alignment="CENTER_LEFT">
                     <VBox spacing="2" styleClass="bg-transparent" HBox.hgrow="ALWAYS">
                         <Label text="Interface Theme" styleClass="section-title"/>
-                        <Label fx:id="themeStatusLabel" text="Currently: Dark Mode" styleClass="text-muted"/>
+                        <Label fx:id="_themeStatusLabel" text="Currently: Dark Mode" styleClass="text-muted"/>
                     </VBox>
                     <HBox spacing="8" alignment="CENTER">
                         <Label text="☀" styleClass="text-amber" style="-fx-font-size: 11px;"/>
-                        <ToggleButton fx:id="themeToggle" styleClass="theme-toggle" selected="true" onAction="#handleThemeToggle"/>
+                        <ToggleButton fx:id="_themeToggle" styleClass="theme-toggle" selected="true" onAction="#_handleThemeToggle"/>
                         <Label text="☽" styleClass="text-blue" style="-fx-font-size: 11px;"/>
                     </HBox>
                 </HBox>
@@ -53,20 +53,20 @@
                 <Label text="SECURITY" styleClass="field-label"/>
                 <VBox spacing="4" styleClass="bg-transparent">
                     <Label text="CURRENT PASSWORD" styleClass="field-label"/>
-                    <PasswordField fx:id="oldPasswordField" promptText="Enter current password"/>
+                    <PasswordField fx:id="_oldPasswordField" promptText="Enter current password"/>
                 </VBox>
                 <HBox spacing="10">
                     <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="bg-transparent">
                         <Label text="NEW PASSWORD" styleClass="field-label"/>
-                        <PasswordField fx:id="newPasswordField" promptText="Min 6 characters"/>
+                        <PasswordField fx:id="_newPasswordField" promptText="Min 6 characters"/>
                     </VBox>
                     <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="bg-transparent">
                         <Label text="CONFIRM NEW PASSWORD" styleClass="field-label"/>
-                        <PasswordField fx:id="confirmPasswordField" promptText="Repeat new password"/>
+                        <PasswordField fx:id="_confirmPasswordField" promptText="Repeat new password"/>
                     </VBox>
                 </HBox>
-                <Label fx:id="passwordFeedback" styleClass="text-muted" visible="false" managed="false" style="-fx-font-size: 10px;"/>
-                <Button text="Update Password" styleClass="btn-primary-full" onAction="#handleChangePassword" maxWidth="Infinity"/>
+                <Label fx:id="_passwordFeedback" styleClass="text-muted" visible="false" managed="false" style="-fx-font-size: 10px;"/>
+                <Button text="Update Password" styleClass="btn-primary-full" onAction="#_handleChangePassword" maxWidth="Infinity"/>
             </VBox>
 
             <Separator/>
@@ -79,7 +79,7 @@
                         <Label text="Sign Out" styleClass="section-title"/>
                         <Label text="You will be returned to the login screen" styleClass="text-muted"/>
                     </VBox>
-                    <Button text="Logout" styleClass="btn-danger" onAction="#handleLogout"/>
+                    <Button text="Logout" styleClass="btn-danger" onAction="#_handleLogout"/>
                 </HBox>
             </VBox>
 

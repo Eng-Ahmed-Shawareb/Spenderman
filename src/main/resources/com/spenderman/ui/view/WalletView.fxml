@@ -5,34 +5,34 @@
 <?import javafx.geometry.Insets?>
 
 <VBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.spenderman.ui.controller.WalletController"
+      fx:controller="com.spenderman.ui.controller.ClsWalletController"
       spacing="12" styleClass="bg-root">
     <padding><Insets top="0" right="0" bottom="16" left="0"/></padding>
 
     <!-- Header -->
     <HBox alignment="CENTER_LEFT" spacing="12">
         <Label text="Wallets" styleClass="page-title" HBox.hgrow="ALWAYS"/>
-        <Button text="+ New Wallet" styleClass="btn-small" onAction="#toggleForm"/>
+        <Button text="+ New Wallet" styleClass="btn-small" onAction="#_toggleForm"/>
     </HBox>
 
     <!-- ═══ ADD WALLET FORM ═══ -->
-    <VBox fx:id="formPanel" styleClass="card-form" spacing="10" visible="false" managed="false">
+    <VBox fx:id="_formPanel" styleClass="card-form" spacing="10" visible="false" managed="false">
         <HBox alignment="CENTER_LEFT" spacing="12">
             <Label text="New Wallet" styleClass="section-title" HBox.hgrow="ALWAYS"/>
-            <Button text="×" styleClass="btn-close" onAction="#toggleForm"/>
+            <Button text="×" styleClass="btn-close" onAction="#_toggleForm"/>
         </HBox>
         <VBox spacing="4" styleClass="bg-transparent">
             <Label text="WALLET NAME" styleClass="field-label"/>
-            <TextField fx:id="nameField" promptText='e.g. "Main Bank Account"'/>
+            <TextField fx:id="_nameField" promptText='e.g. "Main Bank Account"'/>
         </VBox>
         <HBox spacing="8" alignment="CENTER_RIGHT">
-            <Button text="Cancel" styleClass="btn-outline" onAction="#toggleForm"/>
-            <Button text="Create Wallet" styleClass="btn-primary" onAction="#handleAddWallet"/>
+            <Button text="Cancel" styleClass="btn-outline" onAction="#_toggleForm"/>
+            <Button text="Create Wallet" styleClass="btn-primary" onAction="#_handleAddWallet"/>
         </HBox>
     </VBox>
 
     <!-- ═══ WALLET GRID ═══ -->
     <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
-        <GridPane fx:id="walletGrid" hgap="12" vgap="12"/>
+        <GridPane fx:id="_walletGrid" hgap="12" vgap="12"/>
     </ScrollPane>
 </VBox>

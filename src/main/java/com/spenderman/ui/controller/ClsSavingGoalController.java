@@ -2,50 +2,56 @@ package com.spenderman.ui.controller;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.shape.Circle;
 
 /**
  * Saving Goals screen controller.
- * UML: SavingGoalController extends BaseController implements IObserver
+ * UML: ClsSavingGoalController extends ABaseController implements IObserver
  * Services: goalService
  */
-public class SavingGoalController extends BaseController {
+public class ClsSavingGoalController extends ABaseController {
 
     @FXML
-    private VBox formPanel;
+    private VBox _formPanel;
     @FXML
-    private TextField nameField;
+    private TextField _nameField;
     @FXML
-    private TextField targetField;
+    private TextField _targetField;
     @FXML
-    private DatePicker targetDatePicker;
+    private DatePicker _targetDatePicker;
     @FXML
-    private VBox goalList;
+    private VBox _goalList;
 
     @Override
     public void initialize() {
-        loadGoals();
+        _loadGoals();
     }
 
     @FXML
-    private void toggleForm() {
-        boolean show = !formPanel.isVisible();
-        formPanel.setVisible(show);
-        formPanel.setManaged(show);
+    private void _toggleForm() {
+        boolean show = !_formPanel.isVisible();
+        _formPanel.setVisible(show);
+        _formPanel.setManaged(show);
     }
 
     @FXML
-    private void handleAddGoal() {
+    private void _handleAddGoal() {
         // TODO: Call goalService.createGoal(goal)
-        System.out.println("Create goal: " + nameField.getText() + " target=" + targetField.getText());
-        toggleForm();
-        loadGoals();
+        System.out.println("Create goal: " + _nameField.getText() + " target=" + _targetField.getText());
+        _toggleForm();
+        _loadGoals();
     }
 
-    private void loadGoals() {
-        goalList.getChildren().clear();
+    private void _loadGoals() {
+        _goalList.getChildren().clear();
 
         // Dummy data matching React prototype
         String[][] goals = {
@@ -85,7 +91,7 @@ public class SavingGoalController extends BaseController {
                 Button addBtn = new Button("+ Add");
                 addBtn.getStyleClass().add("btn-outline-small");
                 final String goalName2 = g[0];
-                addBtn.setOnAction(e -> toggleAddAmountForm(card, goalName2));
+                addBtn.setOnAction(e -> _toggleAddAmountForm(card, goalName2));
                 badges.getChildren().add(addBtn);
             }
 
@@ -131,14 +137,14 @@ public class SavingGoalController extends BaseController {
             }
 
             card.getChildren().addAll(titleRow, amounts, bar, footer);
-            goalList.getChildren().add(card);
+            _goalList.getChildren().add(card);
         }
     }
 
     /**
      * Toggle a mini inline form to add money to a specific goal.
      */
-    private void toggleAddAmountForm(VBox card, String goalName) {
+    private void _toggleAddAmountForm(VBox card, String goalName) {
         // Check if form already exists
         if (card.getChildren().size() > 4 && card.getChildren().get(4) instanceof HBox addRow) {
             card.getChildren().remove(4);
@@ -174,6 +180,6 @@ public class SavingGoalController extends BaseController {
 
     @Override
     public void refreshData() {
-        loadGoals();
+        _loadGoals();
     }
 }

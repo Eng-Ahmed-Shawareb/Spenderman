@@ -5,44 +5,44 @@
 <?import javafx.geometry.Insets?>
 
 <VBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.spenderman.ui.controller.SavingGoalController"
+      fx:controller="com.spenderman.ui.controller.ClsSavingGoalController"
       spacing="12" styleClass="bg-root">
     <padding><Insets top="0" right="0" bottom="16" left="0"/></padding>
 
     <!-- Header -->
     <HBox alignment="CENTER_LEFT" spacing="12">
         <Label text="Saving Goals" styleClass="page-title" HBox.hgrow="ALWAYS"/>
-        <Button text="+ New Goal" styleClass="btn-small" onAction="#toggleForm"/>
+        <Button text="+ New Goal" styleClass="btn-small" onAction="#_toggleForm"/>
     </HBox>
 
     <!-- ═══ ADD GOAL FORM ═══ -->
-    <VBox fx:id="formPanel" styleClass="card-form" spacing="10" visible="false" managed="false">
+    <VBox fx:id="_formPanel" styleClass="card-form" spacing="10" visible="false" managed="false">
         <HBox alignment="CENTER_LEFT" spacing="12">
             <Label text="New Saving Goal" styleClass="section-title" HBox.hgrow="ALWAYS"/>
-            <Button text="×" styleClass="btn-close" onAction="#toggleForm"/>
+            <Button text="×" styleClass="btn-close" onAction="#_toggleForm"/>
         </HBox>
         <VBox spacing="4" styleClass="bg-transparent">
             <Label text="GOAL NAME" styleClass="field-label"/>
-            <TextField fx:id="nameField" promptText='e.g. "New Laptop"'/>
+            <TextField fx:id="_nameField" promptText='e.g. "New Laptop"'/>
         </VBox>
         <HBox spacing="10">
             <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="bg-transparent">
                 <Label text="TARGET AMOUNT (EGP)" styleClass="field-label"/>
-                <TextField fx:id="targetField" promptText="0.00"/>
+                <TextField fx:id="_targetField" promptText="0.00"/>
             </VBox>
             <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="bg-transparent">
                 <Label text="TARGET DATE (OPTIONAL)" styleClass="field-label"/>
-                <DatePicker fx:id="targetDatePicker" maxWidth="Infinity"/>
+                <DatePicker fx:id="_targetDatePicker" maxWidth="Infinity"/>
             </VBox>
         </HBox>
         <HBox spacing="8" alignment="CENTER_RIGHT">
-            <Button text="Cancel" styleClass="btn-outline" onAction="#toggleForm"/>
-            <Button text="Create Goal" styleClass="btn-primary" onAction="#handleAddGoal"/>
+            <Button text="Cancel" styleClass="btn-outline" onAction="#_toggleForm"/>
+            <Button text="Create Goal" styleClass="btn-primary" onAction="#_handleAddGoal"/>
         </HBox>
     </VBox>
 
     <!-- ═══ GOAL LIST ═══ -->
     <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
-        <VBox fx:id="goalList" spacing="12"/>
+        <VBox fx:id="_goalList" spacing="12"/>
     </ScrollPane>
 </VBox>

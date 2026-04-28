@@ -23,7 +23,7 @@ Names should reflect the data they store or the action they perform, using whole
 
 All of these structures should use descriptive, whole words. The capitalization and prefix rules are as follows:
 
-- **Classes:** Use standard UpperCamelCase (e.g., `RetirementAccount`).
+- **Classes:** Use standard UpperCamelCase but add Cls as prefix in the name of the class (e.g., `ClsRetirementAccount`).
     
 - **Interfaces:** Must start with a capital **I** followed by UpperCamelCase (e.g., `IRunnable`).
     

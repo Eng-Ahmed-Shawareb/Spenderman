@@ -13,20 +13,37 @@ import javafx.scene.layout.*;
  */
 public class TransactionController extends BaseController {
 
+    // ── Add-form fields ──
     @FXML private VBox formPanel;
     @FXML private TextField amountField;
     @FXML private ToggleButton expenseToggle;
     @FXML private ToggleButton depositToggle;
-    @FXML private ToggleButton savingGoalToggle;
     @FXML private ToggleButton targetWallet;
     @FXML private ToggleButton targetGoal;
     @FXML private ComboBox<String> targetCombo;
     @FXML private ComboBox<String> categoryCombo;
     @FXML private TextArea noteArea;
+
+    // ── Edit-form fields ──
+    @FXML private VBox editFormPanel;
+    @FXML private TextField editAmountField;
+    @FXML private ToggleButton editExpenseToggle;
+    @FXML private ToggleButton editDepositToggle;
+    @FXML private ToggleButton editTargetWallet;
+    @FXML private ToggleButton editTargetGoal;
+    @FXML private ComboBox<String> editTargetCombo;
+    @FXML private ComboBox<String> editCategoryCombo;
+    @FXML private TextArea editNoteArea;
+
     @FXML private VBox transactionRows;
 
     private ToggleGroup typeGroup;
     private ToggleGroup targetGroup;
+    private ToggleGroup editTypeGroup;
+    private ToggleGroup editTargetGroup;
+
+    /** Holds the row data currently being edited (index 0-5 = desc,target,cat,type,amount,date; index 6 = note). */
+    private String[] currentEditRow;
 
     @Override
     public void initialize() {
@@ -34,7 +51,6 @@ public class TransactionController extends BaseController {
         typeGroup = new ToggleGroup();
         expenseToggle.setToggleGroup(typeGroup);
         depositToggle.setToggleGroup(typeGroup);
-        savingGoalToggle.setToggleGroup(typeGroup);
         expenseToggle.setSelected(true);
 
         targetGroup = new ToggleGroup();
@@ -53,6 +69,27 @@ public class TransactionController extends BaseController {
                 targetCombo.getItems().addAll("Main Bank Account", "Pocket Cash", "Business Account");
             } else {
                 targetCombo.getItems().addAll("New Laptop", "Summer Vacation");
+            }
+        });
+
+        // ── Setup edit-form toggle groups ──
+        editTypeGroup = new ToggleGroup();
+        editExpenseToggle.setToggleGroup(editTypeGroup);
+        editDepositToggle.setToggleGroup(editTypeGroup);
+
+        editTargetGroup = new ToggleGroup();
+        editTargetWallet.setToggleGroup(editTargetGroup);
+        editTargetGoal.setToggleGroup(editTargetGroup);
+
+        editTargetCombo.getItems().addAll("Main Bank Account", "Pocket Cash", "Business Account");
+        editCategoryCombo.getItems().addAll("Food", "Transport", "Salary", "Utilities", "Entertainment", "Freelance");
+
+        editTargetGroup.selectedToggleProperty().addListener((obs, old, newToggle) -> {
+            editTargetCombo.getItems().clear();
+            if (newToggle == editTargetWallet) {
+                editTargetCombo.getItems().addAll("Main Bank Account", "Pocket Cash", "Business Account");
+            } else {
+                editTargetCombo.getItems().addAll("New Laptop", "Summer Vacation");
             }
         });
 
@@ -136,9 +173,67 @@ public class TransactionController extends BaseController {
     }
 
     @FXML
+    private void closeEditForm() {
+        editFormPanel.setVisible(false);
+        editFormPanel.setManaged(false);
+        currentEditRow = null;
+    }
+
+    @FXML
+    private void handleSaveEdit() {
+        if (currentEditRow == null) return;
+        // TODO: Call transactionService.updateTransaction(id, updatedData)
+        System.out.println("Saved edit for: " + currentEditRow[0]
+                + " -> new amount: " + editAmountField.getText());
+        closeEditForm();
+        loadTransactions();
+    }
+
+    @FXML
     private void handleEditTransaction(String[] rowData) {
-        // TODO: Populate form with rowData and switch to edit mode
-        System.out.println("Edit transaction: " + rowData[0]);
+        currentEditRow = rowData;
+
+        // Close the add-form if it is open
+        formPanel.setVisible(false);
+        formPanel.setManaged(false);
+
+        // Pre-populate amount (strip leading sign and " EGP" if present)
+        String rawAmount = rowData[4].replace("+", "").replace("-", "").trim();
+        editAmountField.setText(rawAmount);
+
+        // Pre-select type toggle
+        String type = rowData[3];
+        if (type.equals("Deposit")) {
+            editDepositToggle.setSelected(true);
+        } else {
+            editExpenseToggle.setSelected(true);
+        }
+
+        // Pre-select target toggle and populate combo
+        String targetRaw = rowData[1];
+        boolean isGoal = targetRaw.startsWith("\u25c7");
+        editTargetCombo.getItems().clear();
+        if (isGoal) {
+            editTargetGoal.setSelected(true);
+            editTargetCombo.getItems().addAll("New Laptop", "Summer Vacation");
+            String goalName = targetRaw.replace("\u25c7", "").trim();
+            editTargetCombo.setValue(goalName);
+        } else {
+            editTargetWallet.setSelected(true);
+            editTargetCombo.getItems().addAll("Main Bank Account", "Pocket Cash", "Business Account");
+            String walletName = targetRaw.replace("\u25c8", "").trim();
+            editTargetCombo.setValue(walletName);
+        }
+
+        // Pre-select category
+        editCategoryCombo.setValue(rowData[2]);
+
+        // Clear note (no note in dummy data)
+        editNoteArea.clear();
+
+        // Show the edit form
+        editFormPanel.setVisible(true);
+        editFormPanel.setManaged(true);
     }
 
     private void handleDeleteTransaction(String[] rowData) {

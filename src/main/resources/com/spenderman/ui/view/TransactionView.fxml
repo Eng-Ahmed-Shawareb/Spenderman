@@ -32,7 +32,6 @@
                 <HBox spacing="6" styleClass="bg-transparent" alignment="CENTER_LEFT">
                     <ToggleButton fx:id="expenseToggle" text="Expense" styleClass="type-toggle-expense" HBox.hgrow="ALWAYS" maxWidth="Infinity" minWidth="80"/>
                     <ToggleButton fx:id="depositToggle" text="Deposit" styleClass="type-toggle-deposit" HBox.hgrow="ALWAYS" maxWidth="Infinity" minWidth="80"/>
-                    <ToggleButton fx:id="savingGoalToggle" text="Saving Goal" styleClass="type-toggle-saving" HBox.hgrow="ALWAYS" maxWidth="Infinity" minWidth="90"/>
                 </HBox>
             </VBox>
         </HBox>
@@ -59,6 +58,52 @@
         <HBox spacing="8" alignment="CENTER_RIGHT">
             <Button text="Cancel" styleClass="btn-outline" onAction="#toggleForm"/>
             <Button text="Save Transaction" styleClass="btn-primary" onAction="#handleAddTransaction"/>
+        </HBox>
+    </VBox>
+
+    <!-- ═══ EDIT TRANSACTION FORM (hidden by default) ═══ -->
+    <VBox fx:id="editFormPanel" styleClass="card-form" spacing="10" visible="false" managed="false">
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <Label text="Edit Transaction" styleClass="section-title" HBox.hgrow="ALWAYS"/>
+            <Button text="×" styleClass="btn-close" onAction="#closeEditForm"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="bg-transparent">
+                <Label text="AMOUNT (EGP)" styleClass="field-label"/>
+                <TextField fx:id="editAmountField" promptText="0.00"/>
+            </VBox>
+            <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="bg-transparent">
+                <Label text="TYPE" styleClass="field-label"/>
+                <HBox spacing="6" styleClass="bg-transparent" alignment="CENTER_LEFT">
+                    <ToggleButton fx:id="editExpenseToggle" text="Expense" styleClass="type-toggle-expense" HBox.hgrow="ALWAYS" maxWidth="Infinity" minWidth="80"/>
+                    <ToggleButton fx:id="editDepositToggle" text="Deposit" styleClass="type-toggle-deposit" HBox.hgrow="ALWAYS" maxWidth="Infinity" minWidth="80"/>
+                </HBox>
+            </VBox>
+        </HBox>
+
+        <VBox spacing="4" styleClass="bg-transparent">
+            <Label text="TARGET" styleClass="field-label"/>
+            <HBox spacing="6" styleClass="bg-transparent">
+                <ToggleButton fx:id="editTargetWallet" text="◈ Wallet" styleClass="target-toggle" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <ToggleButton fx:id="editTargetGoal" text="◇ Saving Goal" styleClass="target-toggle" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            </HBox>
+            <ComboBox fx:id="editTargetCombo" maxWidth="Infinity" promptText="Select target..."/>
+        </VBox>
+
+        <VBox spacing="4" styleClass="bg-transparent">
+            <Label text="CATEGORY" styleClass="field-label"/>
+            <ComboBox fx:id="editCategoryCombo" maxWidth="Infinity" promptText="Select category..."/>
+        </VBox>
+
+        <VBox spacing="4" styleClass="bg-transparent">
+            <Label text="NOTE (OPTIONAL)" styleClass="field-label"/>
+            <TextArea fx:id="editNoteArea" promptText="Add a note…" prefHeight="52" wrapText="true"/>
+        </VBox>
+
+        <HBox spacing="8" alignment="CENTER_RIGHT">
+            <Button text="Cancel" styleClass="btn-outline" onAction="#closeEditForm"/>
+            <Button text="Save Changes" styleClass="btn-primary" onAction="#handleSaveEdit"/>
         </HBox>
     </VBox>
 

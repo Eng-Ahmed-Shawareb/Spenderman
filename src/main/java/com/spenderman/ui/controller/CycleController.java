@@ -12,11 +12,16 @@ import javafx.scene.layout.*;
  */
 public class CycleController extends BaseController {
 
-    @FXML private VBox formPanel;
-    @FXML private TextField budgetField;
-    @FXML private DatePicker startPicker;
-    @FXML private DatePicker endPicker;
-    @FXML private VBox cycleList;
+    @FXML
+    private VBox formPanel;
+    @FXML
+    private TextField budgetField;
+    @FXML
+    private DatePicker startPicker;
+    @FXML
+    private DatePicker endPicker;
+    @FXML
+    private VBox cycleList;
 
     @Override
     public void initialize() {
@@ -43,9 +48,9 @@ public class CycleController extends BaseController {
 
         // Dummy data matching React prototype
         String[][] cycles = {
-                {"April 2025", "5000", "3200", "Active", "2025-04-01", "2025-04-30"},
-                {"March 2025", "4500", "4800", "Past", "2025-03-01", "2025-03-31"},
-                {"February 2025", "4000", "3700", "Past", "2025-02-01", "2025-02-28"},
+                { "April 2025", "5000", "3200", "Active", "2025-04-01", "2025-04-30" },
+                { "March 2025", "4500", "4800", "Past", "2025-03-01", "2025-03-31" },
+                { "February 2025", "4000", "3700", "Past", "2025-02-01", "2025-02-28" },
         };
 
         for (String[] cy : cycles) {

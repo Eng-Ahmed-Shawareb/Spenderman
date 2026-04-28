@@ -13,11 +13,16 @@ import javafx.scene.shape.Circle;
  */
 public class SavingGoalController extends BaseController {
 
-    @FXML private VBox formPanel;
-    @FXML private TextField nameField;
-    @FXML private TextField targetField;
-    @FXML private DatePicker targetDatePicker;
-    @FXML private VBox goalList;
+    @FXML
+    private VBox formPanel;
+    @FXML
+    private TextField nameField;
+    @FXML
+    private TextField targetField;
+    @FXML
+    private DatePicker targetDatePicker;
+    @FXML
+    private VBox goalList;
 
     @Override
     public void initialize() {
@@ -44,9 +49,9 @@ public class SavingGoalController extends BaseController {
 
         // Dummy data matching React prototype
         String[][] goals = {
-                {"New Laptop", "3200", "8000", "2025-09-01", "Active", "#F472B6"},
-                {"Summer Vacation", "1500", "5000", "2025-07-01", "Active", "#22C97A"},
-                {"Emergency Fund", "10000", "10000", "", "Completed", "#F5A623"},
+                { "New Laptop", "3200", "8000", "2025-09-01", "Active", "#F472B6" },
+                { "Summer Vacation", "1500", "5000", "2025-07-01", "Active", "#22C97A" },
+                { "Emergency Fund", "10000", "10000", "", "Completed", "#F5A623" },
         };
 
         for (String[] g : goals) {

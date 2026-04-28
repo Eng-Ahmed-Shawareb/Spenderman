@@ -10,20 +10,20 @@
     -fx-font-size: 12px;
 
     /* Color tokens (reusable via derive/lookup) */
-    -sp-bg:      #080B12;
-    -sp-surf:    #0F1319;
-    -sp-surf2:   #161B26;
-    -sp-surf3:   #1D2333;
-    -sp-border:  #252D40;
-    -sp-green:   #22C97A;
-    -sp-purple:  #8875F5;
-    -sp-blue:    #4B9EF8;
-    -sp-amber:   #F5A623;
-    -sp-red:     #F56565;
-    -sp-pink:    #F472B6;
-    -sp-text:    #DCE1EE;
-    -sp-sub:     #8490A8;
-    -sp-muted:   #4A5268;
+    -sp-bg: #080B12;
+    -sp-surf: #0F1319;
+    -sp-surf2: #161B26;
+    -sp-surf3: #1D2333;
+    -sp-border: #252D40;
+    -sp-green: #22C97A;
+    -sp-purple: #8875F5;
+    -sp-blue: #4B9EF8;
+    -sp-amber: #F5A623;
+    -sp-red: #F56565;
+    -sp-pink: #F472B6;
+    -sp-text: #DCE1EE;
+    -sp-sub: #8490A8;
+    -sp-muted: #4A5268;
 }
 
 /* ─── BACKGROUNDS ────────────────────────────────────────────────────────────── */
@@ -218,7 +218,8 @@
 }
 
 /* ─── INPUT FIELDS ───────────────────────────────────────────────────────────── */
-.text-field, .password-field {
+.text-field,
+.password-field {
     -fx-background-color: -sp-surf3;
     -fx-border-color: -sp-border;
     -fx-border-width: 1;
@@ -232,7 +233,8 @@
     -fx-pref-height: 32;
 }
 
-.text-field:focused, .password-field:focused {
+.text-field:focused,
+.password-field:focused {
     -fx-border-color: -sp-green;
 }
 
@@ -305,6 +307,74 @@
     -fx-background-color: transparent;
     -fx-border-width: 0;
     -fx-font-size: 11px;
+}
+
+/* DatePicker Popup Styling */
+.date-picker-popup {
+    -fx-background-color: -sp-surf2;
+    -fx-control-inner-background: -sp-surf2;
+    -fx-border-color: -sp-border;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+}
+
+.date-picker-popup .month-year-pane {
+    -fx-background-color: -sp-surf;
+    -fx-padding: 8 8 8 8;
+}
+
+.date-picker-popup .month-year-pane .label {
+    -fx-text-fill: -sp-text;
+    -fx-font-weight: bold;
+}
+
+.date-picker-popup .calendar-grid {
+    -fx-background-color: -sp-surf2;
+}
+
+.date-picker-popup .day-name-cell {
+    -fx-text-fill: -sp-sub;
+    -fx-font-weight: bold;
+    -fx-font-size: 10px;
+    -fx-background-color: -sp-surf2;
+}
+
+.date-picker-popup .week-number-cell {
+    -fx-text-fill: -sp-sub;
+    -fx-background-color: -sp-surf2;
+}
+
+.date-picker-popup .day-cell {
+    -fx-text-fill: -sp-text;
+    -fx-background-color: -sp-surf2;
+    -fx-padding: 5 5 5 5;
+    -fx-border-color: -sp-border;
+    -fx-border-width: 1;
+}
+
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: -sp-surf3;
+    -fx-background-radius: 4;
+}
+
+.date-picker-popup .day-cell:selected {
+    -fx-background-color: -sp-green;
+    -fx-text-fill: #000000;
+    -fx-background-radius: 4;
+}
+
+.date-picker-popup .left-arrow, 
+.date-picker-popup .right-arrow {
+    -fx-background-color: -sp-text;
+}
+
+.date-picker-popup .button {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+
+.date-picker-popup .button:hover {
+    -fx-background-color: -sp-surf3;
 }
 
 /* ─── BUTTONS ────────────────────────────────────────────────────────────────── */
@@ -585,7 +655,7 @@
     -fx-background: transparent;
 }
 
-.scroll-pane > .viewport {
+.scroll-pane>.viewport {
     -fx-background-color: transparent;
 }
 
@@ -615,13 +685,13 @@
     -fx-accent: -sp-green;
 }
 
-.progress-bar > .bar {
+.progress-bar>.bar {
     -fx-background-color: -sp-green;
     -fx-background-radius: 4;
     -fx-background-insets: 0;
 }
 
-.progress-bar > .track {
+.progress-bar>.track {
     -fx-background-color: -sp-surf3;
     -fx-background-radius: 4;
     -fx-background-insets: 0;
@@ -667,7 +737,7 @@
     -fx-padding: 10 0 10 0;
 }
 
-.separator > .line {
+.separator>.line {
     -fx-border-color: -sp-border;
     -fx-border-width: 1 0 0 0;
 }
@@ -701,6 +771,7 @@
     -fx-pref-height: -1;
     -fx-cursor: hand;
 }
+
 .type-toggle-expense:selected {
     -fx-background-color: derive(-sp-red, -70%);
     -fx-text-fill: -sp-red;
@@ -720,6 +791,7 @@
     -fx-pref-height: -1;
     -fx-cursor: hand;
 }
+
 .type-toggle-deposit:selected {
     -fx-background-color: derive(-sp-green, -70%);
     -fx-text-fill: -sp-green;
@@ -739,6 +811,7 @@
     -fx-pref-height: -1;
     -fx-cursor: hand;
 }
+
 .type-toggle-saving:selected {
     -fx-background-color: derive(-sp-purple, -70%);
     -fx-text-fill: -sp-purple;
@@ -759,6 +832,7 @@
     -fx-pref-height: -1;
     -fx-cursor: hand;
 }
+
 .target-toggle:selected {
     -fx-background-color: derive(-sp-green, -80%);
     -fx-text-fill: -sp-green;

@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8da6a0a9-7949-4391-91cc-db10c9b7b5fa" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/model/ClsCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/model/ClsCategory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/model/ClsCycle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/model/ClsCycle.java" afterDir="false" />
+    <list default="true" id="e6088af7-6f98-4f71-92ed-b6264eb4de44" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/model/ClsSavingGoal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/model/ClsSavingGoal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/model/ClsWallet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/model/ClsWallet.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,18 +18,11 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
-      </MavenGeneralSettings>
-    </option>
-  </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 6,
-  &quot;fromUser&quot;: false
-}</component>
-  <component name="ProjectId" id="3Cwy6i1DVpr3yRJOuZsy1zGpQIX" />
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 6
+}]]></component>
+  <component name="ProjectId" id="3CzrJ1QsRRSainXrkYAJnW0zlMF" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -36,44 +30,21 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.ClsSpendermanApp.executor": "Run",
-    "Application.SpendermanApp.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/ahmed-shawareb/VSCode projects/Spenderman/src",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.keymap",
-    "vue.rearranger.settings.migration": "true"
+    "kotlin-language-version-configured": "true"
   }
 }]]></component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.30387.90" />
-      </set>
-    </attachedChunks>
-  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="8da6a0a9-7949-4391-91cc-db10c9b7b5fa" name="Changes" comment="" />
-      <created>1777310755796</created>
+      <changelist id="e6088af7-6f98-4f71-92ed-b6264eb4de44" name="Changes" comment="" />
+      <created>1777399166763</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1777310755796</updated>
-      <workItem from="1777382357458" duration="740000" />
+      <updated>1777399166763</updated>
     </task>
     <servers />
   </component>

@@ -1,5 +1,7 @@
 package com.spenderman.ui.controller;
 
+import com.spenderman.Observer.EvenEnum.EnEvenType;
+import com.spenderman.Observer.interfaceClass.IObserver;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -10,7 +12,7 @@ import javafx.scene.control.PasswordField;
  * UML: ClsSignUpController extends ABaseController implements IObserver
  * Fields: _userService, _firstNameField, _lastNameField, _usernameField, _passwordField, signUpButton, _errorLabel, goLoginLink
  */
-public class ClsSignUpController extends ABaseController {
+public class ClsSignUpController extends ABaseController implements IObserver {
 
     @FXML private TextField _firstNameField;
     @FXML private TextField _lastNameField;
@@ -87,5 +89,10 @@ public class ClsSignUpController extends ABaseController {
     @Override
     public void refreshData() {
         // No-op for signup screen
+    }
+
+    @Override
+    public void update(EnEvenType evenType, Object data) {
+
     }
 }

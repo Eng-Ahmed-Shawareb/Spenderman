@@ -1,5 +1,7 @@
 package com.spenderman.ui.controller;
 
+import com.spenderman.Observer.EvenEnum.EnEvenType;
+import com.spenderman.Observer.interfaceClass.IObserver;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -17,7 +19,7 @@ import javafx.scene.shape.Circle;
  * UML: ClsSavingGoalController extends ABaseController implements IObserver
  * Services: goalService
  */
-public class ClsSavingGoalController extends ABaseController {
+public class ClsSavingGoalController extends ABaseController implements IObserver {
 
     @FXML
     private VBox _formPanel;
@@ -181,5 +183,10 @@ public class ClsSavingGoalController extends ABaseController {
     @Override
     public void refreshData() {
         _loadGoals();
+    }
+
+    @Override
+    public void update(EnEvenType evenType, Object data) {
+
     }
 }

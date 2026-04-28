@@ -15,6 +15,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.spenderman.Observer.interfaceClass.IObserver;
+import com.spenderman.Observer.EvenEnum.EnEvenType;
+import com.spenderman.Observer.Singleton.ClsAppEventBus;
+
 /**
  * Singleton scene manager for handling screen navigation and state.
  * Loads FXML views, applies global CSS stylesheet, and manages the app shell.
@@ -24,13 +28,14 @@ import java.util.Set;
  *   - showDialog(fxmlPath) : void
  *   - getController(key) : ABaseController
  */
-public class ClsSceneManager {
+public class ClsSceneManager implements IObserver {
     private static ClsSceneManager _instance;
     private Stage _primaryStage;
     private Scene _mainScene;
     private Map<String, ABaseController> _controllerCache = new HashMap<>();
     private ClsUser _currentUser;
     private ClsAppShellController _shellController;
+    private boolean _isDarkTheme = true;
 
     // ═══ PATHS — must match your exact resources directory structure ═══
     private static final String _VIEWS_BASE = "/com/spenderman/ui/view/";
@@ -54,7 +59,9 @@ public class ClsSceneManager {
             "dashboard", "transactions", "wallets", "categories", "cycles", "goals", "settings"
     );
 
-    private ClsSceneManager() {}
+    private ClsSceneManager() {
+        ClsAppEventBus.getInstance().addObserver(this);
+    }
 
     public static ClsSceneManager getInstance() {
         if (_instance == null) {
@@ -116,9 +123,11 @@ public class ClsSceneManager {
         if (_mainScene == null) {
             _mainScene = new Scene($root, 1000, 700);
             _applyCss(_mainScene);
+            _applyThemeToRoot();
             _primaryStage.setScene(_mainScene);
         } else {
             _mainScene.setRoot($root);
+            _applyThemeToRoot();
         }
 
         // Clear shell reference when going to standalone screens
@@ -147,9 +156,11 @@ public class ClsSceneManager {
             if (_mainScene == null) {
                 _mainScene = new Scene(shellRoot, 1000, 700);
                 _applyCss(_mainScene);
+                _applyThemeToRoot();
                 _primaryStage.setScene(_mainScene);
             } else {
                 _mainScene.setRoot(shellRoot);
+                _applyThemeToRoot();
             }
         }
 
@@ -188,6 +199,29 @@ public class ClsSceneManager {
         } else {
             System.err.println("⚠️ CSS not found at: " + _CSS_PATH);
             System.err.println("   Verify this file exists in src/main/resources" + _CSS_PATH);
+        }
+    }
+
+    @Override
+    public void update(EnEvenType evenType, Object data) {
+        if (evenType == EnEvenType.THEME_CHANGED) {
+            if (data instanceof Boolean) {
+                _isDarkTheme = (Boolean) data;
+                _applyThemeToRoot();
+            }
+        }
+    }
+
+    private void _applyThemeToRoot() {
+        if (_mainScene != null && _mainScene.getRoot() != null) {
+            Parent root = _mainScene.getRoot();
+            if (_isDarkTheme) {
+                root.getStyleClass().remove("light-theme");
+            } else {
+                if (!root.getStyleClass().contains("light-theme")) {
+                    root.getStyleClass().add("light-theme");
+                }
+            }
         }
     }
 

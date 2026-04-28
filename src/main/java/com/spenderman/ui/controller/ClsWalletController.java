@@ -1,5 +1,7 @@
 package com.spenderman.ui.controller;
 
+import com.spenderman.Observer.EvenEnum.EnEvenType;
+import com.spenderman.Observer.interfaceClass.IObserver;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -20,7 +22,7 @@ import javafx.scene.shape.Circle;
  * UML: ClsWalletController extends ABaseController implements IObserver
  * Services: walletService
  */
-public class ClsWalletController extends ABaseController {
+public class ClsWalletController extends ABaseController implements IObserver {
 
     @FXML private VBox _formPanel;
     @FXML private TextField _nameField;
@@ -112,5 +114,10 @@ public class ClsWalletController extends ABaseController {
     @Override
     public void refreshData() {
         _loadWallets();
+    }
+
+    @Override
+    public void update(EnEvenType evenType, Object data) {
+
     }
 }

@@ -1,5 +1,7 @@
 package com.spenderman.ui.controller;
 
+import com.spenderman.Observer.EvenEnum.EnEvenType;
+import com.spenderman.Observer.interfaceClass.IObserver;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,7 +20,7 @@ import javafx.scene.layout.HBox;
  * UML: ClsTransactionController extends ABaseController implements IObserver
  * Services: transactionService, walletService, categoryService, goalService
  */
-public class ClsTransactionController extends ABaseController {
+public class ClsTransactionController extends ABaseController implements IObserver {
 
     // ── Add-form fields ──
     @FXML private VBox _formPanel;
@@ -283,5 +285,10 @@ public class ClsTransactionController extends ABaseController {
     @Override
     public void refreshData() {
         _loadTransactions();
+    }
+
+    @Override
+    public void update(EnEvenType evenType, Object data) {
+
     }
 }

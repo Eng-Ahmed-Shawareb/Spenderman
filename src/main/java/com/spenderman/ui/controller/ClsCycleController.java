@@ -1,5 +1,7 @@
 package com.spenderman.ui.controller;
 
+import com.spenderman.Observer.EvenEnum.EnEvenType;
+import com.spenderman.Observer.interfaceClass.IObserver;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -16,7 +18,7 @@ import javafx.scene.layout.Priority;
  * UML: ClsCycleController extends ABaseController implements IObserver
  * Services: cycleService
  */
-public class ClsCycleController extends ABaseController {
+public class ClsCycleController extends ABaseController implements IObserver {
 
     @FXML
     private VBox _formPanel;
@@ -140,5 +142,10 @@ public class ClsCycleController extends ABaseController {
     @Override
     public void refreshData() {
         _loadCycles();
+    }
+
+    @Override
+    public void update(EnEvenType evenType, Object data) {
+
     }
 }

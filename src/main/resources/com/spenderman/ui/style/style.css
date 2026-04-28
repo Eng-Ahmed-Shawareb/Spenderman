@@ -1056,3 +1056,21 @@
 .color-picker-field .arrow {
     -fx-background-color: -sp-sub;
 }
+
+/* ─── LIGHT THEME OVERRIDES ──────────────────────────────────────────────────── */
+.light-theme {
+    -sp-bg: #F0F4F8;
+    -sp-surf: #FFFFFF;
+    -sp-surf2: #F8FAFC;
+    -sp-surf3: #EDF2F7;
+    -sp-border: #E2E8F0;
+    -sp-green: #10B981;
+    -sp-purple: #7C3AED;
+    -sp-blue: #3B82F6;
+    -sp-amber: #F59E0B;
+    -sp-red: #EF4444;
+    -sp-pink: #EC4899;
+    -sp-text: #1E293B;
+    -sp-sub: #64748B;
+    -sp-muted: #94A3B8;
+}

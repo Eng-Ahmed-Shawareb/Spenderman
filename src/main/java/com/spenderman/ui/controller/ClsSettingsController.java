@@ -1,16 +1,19 @@
 package com.spenderman.ui.controller;
 
+import com.spenderman.Observer.EvenEnum.EnEvenType;
+import com.spenderman.Observer.interfaceClass.IObserver;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ToggleButton;
+import com.spenderman.Observer.Singleton.ClsAppEventBus;
 
 /**
  * Settings screen controller.
  * UML: ClsSettingsController extends ABaseController implements IObserver
  * Services: userService
  */
-public class ClsSettingsController extends ABaseController {
+public class ClsSettingsController extends ABaseController implements IObserver {
 
     @FXML private Label _profileInitials;
     @FXML private Label _profileNameLabel;
@@ -58,7 +61,7 @@ public class ClsSettingsController extends ABaseController {
         boolean isDark = _themeToggle.isSelected();
         _themeStatusLabel.setText("Currently: " + (isDark ? "Dark Mode" : "Light Mode"));
         // TODO: Call userService.updateTheme(userId, isDark ? ThemeEnum.DARK : ThemeEnum.LIGHT)
-        // TODO: Publish "THEME_CHANGED" event via $eventBus
+        ClsAppEventBus.getInstance().notifyObservers(EnEvenType.THEME_CHANGED, isDark);
     }
 
     @FXML
@@ -113,5 +116,10 @@ public class ClsSettingsController extends ABaseController {
             _profileNameLabel.setText($currentUser.getFullName());
             _profileSubLabel.setText("@" + $currentUser.getUsername() + " · Member since Jan 2025");
         }
+    }
+
+    @Override
+    public void update(EnEvenType evenType, Object data) {
+
     }
 }

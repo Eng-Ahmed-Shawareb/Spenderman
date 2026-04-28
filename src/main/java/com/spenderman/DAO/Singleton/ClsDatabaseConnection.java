@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ClsDatabaseConnection {
-    private ClsDatabaseConnection _instance = null;
+    private static ClsDatabaseConnection _instance = null;
     private Connection _connection;
     private String _URL = "jdbc:sqlserver://BudgetSystemDB.mssql.somee.com:1433;" +
             "databaseName=BudgetSystemDB;" +
@@ -22,7 +22,7 @@ public class ClsDatabaseConnection {
         }
     }
 
-    public ClsDatabaseConnection getInstance(){
+    public static ClsDatabaseConnection getInstance(){
         if(_instance == null){
             _instance = new ClsDatabaseConnection();
         }

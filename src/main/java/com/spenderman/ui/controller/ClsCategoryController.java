@@ -1,5 +1,7 @@
 package com.spenderman.ui.controller;
 
+import com.spenderman.Observer.EvenEnum.EnEvenType;
+import com.spenderman.Observer.interfaceClass.IObserver;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -21,7 +23,7 @@ import javafx.scene.shape.Circle;
  * UML: ClsCategoryController extends ABaseController implements IObserver
  * Services: categoryService
  */
-public class ClsCategoryController extends ABaseController {
+public class ClsCategoryController extends ABaseController implements IObserver {
 
     @FXML private VBox _formPanel;
     @FXML private TextField _nameField;
@@ -121,5 +123,10 @@ public class ClsCategoryController extends ABaseController {
     @Override
     public void refreshData() {
         _loadCategories();
+    }
+
+    @Override
+    public void update(EnEvenType evenType, Object data) {
+
     }
 }

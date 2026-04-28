@@ -1,5 +1,7 @@
 package com.spenderman.ui.controller;
 
+import com.spenderman.Observer.EvenEnum.EnEvenType;
+import com.spenderman.Observer.interfaceClass.IObserver;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -17,7 +19,7 @@ import javafx.scene.text.TextAlignment;
  * UML: ClsDashboardController extends ABaseController implements IObserver
  * Services: walletService, transactionService, cycleService, goalService
  */
-public class ClsDashboardController extends ABaseController {
+public class ClsDashboardController extends ABaseController implements IObserver {
 
     @FXML private Label _totalBalanceLabel;
     @FXML private VBox _cycleCard;
@@ -186,5 +188,10 @@ public class ClsDashboardController extends ABaseController {
         _loadExpensePieChart();
         _loadDepositPieChart();
         _loadWalletPieChart();
+    }
+
+    @Override
+    public void update(EnEvenType evenType, Object data) {
+
     }
 }

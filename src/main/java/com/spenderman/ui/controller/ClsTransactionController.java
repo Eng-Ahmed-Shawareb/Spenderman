@@ -58,12 +58,26 @@ public class ClsTransactionController extends ABaseController {
         _typeGroup = new ToggleGroup();
         _expenseToggle.setToggleGroup(_typeGroup);
         _depositToggle.setToggleGroup(_typeGroup);
-        _expenseToggle.setSelected(true);
 
         _targetGroup = new ToggleGroup();
         _targetWallet.setToggleGroup(_targetGroup);
         _targetGoal.setToggleGroup(_targetGroup);
         _targetWallet.setSelected(true);
+
+        _typeGroup.selectedToggleProperty().addListener((obs, old, newToggle) -> {
+            if (newToggle != null) {
+                boolean isExpense = (newToggle == _expenseToggle);
+                _targetGoal.setVisible(!isExpense);
+                _targetGoal.setManaged(!isExpense);
+                if (isExpense && _targetGroup.getSelectedToggle() == _targetGoal) {
+                    _targetWallet.setSelected(true);
+                }
+            }
+        });
+
+        _expenseToggle.setSelected(true);
+        _targetGoal.setVisible(false);
+        _targetGoal.setManaged(false);
 
         // Populate combos with dummy data
         _targetCombo.getItems().addAll("Main Bank Account", "Pocket Cash", "Business Account");
@@ -87,6 +101,17 @@ public class ClsTransactionController extends ABaseController {
         _editTargetGroup = new ToggleGroup();
         _editTargetWallet.setToggleGroup(_editTargetGroup);
         _editTargetGoal.setToggleGroup(_editTargetGroup);
+
+        _editTypeGroup.selectedToggleProperty().addListener((obs, old, newToggle) -> {
+            if (newToggle != null) {
+                boolean isExpense = (newToggle == _editExpenseToggle);
+                _editTargetGoal.setVisible(!isExpense);
+                _editTargetGoal.setManaged(!isExpense);
+                if (isExpense && _editTargetGroup.getSelectedToggle() == _editTargetGoal) {
+                    _editTargetWallet.setSelected(true);
+                }
+            }
+        });
 
         _editTargetCombo.getItems().addAll("Main Bank Account", "Pocket Cash", "Business Account");
         _editCategoryCombo.getItems().addAll("Food", "Transport", "Salary", "Utilities", "Entertainment", "Freelance");
@@ -214,8 +239,12 @@ public class ClsTransactionController extends ABaseController {
         String type = rowData[3];
         if (type.equals("Deposit")) {
             _editDepositToggle.setSelected(true);
+            _editTargetGoal.setVisible(true);
+            _editTargetGoal.setManaged(true);
         } else {
             _editExpenseToggle.setSelected(true);
+            _editTargetGoal.setVisible(false);
+            _editTargetGoal.setManaged(false);
         }
 
         // Pre-select target toggle and populate combo

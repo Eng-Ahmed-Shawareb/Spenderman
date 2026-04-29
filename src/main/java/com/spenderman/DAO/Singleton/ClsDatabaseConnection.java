@@ -30,9 +30,6 @@ public class ClsDatabaseConnection {
     }
 
     public Connection getConnection(){
-        if(_instance == null){
-            _instance = new ClsDatabaseConnection();
-        }
         return _connection;
     }
 

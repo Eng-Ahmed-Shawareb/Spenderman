@@ -6,17 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="2be6663b-4a01-4c4e-b4a6-2f9d1c5a4c78" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/DAO/ClsCategoryDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/DAO/ClsCategoryDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/DAO/ClsWalletDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/DAO/ClsWalletDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/DAO/Singleton/ClsDatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/DAO/Singleton/ClsDatabaseConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/ClsCategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/ClsCategoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/ClsCycleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/ClsCycleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/ClsDashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/ClsDashboardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/ClsLoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/ClsLoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/ClsSavingGoalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/ClsSavingGoalController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/ClsSettingsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/ClsSettingsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/ClsSignUpController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/ClsSignUpController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/ClsTransactionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/ClsTransactionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/ClsWalletController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/controller/ClsWalletController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/manager/ClsSceneManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/ui/manager/ClsSceneManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

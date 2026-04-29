@@ -1,14 +1,16 @@
 package com.spenderman.model;
 import java.time.LocalDate;
+import java.util.Date;
+
 import com.spenderman.model.StatusEnums.EnGoalState;
 public class ClsSavingGoal {
     private int _goalID;
-
-
-
     private int _userID;
     private String _name;
     private double _targetAmount;
+    private double _currentSaved;
+    private LocalDate _targetDate;
+    private EnGoalState status;
 
     public ClsSavingGoal(int _goalID, int _userID, double _targetAmount, String _name, double _currentSaved, LocalDate _targetDate, EnGoalState status) {
         this._goalID = _goalID;
@@ -19,11 +21,6 @@ public class ClsSavingGoal {
         this._targetDate = _targetDate;
         this.status = status;
     }
-
-    private double _currentSaved;
-    private LocalDate _targetDate;
-private EnGoalState status;
-
 
     public int get_goalID() {
         return _goalID;

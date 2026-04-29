@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class ClsCategoryDAO implements IRepository<ClsCategory> {
+
     private ClsDatabaseConnection _databaseConnection;
 
     public ClsCategoryDAO() {

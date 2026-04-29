@@ -12,7 +12,18 @@ import java.util.Optional;
 
 public class ClsUserDAO implements IRepository<ClsUser> {
     private final ClsDatabaseConnection _databaseConnection;
+    private ClsUser mapResultSetToUser(ResultSet rs) throws SQLException {
+        ClsUser user = new ClsUser(
+                rs.getInt("ID"),
+                rs.getString("first_name"),
+                rs.getString("last_name"),
+                rs.getString("username")
+        );
+        user.setPasswordHash(rs.getString("user_password"));
+        user.setCreatedDate(rs.getObject("created_date", LocalDateTime.class));
 
+        return user;
+    }
     public ClsUserDAO(ClsDatabaseConnection databaseConnection) {
         this._databaseConnection = databaseConnection;
     }
@@ -104,16 +115,4 @@ public class ClsUserDAO implements IRepository<ClsUser> {
         }
     }
 
-    private ClsUser mapResultSetToUser(ResultSet rs) throws SQLException {
-        ClsUser user = new ClsUser(
-                rs.getInt("ID"),
-                rs.getString("first_name"),
-                rs.getString("last_name"),
-                rs.getString("username")
-        );
-        user.setPasswordHash(rs.getString("user_password"));
-        user.setCreatedDate(rs.getObject("created_date", LocalDateTime.class));
-
-        return user;
-    }
 }

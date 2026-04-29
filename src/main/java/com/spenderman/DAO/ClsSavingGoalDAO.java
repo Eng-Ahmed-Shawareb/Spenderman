@@ -81,7 +81,7 @@ public class ClsSavingGoalDAO implements IRepository<ClsSavingGoal> {
             statement.setDouble(4, entity.get_targetAmount());
             statement.setDouble(5, entity.get_currentSaved());
             statement.setObject(6, entity.get_targetDate());
-            statement.setString(7, entity.getStatus().name()); // استخدام .name() أفضل من String.valueOf
+            statement.setString(7, entity.getStatus().name());
 
             return statement.executeUpdate() > 0;
         } catch (SQLException es) {

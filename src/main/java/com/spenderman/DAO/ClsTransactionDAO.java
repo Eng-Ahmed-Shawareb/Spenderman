@@ -14,6 +14,11 @@ import java.util.Optional;
 
 public class ClsTransactionDAO implements IRepository<ClsTransaction> {
     private ClsDatabaseConnection _databaseConnection;
+
+    public ClsTransactionDAO(){
+        this._databaseConnection = ClsDatabaseConnection.getInstance();
+    }
+
     @Override
     public Optional<ClsTransaction> findByID(int ID)
     {

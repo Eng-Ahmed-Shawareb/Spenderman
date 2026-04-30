@@ -17,8 +17,8 @@ import java.util.Optional;
 public class ClsSavingGoalDAO implements IRepository<ClsSavingGoal> {
     private final ClsDatabaseConnection _databaseConnection;
 
-    public ClsSavingGoalDAO(ClsDatabaseConnection _databaseConnection) {
-        this._databaseConnection = _databaseConnection;
+    public ClsSavingGoalDAO() {
+        this._databaseConnection = ClsDatabaseConnection.getInstance();
     }
 
 

@@ -14,6 +14,10 @@ import java.util.Optional;
 public class ClsCycleDAO implements IRepository<ClsCycle> {
     private ClsDatabaseConnection _databaseConnection;
 
+    public ClsCycleDAO(){
+        this._databaseConnection = ClsDatabaseConnection.getInstance();
+    }
+
     @Override
     public Optional<ClsCycle> findByID(int ID)
     {

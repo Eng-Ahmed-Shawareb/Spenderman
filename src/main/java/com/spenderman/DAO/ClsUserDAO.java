@@ -24,8 +24,8 @@ public class ClsUserDAO implements IRepository<ClsUser> {
 
         return user;
     }
-    public ClsUserDAO(ClsDatabaseConnection databaseConnection) {
-        this._databaseConnection = databaseConnection;
+    public ClsUserDAO() {
+        this._databaseConnection = ClsDatabaseConnection.getInstance();
     }
 
     @Override

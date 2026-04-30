@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2be6663b-4a01-4c4e-b4a6-2f9d1c5a4c78" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project Design/UML/Sequence diagram/changepassword.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project Design/UML/Sequence diagram/createdeposit.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project Design/UML/Sequence diagram/createsavinggoal.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/DAO/ClsCycleDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/DAO/ClsCycleDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/spenderman/DAO/ClsTransactionDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/spenderman/DAO/ClsTransactionDAO.java" afterDir="false" />
-    </list>
+    <list default="true" id="2be6663b-4a01-4c4e-b4a6-2f9d1c5a4c78" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

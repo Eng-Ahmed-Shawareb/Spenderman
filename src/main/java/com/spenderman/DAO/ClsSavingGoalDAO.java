@@ -1,6 +1,7 @@
 package com.spenderman.DAO;
 
 import com.spenderman.DAO.InterfaceClass.IRepository;
+import com.spenderman.DAO.InterfaceClass.ISavingGoalDAO;
 import com.spenderman.DAO.Singleton.ClsDatabaseConnection;
 import com.spenderman.model.ClsSavingGoal;
 import com.spenderman.model.StatusEnums.EnGoalState;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ClsSavingGoalDAO implements IRepository<ClsSavingGoal> {
+public class ClsSavingGoalDAO implements ISavingGoalDAO {
     private final ClsDatabaseConnection _databaseConnection;
 
     public ClsSavingGoalDAO() {
@@ -125,5 +126,30 @@ public class ClsSavingGoalDAO implements IRepository<ClsSavingGoal> {
             System.out.println("Exception delete: " + es.getMessage());
         }
         return false;
+    }
+
+    @Override
+    public List<ClsSavingGoal> findByUserID(int userID) {
+        List<ClsSavingGoal> resultList = new ArrayList<>();
+
+
+        String query = "SELECT * FROM SavingGoal WHERE user_id = ?";
+
+        try (Connection connection = _databaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, userID);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    resultList.add(mapResultSetToSavingGoal(resultSet));
+                }
+            }
+
+        } catch (SQLException es) {
+            System.out.println("Exception findByUserID: " + es.getMessage());
+        }
+
+        return resultList;
     }
 }

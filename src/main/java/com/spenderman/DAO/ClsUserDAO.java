@@ -12,6 +12,7 @@ import java.util.Optional;
 
 public class ClsUserDAO implements IRepository<ClsUser> {
     private final ClsDatabaseConnection _databaseConnection;
+
     private ClsUser mapResultSetToUser(ResultSet rs) throws SQLException {
         ClsUser user = new ClsUser(
                 rs.getInt("ID"),
@@ -24,6 +25,7 @@ public class ClsUserDAO implements IRepository<ClsUser> {
 
         return user;
     }
+
     public ClsUserDAO() {
         this._databaseConnection = ClsDatabaseConnection.getInstance();
     }

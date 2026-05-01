@@ -1,6 +1,7 @@
 package com.spenderman.DAO;
 
 import com.spenderman.DAO.InterfaceClass.IRepository;
+import com.spenderman.DAO.InterfaceClass.IWalletDAO;
 import com.spenderman.DAO.Singleton.ClsDatabaseConnection;
 import com.spenderman.model.ClsWallet;
 
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ClsWalletDAO implements IRepository<ClsWallet> {
+public class ClsWalletDAO implements IWalletDAO {
     private ClsDatabaseConnection _databaseConnection;
 
     public ClsWalletDAO(){
@@ -121,6 +122,72 @@ public class ClsWalletDAO implements IRepository<ClsWallet> {
         try(PreparedStatement statement = connection.prepareStatement(query)){
 
             statement.setInt(1 , ID);
+
+            if(statement.executeUpdate() > 0){
+                return true;
+            }
+
+        }catch (SQLException es){
+            System.out.println("Exception : " + es.getMessage());
+        }
+        return false;
+    }
+
+    @Override
+    public List<ClsWallet> getByUser(int userID) {
+        List<ClsWallet> resultList = new ArrayList<>();
+
+        Connection connection = _databaseConnection.getConnection();
+
+        String query = "SELECT * FROM Wallet WHERE FK_UserID = ?";
+
+        try(PreparedStatement statement = connection.prepareStatement(query)){
+            statement.setInt(1 , userID);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()){
+                ClsWallet wallet = new ClsWallet(resultSet.getInt("ID") ,
+                        resultSet.getInt("FK_UserID") ,
+                        resultSet.getString("wallet_name") ,
+                        resultSet.getDouble("balance"));
+                resultList.add(wallet);
+            }
+        }catch (SQLException es){
+            System.out.println("Exception : " + es.getMessage());
+        }
+        return resultList;
+    }
+
+    @Override
+    public double getTotalBalance(int userID) {
+        double totalBalance = 0.0;
+        Connection connection = _databaseConnection.getConnection();
+
+        String query = "SELECT * FROM Wallet WHERE FK_UserID = ?";
+
+        try(PreparedStatement statement = connection.prepareStatement(query)){
+            statement.setInt(1 , userID);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()){
+                totalBalance += resultSet.getDouble("balance");
+            }
+        }catch (SQLException es){
+            System.out.println("Exception : " + es.getMessage());
+        }
+        return totalBalance;
+    }
+
+    @Override
+    public boolean updateTotalBalance(int walletID, double amount) {
+        Connection connection = _databaseConnection.getConnection();
+
+        String query = "UPDATE Wallet SET balance = balance + ? WHERE ID = ?";
+
+        try(PreparedStatement statement = connection.prepareStatement(query)){
+
+            statement.setDouble(1 , amount);
+            statement.setInt(2 , walletID);
 
             if(statement.executeUpdate() > 0){
                 return true;

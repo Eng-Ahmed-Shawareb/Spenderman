@@ -2,6 +2,8 @@ package com.spenderman.ui.controller;
 
 import com.spenderman.Observer.EvenEnum.EnEvenType;
 import com.spenderman.Observer.interfaceClass.IObserver;
+import com.spenderman.model.ClsSavingGoal;
+import com.spenderman.service.ClsSavingGoalService;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -32,6 +34,8 @@ public class ClsSavingGoalController extends ABaseController implements IObserve
     @FXML
     private VBox _goalList;
 
+    private ClsSavingGoalService goalService;
+
     @Override
     public void initialize() {
         _loadGoals();
@@ -46,7 +50,8 @@ public class ClsSavingGoalController extends ABaseController implements IObserve
 
     @FXML
     private void _handleAddGoal() {
-        // TODO: Call goalService.createGoal(goal)
+
+
         System.out.println("Create goal: " + _nameField.getText() + " target=" + _targetField.getText());
         _toggleForm();
         _loadGoals();

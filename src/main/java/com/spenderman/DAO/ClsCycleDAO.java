@@ -24,8 +24,9 @@ public class ClsCycleDAO implements ICycleDAO {
     public Optional<ClsCycle> findByID(int ID)
     {
         String query="SELECT * FROM Cycle WHERE ID=?";
+        Connection connection=_databaseConnection.getConnection();
 
-        try(Connection connection=_databaseConnection.getConnection();
+        try(
             PreparedStatement  statement= connection.prepareStatement(query);
         ){
             statement.setInt(1,ID);
@@ -51,7 +52,8 @@ public class ClsCycleDAO implements ICycleDAO {
     public List<ClsCycle> findAll() {
         String query="SELECT * FROM Cycle";
         List<ClsCycle>cycles=new ArrayList<ClsCycle>();
-        try(Connection connection=_databaseConnection.getConnection();
+        Connection connection=_databaseConnection.getConnection();
+        try(
             PreparedStatement  statement= connection.prepareStatement(query);
         ){
             ResultSet resultSet= statement.executeQuery();
@@ -75,18 +77,19 @@ public class ClsCycleDAO implements ICycleDAO {
 
     @Override
     public boolean save(ClsCycle entity) {
-        String query="INSERT INTO Cycle(ID" +
-                ",FK_UserID,budget_amount,start_date,end_date,state) VALUES(?,?,?,?,?,?)";
-        try(Connection connection= _databaseConnection.getConnection();
+        String query="INSERT INTO Cycle(" +
+                "FK_UserID,budget_amount,start_date,end_date,state) VALUES(?,?,?,?,?)";
+        Connection connection= _databaseConnection.getConnection();
+        try(
             PreparedStatement statement=connection.prepareStatement(query);
         )
         {
-            statement.setInt(1,entity.get_cycleID());
-            statement.setInt(2,entity.get_userID());
-            statement.setDouble(3,entity.get_budgetAmount());
-            statement.setObject(4,entity.get_startDate());
-            statement.setObject(5,entity.get_endDate());
-            statement.setString(6,entity.get_state().name());
+
+            statement.setInt(1,entity.get_userID());
+            statement.setDouble(2,entity.get_budgetAmount());
+            statement.setObject(3,entity.get_startDate());
+            statement.setObject(4,entity.get_endDate());
+            statement.setString(5,entity.get_state().name());
             if(statement.executeUpdate()>0)
                 return true;
 
@@ -105,7 +108,8 @@ public class ClsCycleDAO implements ICycleDAO {
                 "end_date=?," +
                 "state=? " +
                 "WHERE ID=?";
-        try(Connection connection= _databaseConnection.getConnection();
+        Connection connection= _databaseConnection.getConnection();
+        try(
             PreparedStatement statement=connection.prepareStatement(query);
         ){
             statement.setInt(1,entity.get_userID());
@@ -126,7 +130,8 @@ public class ClsCycleDAO implements ICycleDAO {
     @Override
     public boolean delete(int ID) {
         String query="DELETE FROM Cycle WHERE ID=?";
-        try(Connection connection= _databaseConnection.getConnection();
+        Connection connection= _databaseConnection.getConnection();
+        try(
             PreparedStatement statement= connection.prepareStatement(query);){
             statement.setInt(1,ID);
             if(statement.executeUpdate()>0)

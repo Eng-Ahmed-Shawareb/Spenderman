@@ -23,9 +23,9 @@ public class ClsTransactionDAO implements IRepository<ClsTransaction> {
     public Optional<ClsTransaction> findByID(int ID)
     {
 String query="SELECT * FROM UserTransaction WHERE ID=?";
+        Connection connection=_databaseConnection.getConnection();
 
-
-        try(Connection connection=_databaseConnection.getConnection();
+        try(
             PreparedStatement  statement= connection.prepareStatement(query);
         ){
             statement.setInt(1,ID);
@@ -53,7 +53,8 @@ catch(SQLException es){
     public List<ClsTransaction> findAll() {
         String query="SELECT * FROM UserTransaction";
         List<ClsTransaction>transactions=new ArrayList<ClsTransaction>();
-try(Connection connection=_databaseConnection.getConnection();
+        Connection connection=_databaseConnection.getConnection();
+try(
     PreparedStatement  statement= connection.prepareStatement(query);
     ){
 ResultSet resultSet= statement.executeQuery();
@@ -79,19 +80,20 @@ catch(SQLException es){
 
     @Override
     public boolean save(ClsTransaction entity) {
-        String query="INSERT INTO UserTransaction(ID" +
-                ",FK_WalletID,FK_SavingGoalID,CatogryID,amount,transaction_date,type,note) VALUES(?,?,?,?,?,?,?,?)";
-        try(Connection connection= _databaseConnection.getConnection();
+        String query="INSERT INTO UserTransaction(" +
+                "FK_WalletID,FK_SavingGoalID,CatogryID,amount,transaction_date,type,note) VALUES(?,?,?,?,?,?,?)";
+        Connection connection= _databaseConnection.getConnection();
+        try(
         PreparedStatement statement=connection.prepareStatement(query);
         )
-        {statement.setInt(1,entity.get_transactionID());
-            statement.setInt(2,entity.get_walletID());
-                statement.setInt(3,entity.get_walletID());
-                statement.setInt(4,entity.get_categoryID());
-                statement.setDouble(5,entity.get_amount());
-                statement.setObject(6,entity.get_localDateTime());
-              statement.setString(7,entity.get_type().name());
-              statement.setString(8,entity.get_note());
+        {
+            statement.setInt(1,entity.get_walletID());
+                statement.setInt(2,entity.get_walletID());
+                statement.setInt(3,entity.get_categoryID());
+                statement.setDouble(4,entity.get_amount());
+                statement.setObject(5,entity.get_localDateTime());
+              statement.setString(6,entity.get_type().name());
+              statement.setString(7,entity.get_note());
               if(statement.executeUpdate()>0)
                   return true;
 
@@ -135,7 +137,8 @@ catch(SQLException es){
     @Override
     public boolean delete(int ID) {
         String query="DELETE FROM UserTransaction WHERE ID=?";
-        try(Connection connection= _databaseConnection.getConnection();
+        Connection connection= _databaseConnection.getConnection();
+        try(
             PreparedStatement statement= connection.prepareStatement(query);){
             statement.setInt(1,ID);
             if(statement.executeUpdate()>0)

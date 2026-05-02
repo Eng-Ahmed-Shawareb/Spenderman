@@ -1,5 +1,6 @@
 package com.spenderman.service;
 
+import com.spenderman.DAO.ClsSavingGoalDAO;
 import com.spenderman.DAO.InterfaceClass.ISavingGoalDAO;
 import com.spenderman.model.ClsSavingGoal;
 import com.spenderman.model.StatusEnums.EnGoalState;
@@ -10,8 +11,8 @@ import java.util.Optional;
 public class ClsSavingGoalService {
     private ISavingGoalDAO _savingGoalDAO;
 
-    public ClsSavingGoalService(ISavingGoalDAO savingGoal_DAO) {
-        this._savingGoalDAO = savingGoal_DAO;
+    public ClsSavingGoalService() {
+        this._savingGoalDAO = new ClsSavingGoalDAO();
     }
 
     public List<ClsSavingGoal> getByUser(int userID){

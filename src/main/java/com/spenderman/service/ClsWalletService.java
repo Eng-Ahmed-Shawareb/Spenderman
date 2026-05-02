@@ -1,5 +1,6 @@
 package com.spenderman.service;
 
+import com.spenderman.DAO.ClsWalletDAO;
 import com.spenderman.DAO.InterfaceClass.IRepository;
 import com.spenderman.DAO.InterfaceClass.IWalletDAO;
 import com.spenderman.model.ClsWallet;
@@ -9,8 +10,8 @@ import java.util.List;
 public class ClsWalletService {
     private IWalletDAO _walletDAO;
 
-    public ClsWalletService(IWalletDAO _walletDAO) {
-        this._walletDAO = _walletDAO;
+    public ClsWalletService() {
+        this._walletDAO = new ClsWalletDAO();
     }
 
     public List<ClsWallet>  getByUser(int userID){

@@ -36,7 +36,7 @@ public class ClsUserDAO implements IRepositoryUsername {
         Connection connection = _databaseConnection.getConnection();
         String query = "SELECT * FROM SystemUser WHERE ID = ?";
         try (
-             PreparedStatement statement = connection.prepareStatement(query)) {
+                PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, ID);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -56,8 +56,8 @@ public class ClsUserDAO implements IRepositoryUsername {
         List<ClsUser> users = new ArrayList<>();
         String query = "SELECT * FROM SystemUser";
         try (
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(query)) {
 
             while (resultSet.next()) {
                 users.add(mapResultSetToUser(resultSet));
@@ -73,7 +73,7 @@ public class ClsUserDAO implements IRepositoryUsername {
         Connection connection = _databaseConnection.getConnection();
         String query = "INSERT INTO SystemUser (username, user_password, first_name, last_name, created_date) VALUES (?, ?, ?, ?, ?)";
         try (
-             PreparedStatement statement = connection.prepareStatement(query)) {
+                PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setString(1, entity.getUsername());
             statement.setString(2, entity.getPasswordHash());
@@ -93,7 +93,7 @@ public class ClsUserDAO implements IRepositoryUsername {
         Connection connection = _databaseConnection.getConnection();
         String query = "UPDATE SystemUser SET username = ?, user_password = ?, first_name = ?, last_name = ? WHERE ID = ?";
         try (
-             PreparedStatement statement = connection.prepareStatement(query)) {
+                PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setString(1, entity.getUsername());
             statement.setString(2, entity.getPasswordHash());
@@ -113,7 +113,7 @@ public class ClsUserDAO implements IRepositoryUsername {
         String query = "DELETE FROM SystemUser WHERE ID = ?";
         Connection connection = _databaseConnection.getConnection();
         try (
-             PreparedStatement statement = connection.prepareStatement(query)) {
+                PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, ID);
             return statement.executeUpdate() > 0;
@@ -122,23 +122,23 @@ public class ClsUserDAO implements IRepositoryUsername {
             return false;
         }
     }
-    @Override
-    public Optional<ClsUser>findByUserName(String userName){
-        String query="SELECT FROM SystemUser where username=?";
-        try(Connection connection=_databaseConnection.getConnection();
-            PreparedStatement statement=connection.prepareStatement(query);
-        ){statement.setString(1,userName);
 
-            ResultSet resultSet   = statement.executeQuery();
-            if(resultSet.next()){
+    @Override
+    public Optional<ClsUser> findByUserName(String userName) {
+        String query = "SELECT * FROM SystemUser WHERE username=?";
+        Connection connection = _databaseConnection.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, userName);
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
                 return Optional.of(new ClsUser(resultSet.getInt("ID"),
                         resultSet.getString("first_name"),
                         resultSet.getString("last_name"),
-                        resultSet.getString("usename")
+                        resultSet.getString("username")
                 ));
             }
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             System.err.println("Error findByID: " + e.getMessage());
 
         }

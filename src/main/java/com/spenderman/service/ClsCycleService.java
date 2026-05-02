@@ -1,5 +1,6 @@
 package com.spenderman.service;
 
+import com.spenderman.DAO.ClsCycleDAO;
 import com.spenderman.DAO.InterfaceClass.ICycleDAO;
 import com.spenderman.model.ClsCycle;
 import com.spenderman.model.StatusEnums.EnCycleState;
@@ -10,9 +11,9 @@ import java.util.Optional;
 public class ClsCycleService {
     private ICycleDAO _cycleDAO;
     private ClsTransactionService _transactionService;
-    public ClsCycleService(ICycleDAO cycleDAO, ClsTransactionService transactionService) {
-        this._cycleDAO = cycleDAO;
-        this._transactionService = transactionService;
+    public ClsCycleService() {
+        this._cycleDAO = new ClsCycleDAO();
+        this._transactionService = new ClsTransactionService();
     }
 
     public Optional<ClsCycle> getActiveCycle(int userID){

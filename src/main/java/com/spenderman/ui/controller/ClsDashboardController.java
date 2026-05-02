@@ -2,6 +2,11 @@ package com.spenderman.ui.controller;
 
 import com.spenderman.Observer.EvenEnum.EnEvenType;
 import com.spenderman.Observer.interfaceClass.IObserver;
+import com.spenderman.model.ClsCycle;
+import com.spenderman.service.ClsCycleService;
+import com.spenderman.service.ClsSavingGoalService;
+import com.spenderman.service.ClsTransactionService;
+import com.spenderman.service.ClsWalletService;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -14,12 +19,19 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 
+import java.util.Optional;
+
 /**
  * Dashboard screen controller.
  * UML: ClsDashboardController extends ABaseController implements IObserver
  * Services: walletService, transactionService, cycleService, goalService
  */
 public class ClsDashboardController extends ABaseController implements IObserver {
+
+    private ClsWalletService _walletService;
+    private ClsTransactionService _transactionService;
+    private ClsSavingGoalService _savingGoalService;
+    private ClsCycleService _cycleService;
 
     @FXML private Label _totalBalanceLabel;
     @FXML private VBox _cycleCard;
@@ -36,6 +48,13 @@ public class ClsDashboardController extends ABaseController implements IObserver
     @FXML private HBox _expenseChartContent;
     @FXML private HBox _depositChartContent;
     @FXML private HBox _walletChartContent;
+
+    public ClsDashboardController(){
+        _walletService = new ClsWalletService();
+        _transactionService = new ClsTransactionService();
+        _cycleService = new ClsCycleService();
+        _savingGoalService = new ClsSavingGoalService();
+    }
 
     // Dummy data matching the React prototype
     private static final double[][] _EXPENSE_SEGS = {
@@ -72,12 +91,18 @@ public class ClsDashboardController extends ABaseController implements IObserver
 
     private void _loadTotalBalance() {
         // TODO: _totalBalanceLabel.setText("EGP " + walletService.getTotalBalance(userId));
-        _totalBalanceLabel.setText("EGP 58,450.00");
+        _totalBalanceLabel.setText("EGP " + String.valueOf(_walletService.getTotalBalance($currentUser.getUserID())));
     }
 
     private void _loadCycleSummary() {
         // TODO: use cycleService.getActiveCycle(userId)
-        boolean hasCycle = true;
+        boolean hasCycle;
+        Optional<ClsCycle> cycle = _cycleService.getActiveCycle($currentUser.getUserID());
+        if(cycle.isPresent()){
+            hasCycle = true;
+        }else{
+            hasCycle = false;
+        }
         _cycleCard.setVisible(hasCycle);
         _cycleCard.setManaged(hasCycle);
         _noCycleCard.setVisible(!hasCycle);

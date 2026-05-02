@@ -1,5 +1,6 @@
 package com.spenderman.service;
 
+import com.spenderman.DAO.ClsTransactionDAO;
 import com.spenderman.DAO.InterfaceClass.ITransactionDAO;
 import com.spenderman.model.ClsTransaction;
 
@@ -9,13 +10,9 @@ import java.util.List;
 
 public class ClsTransactionService {
     private ITransactionDAO _transactionDAO;
-    private ClsWalletService _walletService;
-    private ClsSavingGoalService _savingGoalService;
 
-    public ClsTransactionService(ITransactionDAO _transactionDAO, ClsWalletService _walletService, ClsSavingGoalService _savingGoalService) {
-        this._transactionDAO = _transactionDAO;
-        this._walletService = _walletService;
-        this._savingGoalService = _savingGoalService;
+    public ClsTransactionService() {
+        this._transactionDAO = new ClsTransactionDAO();
     }
 
     public boolean addTransaction(ClsTransaction transaction){

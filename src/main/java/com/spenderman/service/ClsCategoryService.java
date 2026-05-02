@@ -1,5 +1,6 @@
 package com.spenderman.service;
 
+import com.spenderman.DAO.ClsCategoryDAO;
 import com.spenderman.DAO.InterfaceClass.ICateogryDAO;
 import com.spenderman.DAO.InterfaceClass.IRepository;
 import com.spenderman.model.ClsCategory;
@@ -10,8 +11,8 @@ import java.util.List;
 public class ClsCategoryService {
     private ICateogryDAO _categoryDAO;
 
-    public ClsCategoryService(ICateogryDAO _categoryDAO) {
-        this._categoryDAO = _categoryDAO;
+    public ClsCategoryService() {
+        this._categoryDAO = new ClsCategoryDAO();
     }
     public List<ClsCategory>getByUser(int userID){
         List<ClsCategory>cateogries=_categoryDAO.getByUserID(userID);

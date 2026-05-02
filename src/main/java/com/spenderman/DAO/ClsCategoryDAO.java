@@ -1,6 +1,7 @@
 package com.spenderman.DAO;
 
 
+import com.spenderman.DAO.InterfaceClass.ICateogryDAO;
 import com.spenderman.DAO.InterfaceClass.IRepository;
 import com.spenderman.DAO.Singleton.ClsDatabaseConnection;
 import com.spenderman.model.ClsCategory;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ClsCategoryDAO implements IRepository<ClsCategory> {
+public class ClsCategoryDAO implements ICateogryDAO {
 
     private ClsDatabaseConnection _databaseConnection;
 
@@ -133,4 +134,37 @@ public class ClsCategoryDAO implements IRepository<ClsCategory> {
         }
         return false;
     }
+@Override
+    public List<ClsCategory>getByUserID(int userID){
+        String query="SELECT FROM SystemUser where FK_UserID=?";
+        Connection connection=_databaseConnection.getConnection();
+        List<ClsCategory>cateogries=new ArrayList<ClsCategory>();
+        try(
+                PreparedStatement statement=connection.prepareStatement(query);
+        ){statement.setInt(1,userID);
+
+            ResultSet resultSet   = statement.executeQuery();
+            if(resultSet.next()){
+                cateogries.add(      new ClsCategory(resultSet.getInt("ID") ,
+                        resultSet.getInt("FK_UserID") ,
+                        resultSet.getString("category_name") ,
+                        resultSet.getString("color") ,
+                        EnTransactionType.valueOf(resultSet.getString("type"))));
+
+
+            }
+        }
+        catch(SQLException e){
+            System.err.println("Error findByUserName: " + e.getMessage());
+
+        }
+
+
+        return cateogries;
+    }
+
+
+
+
+
 }

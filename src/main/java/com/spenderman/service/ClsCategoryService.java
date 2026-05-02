@@ -1,13 +1,42 @@
 package com.spenderman.service;
 
+import com.spenderman.DAO.InterfaceClass.ICateogryDAO;
 import com.spenderman.DAO.InterfaceClass.IRepository;
 import com.spenderman.model.ClsCategory;
 import com.spenderman.model.ClsUser;
 
-public class ClsCategoryService {
-    private IRepository<ClsCategory> _categoryDAO;
+import java.util.List;
 
-    public ClsCategoryService(IRepository<ClsCategory> _categoryDAO) {
+public class ClsCategoryService {
+    private ICateogryDAO _categoryDAO;
+
+    public ClsCategoryService(ICateogryDAO _categoryDAO) {
         this._categoryDAO = _categoryDAO;
+    }
+    public List<ClsCategory>getByUser(int userID){
+        List<ClsCategory>cateogries=_categoryDAO.getByUserID(userID);
+        if(cateogries.isEmpty())
+            throw new RuntimeException("there is no cateogries");
+        return cateogries;
+    }
+    public boolean createCateogry(ClsCategory cat){
+        if(_categoryDAO.save(cat))
+            return true;
+        else
+            return false;
+
+    }
+    public boolean update(int cateogryID){
+
+        ClsCategory cateogry=_categoryDAO.findByID(cateogryID).get();
+        if(_categoryDAO.update(cateogry))
+            return true;
+        return false;
+
+    }
+    public boolean delete(int cateogryID){
+        if(_categoryDAO.delete(cateogryID))
+            return true;
+        return false;
     }
 }

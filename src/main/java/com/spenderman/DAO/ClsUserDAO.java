@@ -1,6 +1,7 @@
 package com.spenderman.DAO;
 
 import com.spenderman.DAO.InterfaceClass.IRepository;
+import com.spenderman.DAO.InterfaceClass.IRepositoryUsername;
 import com.spenderman.DAO.Singleton.ClsDatabaseConnection;
 import com.spenderman.model.ClsUser;
 
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ClsUserDAO implements IRepository<ClsUser> {
+public class ClsUserDAO implements IRepositoryUsername {
     private final ClsDatabaseConnection _databaseConnection;
 
     private ClsUser mapResultSetToUser(ResultSet rs) throws SQLException {
@@ -121,5 +122,28 @@ public class ClsUserDAO implements IRepository<ClsUser> {
             return false;
         }
     }
+    @Override
+    public Optional<ClsUser>findByUserName(String userName){
+        String query="SELECT FROM SystemUser where username=?";
+        try(Connection connection=_databaseConnection.getConnection();
+            PreparedStatement statement=connection.prepareStatement(query);
+        ){statement.setString(1,userName);
 
+            ResultSet resultSet   = statement.executeQuery();
+            if(resultSet.next()){
+                return Optional.of(new ClsUser(resultSet.getInt("ID"),
+                        resultSet.getString("first_name"),
+                        resultSet.getString("last_name"),
+                        resultSet.getString("usename")
+                ));
+            }
+        }
+        catch(SQLException e){
+            System.err.println("Error findByID: " + e.getMessage());
+
+        }
+
+
+        return Optional.empty();
+    }
 }

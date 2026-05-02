@@ -30,7 +30,7 @@ public class ClsSavingGoalDAO implements ISavingGoalDAO {
                 resultSet.getDouble("target_amount"),
                 resultSet.getString("goal_name"),
                 resultSet.getDouble("current_amount"),
-                resultSet.getObject("target_data", LocalDate.class),
+                resultSet.getObject("target_date", LocalDate.class),
                 EnGoalState.valueOf(resultSet.getString("state"))
         );
     }
@@ -74,17 +74,16 @@ public class ClsSavingGoalDAO implements ISavingGoalDAO {
     @Override
     public boolean save(ClsSavingGoal entity) {
         Connection connection = _databaseConnection.getConnection();
-        String query = "INSERT INTO SavingGoal (ID, FK_userID, goal_name, target_amount, current_amount, target_data, state) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO SavingGoal (FK_userID, goal_name, target_amount, current_amount, target_date, state) VALUES (?, ?, ?, ?, ?, ?)";
         try (
              PreparedStatement statement = connection.prepareStatement(query)) {
 
-            statement.setInt(1, entity.get_goalID());
-            statement.setInt(2, entity.get_userID());
-            statement.setString(3, entity.get_name());
-            statement.setDouble(4, entity.get_targetAmount());
-            statement.setDouble(5, entity.get_currentSaved());
-            statement.setObject(6, entity.get_targetDate());
-            statement.setString(7, entity.getStatus().name());
+            statement.setInt(1, entity.get_userID());
+            statement.setString(2, entity.get_name());
+            statement.setDouble(3, entity.get_targetAmount());
+            statement.setDouble(4, entity.get_currentSaved());
+            statement.setObject(5, entity.get_targetDate());
+            statement.setString(6, entity.getStatus().name());
 
             return statement.executeUpdate() > 0;
         } catch (SQLException es) {
@@ -97,7 +96,7 @@ public class ClsSavingGoalDAO implements ISavingGoalDAO {
     public boolean update(ClsSavingGoal entity) {
         Connection connection = _databaseConnection.getConnection();
         String query = "UPDATE SavingGoal SET FK_userID = ?, goal_name = ?, target_amount = ?, " +
-                "current_amount = ?, target_data = ?, state = ? WHERE ID = ?";
+                "current_amount = ?, target_date = ?, state = ? WHERE ID = ?";
 
         try (
              PreparedStatement statement = connection.prepareStatement(query)) {

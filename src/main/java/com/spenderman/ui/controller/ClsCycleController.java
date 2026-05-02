@@ -1,7 +1,14 @@
 package com.spenderman.ui.controller;
 
 import com.spenderman.Observer.EvenEnum.EnEvenType;
+import com.spenderman.Observer.Singleton.ClsAppEventBus;
 import com.spenderman.Observer.interfaceClass.IObserver;
+import com.spenderman.model.ClsCycle;
+import com.spenderman.model.StatusEnums.EnCycleState;
+import com.spenderman.service.ClsCycleService;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -20,20 +27,22 @@ import javafx.scene.layout.Priority;
  */
 public class ClsCycleController extends ABaseController implements IObserver {
 
-    @FXML
-    private VBox _formPanel;
-    @FXML
-    private TextField _budgetField;
-    @FXML
-    private DatePicker _startPicker;
-    @FXML
-    private DatePicker _endPicker;
-    @FXML
-    private VBox _cycleList;
+    @FXML private VBox _formPanel;
+    @FXML private TextField _budgetField;
+    @FXML private DatePicker _startPicker;
+    @FXML private DatePicker _endPicker;
+    @FXML private VBox _cycleList;
+    @FXML private Label _errorLabel;
+
+    private ClsCycleService cycleService;
+
+    public ClsCycleController() {
+        cycleService = new ClsCycleService();
+    }
 
     @Override
     public void initialize() {
-        _loadCycles();
+        ClsAppEventBus.getInstance().addObserver(this);
     }
 
     @FXML
@@ -41,34 +50,84 @@ public class ClsCycleController extends ABaseController implements IObserver {
         boolean show = !_formPanel.isVisible();
         _formPanel.setVisible(show);
         _formPanel.setManaged(show);
+        _errorLabel.setVisible(false);
+        _errorLabel.setManaged(false);
     }
 
     @FXML
     private void _handleAddCycle() {
-        // TODO: Call cycleService.createCycle(cycle)
-        System.out.println("Create cycle: budget=" + _budgetField.getText());
+        if (_budgetField.getText().trim().isEmpty() || _startPicker.getValue() == null || _endPicker.getValue() == null) {
+            _errorLabel.setText("⚠ Please provide a budget, start date, and end date.");
+            _errorLabel.setVisible(true);
+            _errorLabel.setManaged(true);
+            return;
+        }
+
+        double budget;
+        try {
+            budget = Double.parseDouble(_budgetField.getText().trim());
+            if (budget <= 0) {
+                _errorLabel.setText("⚠ Budget amount must be positive.");
+                _errorLabel.setVisible(true);
+                _errorLabel.setManaged(true);
+                return;
+            }
+        } catch (NumberFormatException e) {
+            _errorLabel.setText("⚠ Budget amount must be a valid number.");
+            _errorLabel.setVisible(true);
+            _errorLabel.setManaged(true);
+            return;
+        }
+
+        LocalDate start = _startPicker.getValue();
+        LocalDate end = _endPicker.getValue();
+
+        if (end.isBefore(start)) {
+            _errorLabel.setText("⚠ End date cannot be before start date.");
+            _errorLabel.setVisible(true);
+            _errorLabel.setManaged(true);
+            return;
+        }
+
+        // Close any currently active cycle
+        java.util.Optional<ClsCycle> activeCycle = cycleService.getActiveCycle($currentUser.getUserID());
+        if (activeCycle.isPresent()) {
+            cycleService.closeCycle(activeCycle.get().get_cycleID());
+            ClsAppEventBus.getInstance().notifyObservers(EnEvenType.CYCLE_UPDATED, activeCycle.get());
+        }
+
+        ClsCycle newCycle = new ClsCycle($currentUser.getUserID(), 0, budget, start, end, EnCycleState.ACTIVE);
+
+        cycleService.createCycle(newCycle);
+        ClsAppEventBus.getInstance().notifyObservers(EnEvenType.CYCLE_ADDED, newCycle);
+
+        _budgetField.clear();
+        _startPicker.setValue(null);
+        _endPicker.setValue(null);
         _toggleForm();
         _loadCycles();
     }
 
     private void _loadCycles() {
         _cycleList.getChildren().clear();
+        if ($currentUser == null) return;
 
-        // Dummy data matching React prototype
-        String[][] cycles = {
-                { "April 2025", "5000", "3200", "Active", "2025-04-01", "2025-04-30" },
-                { "March 2025", "4500", "4800", "Past", "2025-03-01", "2025-03-31" },
-                { "February 2025", "4000", "3700", "Past", "2025-02-01", "2025-02-28" },
-        };
+        List<ClsCycle> cycles = cycleService.getByUser($currentUser.getUserID());
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM yyyy");
 
-        for (String[] cy : cycles) {
+        // Reverse the list to show newest first, assuming inserted chronologically
+        java.util.Collections.reverse(cycles);
+
+        for (ClsCycle cy : cycles) {
             VBox card = new VBox(10);
             card.getStyleClass().add("card");
 
-            double budget = Double.parseDouble(cy[1]);
-            double spent = Double.parseDouble(cy[2]);
-            double pct = (spent / budget) * 100;
+            double budget = cy.get_budgetAmount();
+            double spent = cycleService.getTotalSpent(cy.get_cycleID());
+            double pct = budget > 0 ? (spent / budget) * 100 : 0;
             boolean over = spent > budget;
+            boolean active = cy.get_state() == EnCycleState.ACTIVE;
+            String statusStr = active ? "Active" : "Past";
 
             // Title row
             HBox titleRow = new HBox();
@@ -77,23 +136,24 @@ public class ClsCycleController extends ABaseController implements IObserver {
 
             VBox titleInfo = new VBox(2);
             titleInfo.getStyleClass().add("bg-transparent");
-            Label cycleTitle = new Label(cy[0]);
+            String title = cy.get_startDate().format(fmt);
+            Label cycleTitle = new Label(title);
             cycleTitle.getStyleClass().add("section-title");
-            Label cycleDate = new Label(cy[4] + " → " + cy[5]);
+            Label cycleDate = new Label(cy.get_startDate() + " → " + cy.get_endDate());
             cycleDate.getStyleClass().add("text-muted");
             titleInfo.getChildren().addAll(cycleTitle, cycleDate);
             HBox.setHgrow(titleInfo, Priority.ALWAYS);
 
             HBox badges = new HBox(6);
             badges.setAlignment(Pos.CENTER);
-            Label status = new Label(cy[3]);
-            status.getStyleClass().add(cy[3].equals("Active") ? "badge-green" : "badge-muted");
+            Label status = new Label(statusStr);
+            status.getStyleClass().add(active ? "badge-green" : "badge-muted");
             badges.getChildren().add(status);
 
-            if (cy[3].equals("Active")) {
+            if (active) {
                 Button closeBtn = new Button("Close");
                 closeBtn.getStyleClass().add("btn-outline-small");
-                closeBtn.setOnAction(e -> _handleCloseCycle());
+                closeBtn.setOnAction(e -> _handleCloseCycle(cy));
                 badges.getChildren().add(closeBtn);
             }
 
@@ -118,6 +178,9 @@ public class ClsCycleController extends ABaseController implements IObserver {
             // Progress bar
             ProgressBar bar = new ProgressBar(Math.min(pct / 100.0, 1.0));
             bar.getStyleClass().add("progress-bar");
+            if (over) {
+                bar.setStyle("-fx-accent: #EF4444;");
+            }
             bar.setMaxWidth(Double.MAX_VALUE);
 
             card.getChildren().addAll(titleRow, statsRow, bar);
@@ -134,18 +197,23 @@ public class ClsCycleController extends ABaseController implements IObserver {
         }
     }
 
-    private void _handleCloseCycle() {
-        // TODO: Call cycleService.closeCycle(cycleId)
-        System.out.println("Close active cycle");
+    private void _handleCloseCycle(ClsCycle cycle) {
+        cycleService.closeCycle(cycle.get_cycleID());
+        ClsAppEventBus.getInstance().notifyObservers(EnEvenType.CYCLE_UPDATED, cycle);
+        _loadCycles();
     }
 
     @Override
     public void refreshData() {
+        if ($currentUser == null) return;
         _loadCycles();
     }
 
     @Override
     public void update(EnEvenType evenType, Object data) {
-
+        if (evenType == EnEvenType.CYCLE_ADDED || evenType == EnEvenType.CYCLE_UPDATED || evenType == EnEvenType.CYCLE_DELETED ||
+            evenType == EnEvenType.TRANSACTION_ADDED || evenType == EnEvenType.TRANSACTION_UPDATED || evenType == EnEvenType.TRANSACTION_DELETED) {
+            refreshData();
+        }
     }
 }

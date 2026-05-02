@@ -35,6 +35,7 @@
                 <DatePicker fx:id="_targetDatePicker" maxWidth="Infinity"/>
             </VBox>
         </HBox>
+        <Label fx:id="_errorLabel" styleClass="error-message" visible="false" managed="false"/>
         <HBox spacing="8" alignment="CENTER_RIGHT">
             <Button text="Cancel" styleClass="btn-outline" onAction="#_toggleForm"/>
             <Button text="Create Goal" styleClass="btn-primary" onAction="#_handleAddGoal"/>

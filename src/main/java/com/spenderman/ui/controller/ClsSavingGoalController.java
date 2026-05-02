@@ -1,9 +1,13 @@
 package com.spenderman.ui.controller;
 
 import com.spenderman.Observer.EvenEnum.EnEvenType;
+import com.spenderman.Observer.Singleton.ClsAppEventBus;
 import com.spenderman.Observer.interfaceClass.IObserver;
 import com.spenderman.model.ClsSavingGoal;
+import com.spenderman.model.StatusEnums.EnGoalState;
 import com.spenderman.service.ClsSavingGoalService;
+import java.time.LocalDate;
+import java.util.List;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -23,22 +27,24 @@ import javafx.scene.shape.Circle;
  */
 public class ClsSavingGoalController extends ABaseController implements IObserver {
 
-    @FXML
-    private VBox _formPanel;
-    @FXML
-    private TextField _nameField;
-    @FXML
-    private TextField _targetField;
-    @FXML
-    private DatePicker _targetDatePicker;
-    @FXML
-    private VBox _goalList;
+    @FXML private VBox _formPanel;
+    @FXML private TextField _nameField;
+    @FXML private TextField _targetField;
+    @FXML private DatePicker _targetDatePicker;
+    @FXML private VBox _goalList;
+    @FXML private Label _errorLabel;
 
     private ClsSavingGoalService goalService;
+    
+    private final String[] colors = {"#F472B6", "#22C97A", "#F5A623", "#8875F5", "#4B9EF8", "#F59E0B"};
+
+    public ClsSavingGoalController() {
+        goalService = new ClsSavingGoalService();
+    }
 
     @Override
     public void initialize() {
-        _loadGoals();
+        ClsAppEventBus.getInstance().addObserver(this);
     }
 
     @FXML
@@ -46,36 +52,66 @@ public class ClsSavingGoalController extends ABaseController implements IObserve
         boolean show = !_formPanel.isVisible();
         _formPanel.setVisible(show);
         _formPanel.setManaged(show);
+        _errorLabel.setVisible(false);
+        _errorLabel.setManaged(false);
     }
 
     @FXML
     private void _handleAddGoal() {
+        if (_nameField.getText().trim().isEmpty() || _targetField.getText().trim().isEmpty()) {
+            _errorLabel.setText("⚠ Please provide both a goal name and a target amount.");
+            _errorLabel.setVisible(true);
+            _errorLabel.setManaged(true);
+            return;
+        }
 
+        double targetAmount;
+        try {
+            targetAmount = Double.parseDouble(_targetField.getText().trim());
+            if (targetAmount <= 0) {
+                _errorLabel.setText("⚠ Target amount must be positive.");
+                _errorLabel.setVisible(true);
+                _errorLabel.setManaged(true);
+                return;
+            }
+        } catch (NumberFormatException e) {
+            _errorLabel.setText("⚠ Target amount must be a valid number.");
+            _errorLabel.setVisible(true);
+            _errorLabel.setManaged(true);
+            return;
+        }
 
-        System.out.println("Create goal: " + _nameField.getText() + " target=" + _targetField.getText());
+        LocalDate targetDate = _targetDatePicker.getValue();
+
+        ClsSavingGoal newGoal = new ClsSavingGoal(0, $currentUser.getUserID(), targetAmount, _nameField.getText().trim(), 0, targetDate, EnGoalState.ACTIVE);
+
+        goalService.createGoal(newGoal);
+        ClsAppEventBus.getInstance().notifyObservers(EnEvenType.GOAL_ADDED, newGoal);
+
+        _nameField.clear();
+        _targetField.clear();
+        _targetDatePicker.setValue(null);
         _toggleForm();
         _loadGoals();
     }
 
     private void _loadGoals() {
         _goalList.getChildren().clear();
+        if ($currentUser == null) return;
 
-        // Dummy data matching React prototype
-        String[][] goals = {
-                { "New Laptop", "3200", "8000", "2025-09-01", "Active", "#F472B6" },
-                { "Summer Vacation", "1500", "5000", "2025-07-01", "Active", "#22C97A" },
-                { "Emergency Fund", "10000", "10000", "", "Completed", "#F5A623" },
-        };
+        List<ClsSavingGoal> goals = goalService.getByUser($currentUser.getUserID());
 
-        for (String[] g : goals) {
+        for (int i = 0; i < goals.size(); i++) {
+            ClsSavingGoal g = goals.get(i);
+            
             VBox card = new VBox(8);
             card.getStyleClass().add("card");
 
-            double cur = Double.parseDouble(g[1]);
-            double tgt = Double.parseDouble(g[2]);
-            double pct = Math.min((cur / tgt) * 100, 100);
-            boolean completed = g[4].equals("Completed");
-            String color = g[5];
+            double cur = g.get_currentSaved();
+            double tgt = g.get_targetAmount();
+            double pct = tgt > 0 ? Math.min((cur / tgt) * 100, 100) : 0;
+            boolean completed = g.getStatus() == EnGoalState.COMPLETED;
+            String color = colors[i % colors.length];
 
             // Title row: dot + name + status + add button
             HBox titleRow = new HBox(8);
@@ -84,21 +120,22 @@ public class ClsSavingGoalController extends ABaseController implements IObserve
             Circle dot = new Circle(5);
             dot.setStyle("-fx-fill: " + color + ";");
 
-            Label goalName = new Label(g[0]);
+            Label goalName = new Label(g.get_name());
             goalName.getStyleClass().add("section-title");
             HBox.setHgrow(goalName, Priority.ALWAYS);
 
             HBox badges = new HBox(6);
             badges.setAlignment(Pos.CENTER);
-            Label status = new Label(g[4]);
+            
+            String statusText = completed ? "Completed" : "Active";
+            Label status = new Label(statusText);
             status.getStyleClass().add(completed ? "badge-green" : "badge-amber");
             badges.getChildren().add(status);
 
             if (!completed) {
                 Button addBtn = new Button("+ Add");
                 addBtn.getStyleClass().add("btn-outline-small");
-                final String goalName2 = g[0];
-                addBtn.setOnAction(e -> _toggleAddAmountForm(card, goalName2));
+                addBtn.setOnAction(e -> _toggleAddAmountForm(card, g));
                 badges.getChildren().add(addBtn);
             }
 
@@ -136,8 +173,8 @@ public class ClsSavingGoalController extends ABaseController implements IObserve
             HBox.setHgrow(progressLabel, Priority.ALWAYS);
             footer.getChildren().add(progressLabel);
 
-            if (!g[3].isEmpty()) {
-                Label targetDate = new Label("Target: " + g[3]);
+            if (g.get_targetDate() != null) {
+                Label targetDate = new Label("Target: " + g.get_targetDate().toString());
                 targetDate.getStyleClass().add("text-muted");
                 targetDate.setStyle("-fx-font-size: 9px;");
                 footer.getChildren().add(targetDate);
@@ -148,10 +185,7 @@ public class ClsSavingGoalController extends ABaseController implements IObserve
         }
     }
 
-    /**
-     * Toggle a mini inline form to add money to a specific goal.
-     */
-    private void _toggleAddAmountForm(VBox card, String goalName) {
+    private void _toggleAddAmountForm(VBox card, ClsSavingGoal goal) {
         // Check if form already exists
         if (card.getChildren().size() > 4 && card.getChildren().get(4) instanceof HBox addRow) {
             card.getChildren().remove(4);
@@ -170,8 +204,16 @@ public class ClsSavingGoalController extends ABaseController implements IObserve
         Button addBtn = new Button("Add");
         addBtn.getStyleClass().add("btn-small");
         addBtn.setOnAction(e -> {
-            // TODO: Call goalService.addAmount(goalId, amount)
-            System.out.println("Add " + addAmount.getText() + " to " + goalName);
+            try {
+                double amount = Double.parseDouble(addAmount.getText().trim());
+                if (amount > 0) {
+                    goalService.addAmount(goal.get_goalID(), amount);
+                    ClsAppEventBus.getInstance().notifyObservers(EnEvenType.GOAL_UPDATED, goal);
+                    _loadGoals();
+                }
+            } catch (NumberFormatException ex) {
+                // Ignore invalid input
+            }
             card.getChildren().remove(addRow);
         });
 
@@ -187,11 +229,14 @@ public class ClsSavingGoalController extends ABaseController implements IObserve
 
     @Override
     public void refreshData() {
+        if ($currentUser == null) return;
         _loadGoals();
     }
 
     @Override
     public void update(EnEvenType evenType, Object data) {
-
+        if (evenType == EnEvenType.GOAL_ADDED || evenType == EnEvenType.GOAL_UPDATED || evenType == EnEvenType.GOAL_DELETED) {
+            refreshData();
+        }
     }
 }

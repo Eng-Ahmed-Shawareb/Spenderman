@@ -237,4 +237,33 @@ catch(SQLException es){
         }
         return List.of();
     }
+
+    @Override
+    public double getTotalExpensesBetweenDates(int userID, LocalDate startDate, LocalDate endDate) {
+        double totalExpenses = 0.0;
+
+        Connection connection = _databaseConnection.getConnection();
+
+        String query = "SELECT amount FROM UserTransaction WHERE transaction_date >= ? AND transaction_date < ? AND type = ?";
+
+        try(PreparedStatement statement = connection.prepareStatement(query)){
+            java.sql.Date sqlStartDate = java.sql.Date.valueOf(startDate);
+            LocalDate exclusiveEndDate = endDate.plusDays(1);
+            java.sql.Date sqlEndDate = java.sql.Date.valueOf(exclusiveEndDate);
+
+            statement.setDate(1 , sqlStartDate);
+            statement.setDate(2 , sqlEndDate);
+            statement.setString(3 , String.valueOf(EnTransactionType.EXPENSE));
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while(resultSet.next()){
+                totalExpenses += resultSet.getDouble("amount");
+            }
+        }catch (SQLException se){
+            System.out.println("Exception : " + se.getMessage());
+        }
+
+        return totalExpenses;
+    }
 }

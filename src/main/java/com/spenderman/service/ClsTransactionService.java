@@ -3,6 +3,7 @@ package com.spenderman.service;
 import com.spenderman.DAO.InterfaceClass.ITransactionDAO;
 import com.spenderman.model.ClsTransaction;
 
+import java.sql.Connection;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -38,6 +39,6 @@ public class ClsTransactionService {
     }
 
     public double getTotalExpensesBetweenDates(int userID, LocalDate startDate, LocalDate endDate) {
-        return 0;
+        return _transactionDAO.getTotalExpensesBetweenDates(userID , startDate , endDate);
     }
 }

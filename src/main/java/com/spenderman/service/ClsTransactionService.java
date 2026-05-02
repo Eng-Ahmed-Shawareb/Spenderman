@@ -3,6 +3,9 @@ package com.spenderman.service;
 import com.spenderman.DAO.InterfaceClass.ITransactionDAO;
 import com.spenderman.model.ClsTransaction;
 
+import java.time.LocalDate;
+import java.util.List;
+
 public class ClsTransactionService {
     private ITransactionDAO _transactionDAO;
     private ClsWalletService _walletService;

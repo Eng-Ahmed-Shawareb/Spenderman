@@ -38,8 +38,8 @@ public class ClsSavingGoalDAO implements ISavingGoalDAO {
     @Override
     public Optional<ClsSavingGoal> findByID(int ID) {
         String query = "SELECT * FROM SavingGoal WHERE ID = ?";
-        try (Connection connection = _databaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        Connection connection = _databaseConnection.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, ID);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -55,9 +55,10 @@ public class ClsSavingGoalDAO implements ISavingGoalDAO {
 
     @Override
     public List<ClsSavingGoal> findAll() {
+        Connection connection = _databaseConnection.getConnection();
         List<ClsSavingGoal> resultList = new ArrayList<>();
         String query = "SELECT * FROM SavingGoal";
-        try (Connection connection = _databaseConnection.getConnection();
+        try (
              PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
 
@@ -72,8 +73,9 @@ public class ClsSavingGoalDAO implements ISavingGoalDAO {
 
     @Override
     public boolean save(ClsSavingGoal entity) {
+        Connection connection = _databaseConnection.getConnection();
         String query = "INSERT INTO SavingGoal (ID, FK_userID, goal_name, target_amount, current_amount, target_data, state) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (Connection connection = _databaseConnection.getConnection();
+        try (
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, entity.get_goalID());
@@ -93,10 +95,11 @@ public class ClsSavingGoalDAO implements ISavingGoalDAO {
 
     @Override
     public boolean update(ClsSavingGoal entity) {
+        Connection connection = _databaseConnection.getConnection();
         String query = "UPDATE SavingGoal SET FK_userID = ?, goal_name = ?, target_amount = ?, " +
                 "current_amount = ?, target_data = ?, state = ? WHERE ID = ?";
 
-        try (Connection connection = _databaseConnection.getConnection();
+        try (
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, entity.get_userID());
@@ -116,8 +119,9 @@ public class ClsSavingGoalDAO implements ISavingGoalDAO {
 
     @Override
     public boolean delete(int ID) {
+        Connection connection = _databaseConnection.getConnection();
         String query = "DELETE FROM SavingGoal WHERE ID = ?";
-        try (Connection connection = _databaseConnection.getConnection();
+        try (
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, ID);
@@ -132,10 +136,9 @@ public class ClsSavingGoalDAO implements ISavingGoalDAO {
     public List<ClsSavingGoal> findByUserID(int userID) {
         List<ClsSavingGoal> resultList = new ArrayList<>();
 
-
-        String query = "SELECT * FROM SavingGoal WHERE user_id = ?";
-
-        try (Connection connection = _databaseConnection.getConnection();
+        Connection connection = _databaseConnection.getConnection();
+        String query = "SELECT * FROM SavingGoal WHERE FK_userID = ?";
+        try (
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, userID);

@@ -32,8 +32,9 @@ public class ClsUserDAO implements IRepository<ClsUser> {
 
     @Override
     public Optional<ClsUser> findByID(int ID) {
+        Connection connection = _databaseConnection.getConnection();
         String query = "SELECT * FROM SystemUser WHERE ID = ?";
-        try (Connection connection = _databaseConnection.getConnection();
+        try (
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, ID);
@@ -50,9 +51,10 @@ public class ClsUserDAO implements IRepository<ClsUser> {
 
     @Override
     public List<ClsUser> findAll() {
+        Connection connection = _databaseConnection.getConnection();
         List<ClsUser> users = new ArrayList<>();
         String query = "SELECT * FROM SystemUser";
-        try (Connection connection = _databaseConnection.getConnection();
+        try (
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
 
@@ -67,8 +69,9 @@ public class ClsUserDAO implements IRepository<ClsUser> {
 
     @Override
     public boolean save(ClsUser entity) {
+        Connection connection = _databaseConnection.getConnection();
         String query = "INSERT INTO SystemUser (username, user_password, first_name, last_name, created_date) VALUES (?, ?, ?, ?, ?)";
-        try (Connection connection = _databaseConnection.getConnection();
+        try (
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setString(1, entity.getUsername());
@@ -86,8 +89,9 @@ public class ClsUserDAO implements IRepository<ClsUser> {
 
     @Override
     public boolean update(ClsUser entity) {
+        Connection connection = _databaseConnection.getConnection();
         String query = "UPDATE SystemUser SET username = ?, user_password = ?, first_name = ?, last_name = ? WHERE ID = ?";
-        try (Connection connection = _databaseConnection.getConnection();
+        try (
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setString(1, entity.getUsername());
@@ -106,7 +110,8 @@ public class ClsUserDAO implements IRepository<ClsUser> {
     @Override
     public boolean delete(int ID) {
         String query = "DELETE FROM SystemUser WHERE ID = ?";
-        try (Connection connection = _databaseConnection.getConnection();
+        Connection connection = _databaseConnection.getConnection();
+        try (
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, ID);

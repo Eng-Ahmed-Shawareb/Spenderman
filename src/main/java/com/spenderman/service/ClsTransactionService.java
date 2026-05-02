@@ -3,8 +3,6 @@ package com.spenderman.service;
 import com.spenderman.DAO.InterfaceClass.ITransactionDAO;
 import com.spenderman.model.ClsTransaction;
 
-import java.util.List;
-
 public class ClsTransactionService {
     private ITransactionDAO _transactionDAO;
     private ClsWalletService _walletService;
@@ -34,5 +32,9 @@ public class ClsTransactionService {
 
     public boolean deleteTransaction(int transactionID){
         return _transactionDAO.delete(transactionID);
+    }
+
+    public double getTotalExpensesBetweenDates(int userID, LocalDate startDate, LocalDate endDate) {
+        return 0;
     }
 }

@@ -19,13 +19,7 @@ public class ClsUserService {
     }
 
     public boolean register(ClsUser user) {
-
-
-        if (user_DAO.save(user)) {
-            return true;
-        } else {
-            throw new RuntimeException("The username is used");
-        }
+        return user_DAO.save(user);
     }
 
     public boolean changePassowrd(int userID, String oldPassword, String newPassowrd) {

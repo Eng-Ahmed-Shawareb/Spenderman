@@ -19,6 +19,10 @@ public class ClsTransactionService {
         return _transactionDAO.save(transaction);
     }
 
+    public boolean updateTransaction(ClsTransaction transaction){
+        return _transactionDAO.update(transaction);
+    }
+
     public List<ClsTransaction> getByWallet(int walletID){
         return _transactionDAO.getByWallet(walletID);
     }

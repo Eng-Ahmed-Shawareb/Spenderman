@@ -55,6 +55,8 @@
             <TextArea fx:id="_noteArea" promptText="Add a note…" prefHeight="52" wrapText="true"/>
         </VBox>
 
+        <Label fx:id="_addErrorLabel" styleClass="error-message" visible="false" managed="false"/>
+
         <HBox spacing="8" alignment="CENTER_RIGHT">
             <Button text="Cancel" styleClass="btn-outline" onAction="#_toggleForm"/>
             <Button text="Save Transaction" styleClass="btn-primary" onAction="#_handleAddTransaction"/>
@@ -100,6 +102,8 @@
             <Label text="NOTE (OPTIONAL)" styleClass="field-label"/>
             <TextArea fx:id="_editNoteArea" promptText="Add a note…" prefHeight="52" wrapText="true"/>
         </VBox>
+
+        <Label fx:id="_editErrorLabel" styleClass="error-message" visible="false" managed="false"/>
 
         <HBox spacing="8" alignment="CENTER_RIGHT">
             <Button text="Cancel" styleClass="btn-outline" onAction="#_closeEditForm"/>

@@ -2,6 +2,14 @@ package com.spenderman.ui.controller;
 
 import com.spenderman.Observer.EvenEnum.EnEvenType;
 import com.spenderman.Observer.interfaceClass.IObserver;
+import com.spenderman.Observer.Singleton.ClsAppEventBus;
+import com.spenderman.model.*;
+import com.spenderman.model.StatusEnums.EnTransactionType;
+import com.spenderman.service.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -32,6 +40,7 @@ public class ClsTransactionController extends ABaseController implements IObserv
     @FXML private ComboBox<String> _targetCombo;
     @FXML private ComboBox<String> _categoryCombo;
     @FXML private TextArea _noteArea;
+    @FXML private Label _addErrorLabel;
 
     // ── Edit-form fields ──
     @FXML private VBox _editFormPanel;
@@ -43,6 +52,7 @@ public class ClsTransactionController extends ABaseController implements IObserv
     @FXML private ComboBox<String> _editTargetCombo;
     @FXML private ComboBox<String> _editCategoryCombo;
     @FXML private TextArea _editNoteArea;
+    @FXML private Label _editErrorLabel;
 
     @FXML private VBox _transactionRows;
 
@@ -51,12 +61,28 @@ public class ClsTransactionController extends ABaseController implements IObserv
     private ToggleGroup _editTypeGroup;
     private ToggleGroup _editTargetGroup;
 
-    /** Holds the row data currently being edited (index 0-5 = desc,target,cat,type,amount,date; index 6 = note). */
-    private String[] _currentEditRow;
+    private ClsTransaction _currentEditTx;
+
+    private ClsTransactionService _transactionService;
+    private ClsWalletService _walletService;
+    private ClsCategoryService _categoryService;
+    private ClsSavingGoalService _savingGoalService;
+
+    private List<ClsWallet> _wallets;
+    private List<ClsSavingGoal> _goals;
+    private List<ClsCategory> _categories;
+
+    public ClsTransactionController() {
+        _transactionService = new ClsTransactionService();
+        _walletService = new ClsWalletService();
+        _categoryService = new ClsCategoryService();
+        _savingGoalService = new ClsSavingGoalService();
+    }
 
     @Override
     public void initialize() {
-        // Setup toggle groups
+        ClsAppEventBus.getInstance().addObserver(this);
+        
         _typeGroup = new ToggleGroup();
         _expenseToggle.setToggleGroup(_typeGroup);
         _depositToggle.setToggleGroup(_typeGroup);
@@ -81,17 +107,13 @@ public class ClsTransactionController extends ABaseController implements IObserv
         _targetGoal.setVisible(false);
         _targetGoal.setManaged(false);
 
-        // Populate combos with dummy data
-        _targetCombo.getItems().addAll("Main Bank Account", "Pocket Cash", "Business Account");
-        _categoryCombo.getItems().addAll("Food", "Transport", "Salary", "Utilities", "Entertainment", "Freelance");
-
         // When target type changes, update combo options
         _targetGroup.selectedToggleProperty().addListener((obs, old, newToggle) -> {
             _targetCombo.getItems().clear();
-            if (newToggle == _targetWallet) {
-                _targetCombo.getItems().addAll("Main Bank Account", "Pocket Cash", "Business Account");
-            } else {
-                _targetCombo.getItems().addAll("New Laptop", "Summer Vacation");
+            if (newToggle == _targetWallet && _wallets != null) {
+                _targetCombo.getItems().addAll(_wallets.stream().map(ClsWallet::get_name).collect(Collectors.toList()));
+            } else if (_goals != null) {
+                _targetCombo.getItems().addAll(_goals.stream().map(ClsSavingGoal::get_name).collect(Collectors.toList()));
             }
         });
 
@@ -115,19 +137,18 @@ public class ClsTransactionController extends ABaseController implements IObserv
             }
         });
 
-        _editTargetCombo.getItems().addAll("Main Bank Account", "Pocket Cash", "Business Account");
-        _editCategoryCombo.getItems().addAll("Food", "Transport", "Salary", "Utilities", "Entertainment", "Freelance");
-
         _editTargetGroup.selectedToggleProperty().addListener((obs, old, newToggle) -> {
             _editTargetCombo.getItems().clear();
-            if (newToggle == _editTargetWallet) {
-                _editTargetCombo.getItems().addAll("Main Bank Account", "Pocket Cash", "Business Account");
-            } else {
-                _editTargetCombo.getItems().addAll("New Laptop", "Summer Vacation");
+            if (newToggle == _editTargetWallet && _wallets != null) {
+                _editTargetCombo.getItems().addAll(_wallets.stream().map(ClsWallet::get_name).collect(Collectors.toList()));
+            } else if (_goals != null) {
+                _editTargetCombo.getItems().addAll(_goals.stream().map(ClsSavingGoal::get_name).collect(Collectors.toList()));
             }
         });
 
-        _loadTransactions();
+        if ($currentUser != null) {
+            refreshData();
+        }
     }
 
     @FXML
@@ -135,66 +156,114 @@ public class ClsTransactionController extends ABaseController implements IObserv
         boolean show = !_formPanel.isVisible();
         _formPanel.setVisible(show);
         _formPanel.setManaged(show);
+        _addErrorLabel.setVisible(false);
+        _addErrorLabel.setManaged(false);
     }
 
     @FXML
     private void _handleAddTransaction() {
-        // TODO: Call transactionService.addTransaction(tx)
-        System.out.println("Add transaction: " + _amountField.getText());
+        if (_amountField.getText().isEmpty() || _categoryCombo.getValue() == null || _targetCombo.getValue() == null) {
+            _addErrorLabel.setText("⚠ Please fill in all required fields.");
+            _addErrorLabel.setVisible(true);
+            _addErrorLabel.setManaged(true);
+            return;
+        }
+
+        double amount;
+        try {
+            amount = Double.parseDouble(_amountField.getText());
+        } catch (NumberFormatException e) {
+            _addErrorLabel.setText("⚠ Please enter a valid numeric amount.");
+            _addErrorLabel.setVisible(true);
+            _addErrorLabel.setManaged(true);
+            return;
+        }
+
+        EnTransactionType type = _expenseToggle.isSelected() ? EnTransactionType.EXPENSE : EnTransactionType.DEPOSIT;
+        
+        int walletId = 0, goalId = 0;
+        if (_targetWallet.isSelected()) {
+            walletId = _wallets.stream().filter(w -> w.get_name().equals(_targetCombo.getValue())).findFirst().get().get_walletID();
+        } else {
+            goalId = _goals.stream().filter(g -> g.get_name().equals(_targetCombo.getValue())).findFirst().get().get_goalID();
+        }
+        
+        int catId = _categories.stream().filter(c -> c.get_name().equals(_categoryCombo.getValue())).findFirst().get().get_categoryID();
+        
+        ClsTransaction tx = new ClsTransaction(0, walletId, goalId, catId, amount, LocalDateTime.now(), type, _noteArea.getText());
+        _transactionService.addTransaction(tx);
+        
+        ClsAppEventBus.getInstance().notifyObservers(EnEvenType.TRANSACTION_ADDED, tx);
+        
+        _amountField.clear();
+        _noteArea.clear();
         _toggleForm();
         _loadTransactions();
     }
 
     private void _loadTransactions() {
         _transactionRows.getChildren().clear();
-
-        // Dummy data matching React prototype
-        String[][] rows = {
-                {"Lunch at Koshary", "◈ Pocket Cash", "Food", "Expense", "-85", "2025-04-15"},
-                {"April Salary", "◈ Main Bank", "Salary", "Deposit", "+8,500", "2025-04-01"},
-                {"Uber ride", "◈ Pocket Cash", "Transport", "Expense", "-45", "2025-04-14"},
-                {"Laptop fund", "◇ New Laptop", "Savings", "Expense", "-500", "2025-04-10"},
-                {"Electricity bill", "◈ Main Bank", "Utilities", "Expense", "-320", "2025-04-05"},
-        };
-
-        for (String[] r : rows) {
+        if ($currentUser == null) return;
+        
+        List<ClsTransaction> txs = _transactionService.getByUser($currentUser.getUserID());
+        
+        for (ClsTransaction tx : txs) {
             HBox row = new HBox();
             row.getStyleClass().add("table-row");
             row.setAlignment(Pos.CENTER_LEFT);
 
-            Label desc = new Label(r[0]);
+            String noteText = (tx.get_note() != null && !tx.get_note().isEmpty()) ? tx.get_note() : "Transaction";
+            Label desc = new Label(noteText);
             desc.getStyleClass().add("table-cell");
             desc.setPrefWidth(170);
 
-            Label target = new Label(r[1]);
-            target.getStyleClass().addAll("table-cell", r[1].startsWith("\u25c7") ? "text-pink" : "text-sub");
+            String targetName = "Unknown";
+            String targetPrefix = "";
+            if (tx.get_walletID() > 0 && _wallets != null) {
+                targetPrefix = "◈ ";
+                ClsWallet w = _wallets.stream().filter(x -> x.get_walletID() == tx.get_walletID()).findFirst().orElse(null);
+                if (w != null) targetName = w.get_name();
+            } else if (tx.get_savingGoalID() > 0 && _goals != null) {
+                targetPrefix = "◇ ";
+                ClsSavingGoal g = _goals.stream().filter(x -> x.get_goalID() == tx.get_savingGoalID()).findFirst().orElse(null);
+                if (g != null) targetName = g.get_name();
+            }
+
+            Label target = new Label(targetPrefix + targetName);
+            target.getStyleClass().addAll("table-cell", targetPrefix.equals("◇ ") ? "text-pink" : "text-sub");
             target.setPrefWidth(130);
 
-            Label cat = new Label(r[2]);
+            String catName = "Unknown";
+            if (_categories != null) {
+                ClsCategory c = _categories.stream().filter(x -> x.get_categoryID() == tx.get_categoryID()).findFirst().orElse(null);
+                if (c != null) catName = c.get_name();
+            }
+            Label cat = new Label(catName);
             cat.getStyleClass().addAll("table-cell", "text-sub");
             cat.setPrefWidth(100);
 
-            Label type = new Label(r[3]);
-            type.getStyleClass().addAll(r[3].equals("Deposit") ? "badge-green" : "badge-red");
+            boolean isDeposit = tx.get_type() == EnTransactionType.DEPOSIT;
+            Label type = new Label(isDeposit ? "Deposit" : "Expense");
+            type.getStyleClass().addAll(isDeposit ? "badge-green" : "badge-red");
             type.setPrefWidth(85);
 
-            Label amount = new Label(r[4] + " EGP");
-            amount.getStyleClass().addAll("table-cell", "mono", r[4].startsWith("+") ? "text-green" : "text-red");
+            String sign = isDeposit ? "+" : "-";
+            Label amount = new Label(sign + tx.get_amount() + " EGP");
+            amount.getStyleClass().addAll("table-cell", "mono", isDeposit ? "text-green" : "text-red");
             amount.setPrefWidth(110);
 
-            Label date = new Label(r[5]);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            Label date = new Label(tx.get_localDateTime() != null ? tx.get_localDateTime().format(formatter) : "");
             date.getStyleClass().addAll("table-cell", "text-muted");
             date.setPrefWidth(90);
 
-            // ── Action buttons ──
-            final String[] rowData = r;
             Button editBtn = new Button("Edit");
             editBtn.getStyleClass().add("btn-action-edit");
-            editBtn.setOnAction(e -> _handleEditTransaction(rowData));
+            editBtn.setOnAction(e -> _handleEditTransaction(tx));
 
             Button deleteBtn = new Button("Delete");
             deleteBtn.getStyleClass().add("btn-action-delete");
-            deleteBtn.setOnAction(e -> _handleDeleteTransaction(rowData));
+            deleteBtn.setOnAction(e -> _handleDeleteTransaction(tx));
 
             HBox actions = new HBox(6, editBtn, deleteBtn);
             actions.setAlignment(Pos.CENTER_LEFT);
@@ -210,36 +279,67 @@ public class ClsTransactionController extends ABaseController implements IObserv
     private void _closeEditForm() {
         _editFormPanel.setVisible(false);
         _editFormPanel.setManaged(false);
-        _currentEditRow = null;
+        _currentEditTx = null;
+        _editErrorLabel.setVisible(false);
+        _editErrorLabel.setManaged(false);
     }
 
     @FXML
     private void _handleSaveEdit() {
-        if (_currentEditRow == null) {
+        if (_currentEditTx == null) return;
+        
+        if (_editAmountField.getText().isEmpty() || _editCategoryCombo.getValue() == null || _editTargetCombo.getValue() == null) {
+            _editErrorLabel.setText("⚠ Please fill in all required fields.");
+            _editErrorLabel.setVisible(true);
+            _editErrorLabel.setManaged(true);
             return;
         }
-        // TODO: Call transactionService.updateTransaction(id, updatedData)
-        System.out.println("Saved edit for: " + _currentEditRow[0]
-                + " -> new amount: " + _editAmountField.getText());
+
+        double amount;
+        try {
+            amount = Double.parseDouble(_editAmountField.getText());
+        } catch (NumberFormatException e) {
+            _editErrorLabel.setText("⚠ Please enter a valid numeric amount.");
+            _editErrorLabel.setVisible(true);
+            _editErrorLabel.setManaged(true);
+            return;
+        }
+
+        EnTransactionType type = _editExpenseToggle.isSelected() ? EnTransactionType.EXPENSE : EnTransactionType.DEPOSIT;
+        
+        int walletId = 0, goalId = 0;
+        if (_editTargetWallet.isSelected()) {
+            walletId = _wallets.stream().filter(w -> w.get_name().equals(_editTargetCombo.getValue())).findFirst().get().get_walletID();
+        } else {
+            goalId = _goals.stream().filter(g -> g.get_name().equals(_editTargetCombo.getValue())).findFirst().get().get_goalID();
+        }
+        
+        int catId = _categories.stream().filter(c -> c.get_name().equals(_editCategoryCombo.getValue())).findFirst().get().get_categoryID();
+        
+        _currentEditTx.set_amount(amount);
+        _currentEditTx.set_type(type);
+        _currentEditTx.set_walletID(walletId);
+        _currentEditTx.set_savingGoalID(goalId);
+        _currentEditTx.set_categoryID(catId);
+        _currentEditTx.set_note(_editNoteArea.getText());
+        
+        _transactionService.updateTransaction(_currentEditTx);
+        ClsAppEventBus.getInstance().notifyObservers(EnEvenType.TRANSACTION_UPDATED, _currentEditTx);
+        
         _closeEditForm();
         _loadTransactions();
     }
 
     @FXML
-    private void _handleEditTransaction(String[] rowData) {
-        _currentEditRow = rowData;
+    private void _handleEditTransaction(ClsTransaction tx) {
+        _currentEditTx = tx;
 
-        // Close the add-form if it is open
         _formPanel.setVisible(false);
         _formPanel.setManaged(false);
 
-        // Pre-populate amount (strip leading sign and " EGP" if present)
-        String rawAmount = rowData[4].replace("+", "").replace("-", "").trim();
-        _editAmountField.setText(rawAmount);
+        _editAmountField.setText(String.valueOf(tx.get_amount()));
 
-        // Pre-select type toggle
-        String type = rowData[3];
-        if (type.equals("Deposit")) {
+        if (tx.get_type() == EnTransactionType.DEPOSIT) {
             _editDepositToggle.setSelected(true);
             _editTargetGoal.setVisible(true);
             _editTargetGoal.setManaged(true);
@@ -249,46 +349,74 @@ public class ClsTransactionController extends ABaseController implements IObserv
             _editTargetGoal.setManaged(false);
         }
 
-        // Pre-select target toggle and populate combo
-        String targetRaw = rowData[1];
-        boolean isGoal = targetRaw.startsWith("\u25c7");
-        _editTargetCombo.getItems().clear();
-        if (isGoal) {
-            _editTargetGoal.setSelected(true);
-            _editTargetCombo.getItems().addAll("New Laptop", "Summer Vacation");
-            String goalName = targetRaw.replace("\u25c7", "").trim();
-            _editTargetCombo.setValue(goalName);
-        } else {
+        if (tx.get_walletID() > 0 && _wallets != null) {
             _editTargetWallet.setSelected(true);
-            _editTargetCombo.getItems().addAll("Main Bank Account", "Pocket Cash", "Business Account");
-            String walletName = targetRaw.replace("\u25c8", "").trim();
-            _editTargetCombo.setValue(walletName);
+            ClsWallet w = _wallets.stream().filter(x -> x.get_walletID() == tx.get_walletID()).findFirst().orElse(null);
+            if (w != null) _editTargetCombo.setValue(w.get_name());
+        } else if (tx.get_savingGoalID() > 0 && _goals != null) {
+            _editTargetGoal.setSelected(true);
+            ClsSavingGoal g = _goals.stream().filter(x -> x.get_goalID() == tx.get_savingGoalID()).findFirst().orElse(null);
+            if (g != null) _editTargetCombo.setValue(g.get_name());
         }
 
-        // Pre-select category
-        _editCategoryCombo.setValue(rowData[2]);
+        if (_categories != null) {
+            ClsCategory c = _categories.stream().filter(x -> x.get_categoryID() == tx.get_categoryID()).findFirst().orElse(null);
+            if (c != null) _editCategoryCombo.setValue(c.get_name());
+        }
 
-        // Clear note (no note in dummy data)
-        _editNoteArea.clear();
+        _editNoteArea.setText(tx.get_note());
 
-        // Show the edit form
         _editFormPanel.setVisible(true);
         _editFormPanel.setManaged(true);
     }
 
-    private void _handleDeleteTransaction(String[] rowData) {
-        // TODO: Call transactionService.deleteTransaction(id) then refresh
-        System.out.println("Delete transaction: " + rowData[0]);
+    private void _handleDeleteTransaction(ClsTransaction tx) {
+        _transactionService.deleteTransaction(tx.get_transactionID());
+        ClsAppEventBus.getInstance().notifyObservers(EnEvenType.TRANSACTION_DELETED, tx);
         _loadTransactions();
     }
 
     @Override
     public void refreshData() {
+        if ($currentUser == null) return;
+        _wallets = _walletService.getByUser($currentUser.getUserID());
+        _goals = _savingGoalService.getByUser($currentUser.getUserID());
+        try {
+            _categories = _categoryService.getByUser($currentUser.getUserID());
+        } catch (Exception e) {
+            _categories = new java.util.ArrayList<>();
+        }
+
+        // populate categories
+        _categoryCombo.getItems().clear();
+        _categoryCombo.getItems().addAll(_categories.stream().map(ClsCategory::get_name).collect(Collectors.toList()));
+        _editCategoryCombo.getItems().clear();
+        _editCategoryCombo.getItems().addAll(_categories.stream().map(ClsCategory::get_name).collect(Collectors.toList()));
+
+        // re-trigger combo populations for targets
+        ToggleButton selected = (ToggleButton) _targetGroup.getSelectedToggle();
+        _targetCombo.getItems().clear();
+        if (selected == _targetWallet && _wallets != null) {
+            _targetCombo.getItems().addAll(_wallets.stream().map(ClsWallet::get_name).collect(Collectors.toList()));
+        } else if (_goals != null) {
+            _targetCombo.getItems().addAll(_goals.stream().map(ClsSavingGoal::get_name).collect(Collectors.toList()));
+        }
+
+        ToggleButton editSelected = (ToggleButton) _editTargetGroup.getSelectedToggle();
+        _editTargetCombo.getItems().clear();
+        if (editSelected == _editTargetWallet && _wallets != null) {
+            _editTargetCombo.getItems().addAll(_wallets.stream().map(ClsWallet::get_name).collect(Collectors.toList()));
+        } else if (_goals != null) {
+            _editTargetCombo.getItems().addAll(_goals.stream().map(ClsSavingGoal::get_name).collect(Collectors.toList()));
+        }
+
         _loadTransactions();
     }
 
     @Override
     public void update(EnEvenType evenType, Object data) {
-
+        if (evenType == EnEvenType.TRANSACTION_ADDED || evenType == EnEvenType.TRANSACTION_DELETED || evenType == EnEvenType.TRANSACTION_UPDATED) {
+            refreshData();
+        }
     }
 }

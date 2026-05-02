@@ -57,6 +57,7 @@ public class ClsLoginController extends ABaseController implements IObserver {
             ClsUser loggedInUser = user.get();
             System.out.println("User logged in successfully: " + loggedInUser.getUsername());
 
+            $sceneManager.setCurrentUser(loggedInUser);
             _clearError();
             $sceneManager.switchTo("dashboard");
         } else {

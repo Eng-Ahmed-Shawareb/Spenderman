@@ -25,20 +25,27 @@ public class ClsSavingGoalService {
 
     public boolean addAmount(int goalID,double newAmount){
         if(newAmount<0)return false;
+        return adjustAmount(goalID, newAmount);
+    }
+
+    public boolean adjustAmount(int goalID, double amountDelta){
         Optional<ClsSavingGoal> goalOptional= _savingGoalDAO.findByID(goalID);
         if(goalOptional.isPresent()) {
             ClsSavingGoal goalToUpdate = goalOptional.get();
             double oldAmount = goalToUpdate.get_currentSaved();
-            goalToUpdate.set_currentSaved(oldAmount + newAmount);
-            if (oldAmount + newAmount >= goalToUpdate.get_targetAmount()) {
+            double newSaved = oldAmount + amountDelta;
+            if (newSaved < 0) newSaved = 0; // Prevent negative balance
+            goalToUpdate.set_currentSaved(newSaved);
+            if (newSaved >= goalToUpdate.get_targetAmount()) {
                 goalToUpdate.setStatus(EnGoalState.COMPLETED);
+            } else if (goalToUpdate.getStatus() == EnGoalState.COMPLETED && newSaved < goalToUpdate.get_targetAmount()) {
+                goalToUpdate.setStatus(EnGoalState.ACTIVE); // Revert status if dropped below target
             }
             return _savingGoalDAO.update(goalToUpdate);
 
         }else{
           return false;
         }
-
     }
 
     public boolean updateStatus(int goalID, EnGoalState newState){

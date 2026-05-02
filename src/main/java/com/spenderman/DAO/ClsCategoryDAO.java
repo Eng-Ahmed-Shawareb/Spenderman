@@ -29,17 +29,17 @@ public class ClsCategoryDAO implements ICateogryDAO {
 
         String query = "SELECT * FROM Category WHERE ID = ?";
 
-        try(PreparedStatement statement = connection.prepareStatement(query)){
-           statement.setInt(1 , ID);
-           ResultSet resultSet = statement.executeQuery();
-           if(resultSet.next()){
-                return Optional.of(new ClsCategory(resultSet.getInt("ID") ,
-                        resultSet.getInt("FK_UserID") ,
-                        resultSet.getString("category_name") ,
-                        resultSet.getString("color") ,
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, ID);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return Optional.of(new ClsCategory(resultSet.getInt("ID"),
+                        resultSet.getInt("FK_UserID"),
+                        resultSet.getString("category_name"),
+                        resultSet.getString("color"),
                         EnTransactionType.valueOf(resultSet.getString("type"))));
-           }
-        }catch (SQLException es){
+            }
+        } catch (SQLException es) {
             System.out.println("Exception : " + es.getMessage());
         }
 
@@ -53,18 +53,18 @@ public class ClsCategoryDAO implements ICateogryDAO {
 
         String query = "SELECT * FROM Category";
 
-        try(PreparedStatement statement = connection.prepareStatement(query)){
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
-            while(resultSet.next()){
-                ClsCategory category = new ClsCategory(resultSet.getInt("ID") ,
-                        resultSet.getInt("FK_UserID") ,
-                        resultSet.getString("category_name") ,
-                        resultSet.getString("color") ,
+            while (resultSet.next()) {
+                ClsCategory category = new ClsCategory(resultSet.getInt("ID"),
+                        resultSet.getInt("FK_UserID"),
+                        resultSet.getString("category_name"),
+                        resultSet.getString("color"),
                         EnTransactionType.valueOf(resultSet.getString("type")));
 
                 resultList.add(category);
             }
-        }catch (SQLException es){
+        } catch (SQLException es) {
             System.out.println("Exception : " + es.getMessage());
         }
         return resultList;
@@ -76,16 +76,16 @@ public class ClsCategoryDAO implements ICateogryDAO {
 
         String query = "INSERT INTO Category (FK_UserID , category_name , color , type) VALUES(? , ? , ? , ?)";
 
-        try(PreparedStatement statement = connection.prepareStatement(query)){
-            statement.setInt(1 , entity.get_userID());
-            statement.setString(2 , entity.get_name());
-            statement.setString(3 , entity.get_hexColor());
-            statement.setString(4 , String.valueOf(entity.get_type()));
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, entity.get_userID());
+            statement.setString(2, entity.get_name());
+            statement.setString(3, entity.get_hexColor());
+            statement.setString(4, String.valueOf(entity.get_type()));
 
-            if(statement.executeUpdate() > 0){
+            if (statement.executeUpdate() > 0) {
                 return true;
             }
-        }catch (SQLException es){
+        } catch (SQLException es) {
             System.out.println("Exception : " + es.getMessage());
         }
         return false;
@@ -96,22 +96,22 @@ public class ClsCategoryDAO implements ICateogryDAO {
         Connection connection = _databaseConnection.getConnection();
 
         String query = "UPDATE Category SET FK_UserID = ? , " +
-                       "category_name = ? , " +
-                       "color = ? , " +
-                       "type = ? " +
-                       "WHERE ID = ?";
+                "category_name = ? , " +
+                "color = ? , " +
+                "type = ? " +
+                "WHERE ID = ?";
 
-        try(PreparedStatement statement = connection.prepareStatement(query)){
-            statement.setInt(1 , entity.get_userID());
-            statement.setString(2 , entity.get_name());
-            statement.setString(3 , entity.get_hexColor());
-            statement.setString(4 , String.valueOf(entity.get_type()));
-            statement.setInt(5 , entity.get_categoryID());
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, entity.get_userID());
+            statement.setString(2, entity.get_name());
+            statement.setString(3, entity.get_hexColor());
+            statement.setString(4, String.valueOf(entity.get_type()));
+            statement.setInt(5, entity.get_categoryID());
 
-            if(statement.executeUpdate() > 0){
+            if (statement.executeUpdate() > 0) {
                 return true;
             }
-        }catch (SQLException es){
+        } catch (SQLException es) {
             System.out.println("Exception : " + es.getMessage());
         }
         return false;
@@ -123,38 +123,39 @@ public class ClsCategoryDAO implements ICateogryDAO {
 
         String query = "DELETE FROM Category WHERE ID = ?";
 
-        try(PreparedStatement statement = connection.prepareStatement(query)){
-            statement.setInt(1 , ID);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, ID);
 
-            if(statement.executeUpdate() > 0){
+            if (statement.executeUpdate() > 0) {
                 return true;
             }
-        }catch (SQLException es){
+        } catch (SQLException es) {
             System.out.println("Exception : " + es.getMessage());
         }
         return false;
     }
-@Override
-    public List<ClsCategory>getByUserID(int userID){
-        String query="SELECT FROM SystemUser where FK_UserID=?";
-        Connection connection=_databaseConnection.getConnection();
-        List<ClsCategory>cateogries=new ArrayList<ClsCategory>();
-        try(
-                PreparedStatement statement=connection.prepareStatement(query);
-        ){statement.setInt(1,userID);
 
-            ResultSet resultSet   = statement.executeQuery();
-            if(resultSet.next()){
-                cateogries.add(      new ClsCategory(resultSet.getInt("ID") ,
-                        resultSet.getInt("FK_UserID") ,
-                        resultSet.getString("category_name") ,
-                        resultSet.getString("color") ,
+    @Override
+    public List<ClsCategory> getByUserID(int userID) {
+        String query = "SELECT * FROM Category WHERE FK_UserID = ?";
+        Connection connection = _databaseConnection.getConnection();
+        List<ClsCategory> cateogries = new ArrayList<ClsCategory>();
+        try (
+                PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            statement.setInt(1, userID);
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                cateogries.add(new ClsCategory(resultSet.getInt("ID"),
+                        resultSet.getInt("FK_UserID"),
+                        resultSet.getString("category_name"),
+                        resultSet.getString("color"),
                         EnTransactionType.valueOf(resultSet.getString("type"))));
 
 
             }
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             System.err.println("Error findByUserName: " + e.getMessage());
 
         }
@@ -162,9 +163,6 @@ public class ClsCategoryDAO implements ICateogryDAO {
 
         return cateogries;
     }
-
-
-
 
 
 }

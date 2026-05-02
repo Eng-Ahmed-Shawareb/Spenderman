@@ -2,6 +2,7 @@ package com.spenderman.ui.controller;
 
 import com.spenderman.Observer.EvenEnum.EnEvenType;
 import com.spenderman.Observer.interfaceClass.IObserver;
+import com.spenderman.Observer.Singleton.ClsAppEventBus;
 import com.spenderman.model.ClsCycle;
 import com.spenderman.service.ClsCycleService;
 import com.spenderman.service.ClsSavingGoalService;
@@ -82,11 +83,7 @@ public class ClsDashboardController extends ABaseController implements IObserver
 
     @Override
     public void initialize() {
-        _loadTotalBalance();
-        _loadCycleSummary();
-        _loadExpensePieChart();
-        _loadDepositPieChart();
-        _loadWalletPieChart();
+        ClsAppEventBus.getInstance().addObserver(this);
     }
 
     private void _loadTotalBalance() {
@@ -208,6 +205,7 @@ public class ClsDashboardController extends ABaseController implements IObserver
 
     @Override
     public void refreshData() {
+        if ($currentUser == null) return;
         _loadTotalBalance();
         _loadCycleSummary();
         _loadExpensePieChart();

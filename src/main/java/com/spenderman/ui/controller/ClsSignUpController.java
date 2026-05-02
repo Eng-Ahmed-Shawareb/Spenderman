@@ -68,7 +68,15 @@ public class ClsSignUpController extends ABaseController implements IObserver {
             new Thread(() -> {
                 try {
                     Thread.sleep(900);
-                    javafx.application.Platform.runLater(() -> $sceneManager.switchTo("dashboard"));
+                    javafx.application.Platform.runLater(() -> {
+                        java.util.Optional<ClsUser> loggedInUser = _userService.login(username, password);
+                        if (loggedInUser.isPresent()) {
+                            $sceneManager.setCurrentUser(loggedInUser.get());
+                            $sceneManager.switchTo("dashboard");
+                        } else {
+                            $sceneManager.switchTo("login");
+                        }
+                    });
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }

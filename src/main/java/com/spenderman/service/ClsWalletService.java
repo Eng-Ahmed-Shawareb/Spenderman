@@ -29,4 +29,8 @@ public class ClsWalletService {
     public boolean updateBalance(int walletID , double amount){
         return _walletDAO.updateTotalBalance(walletID , amount);
     }
+
+    public boolean deleteWallet(int walletID){
+        return _walletDAO.delete(walletID);
+    }
 }

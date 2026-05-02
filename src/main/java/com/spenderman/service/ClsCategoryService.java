@@ -14,19 +14,14 @@ public class ClsCategoryService {
     public ClsCategoryService() {
         this._categoryDAO = new ClsCategoryDAO();
     }
-    public List<ClsCategory>getByUser(int userID){
-        List<ClsCategory>cateogries=_categoryDAO.getByUserID(userID);
-        if(cateogries.isEmpty())
-            throw new RuntimeException("there is no cateogries");
-        return cateogries;
+    public List<ClsCategory> getByUser(int userID){
+        return _categoryDAO.getByUserID(userID);
     }
-    public boolean createCateogry(ClsCategory cat){
-        if(_categoryDAO.save(cat))
-            return true;
-        else
-            return false;
-
+    
+    public boolean createCategory(ClsCategory cat){
+        return _categoryDAO.save(cat);
     }
+    
     public boolean update(int cateogryID){
 
         ClsCategory cateogry=_categoryDAO.findByID(cateogryID).get();

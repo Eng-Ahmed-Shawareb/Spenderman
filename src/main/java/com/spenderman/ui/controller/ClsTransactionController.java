@@ -100,6 +100,7 @@ public class ClsTransactionController extends ABaseController implements IObserv
                 if (isExpense && _targetGroup.getSelectedToggle() == _targetGoal) {
                     _targetWallet.setSelected(true);
                 }
+                _updateCategoryCombo();
             }
         });
 
@@ -134,6 +135,7 @@ public class ClsTransactionController extends ABaseController implements IObserv
                 if (isExpense && _editTargetGroup.getSelectedToggle() == _editTargetGoal) {
                     _editTargetWallet.setSelected(true);
                 }
+                _updateEditCategoryCombo();
             }
         });
 
@@ -348,6 +350,8 @@ public class ClsTransactionController extends ABaseController implements IObserv
             _editTargetGoal.setVisible(false);
             _editTargetGoal.setManaged(false);
         }
+        
+        _updateEditCategoryCombo();
 
         if (tx.get_walletID() > 0 && _wallets != null) {
             _editTargetWallet.setSelected(true);
@@ -388,10 +392,8 @@ public class ClsTransactionController extends ABaseController implements IObserv
         }
 
         // populate categories
-        _categoryCombo.getItems().clear();
-        _categoryCombo.getItems().addAll(_categories.stream().map(ClsCategory::get_name).collect(Collectors.toList()));
-        _editCategoryCombo.getItems().clear();
-        _editCategoryCombo.getItems().addAll(_categories.stream().map(ClsCategory::get_name).collect(Collectors.toList()));
+        _updateCategoryCombo();
+        _updateEditCategoryCombo();
 
         // re-trigger combo populations for targets
         ToggleButton selected = (ToggleButton) _targetGroup.getSelectedToggle();
@@ -417,6 +419,34 @@ public class ClsTransactionController extends ABaseController implements IObserv
     public void update(EnEvenType evenType, Object data) {
         if (evenType == EnEvenType.TRANSACTION_ADDED || evenType == EnEvenType.TRANSACTION_DELETED || evenType == EnEvenType.TRANSACTION_UPDATED) {
             refreshData();
+        }
+    }
+
+    private void _updateCategoryCombo() {
+        if (_categories == null) return;
+        EnTransactionType type = _expenseToggle.isSelected() ? EnTransactionType.EXPENSE : EnTransactionType.DEPOSIT;
+        String currentSelection = _categoryCombo.getValue();
+        _categoryCombo.getItems().clear();
+        _categoryCombo.getItems().addAll(_categories.stream()
+                .filter(c -> c.get_type() == type)
+                .map(ClsCategory::get_name)
+                .collect(Collectors.toList()));
+        if (currentSelection != null && _categoryCombo.getItems().contains(currentSelection)) {
+            _categoryCombo.setValue(currentSelection);
+        }
+    }
+
+    private void _updateEditCategoryCombo() {
+        if (_categories == null) return;
+        EnTransactionType type = _editExpenseToggle.isSelected() ? EnTransactionType.EXPENSE : EnTransactionType.DEPOSIT;
+        String currentSelection = _editCategoryCombo.getValue();
+        _editCategoryCombo.getItems().clear();
+        _editCategoryCombo.getItems().addAll(_categories.stream()
+                .filter(c -> c.get_type() == type)
+                .map(ClsCategory::get_name)
+                .collect(Collectors.toList()));
+        if (currentSelection != null && _editCategoryCombo.getItems().contains(currentSelection)) {
+            _editCategoryCombo.setValue(currentSelection);
         }
     }
 }

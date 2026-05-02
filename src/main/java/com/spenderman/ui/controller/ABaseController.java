@@ -21,6 +21,7 @@ public abstract class ABaseController {
 
     public void setCurrentUser(ClsUser user) {
         this.$currentUser = user;
+        refreshData();
     }
 
     public ClsUser getCurrentUser() {

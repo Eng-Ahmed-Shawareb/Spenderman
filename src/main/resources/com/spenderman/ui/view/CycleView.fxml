@@ -12,7 +12,7 @@
     <!-- Header -->
     <HBox alignment="CENTER_LEFT" spacing="12">
         <Label text="Budget Cycles" styleClass="page-title" HBox.hgrow="ALWAYS"/>
-        <Button text="+ New Cycle" styleClass="btn-small" onAction="#_toggleForm"/>
+        <Button fx:id="_newCycleBtn" text="+ New Cycle" styleClass="btn-small" onAction="#_toggleForm"/>
     </HBox>
 
     <!-- ═══ ADD CYCLE FORM ═══ -->
@@ -27,12 +27,8 @@
         </VBox>
         <HBox spacing="10">
             <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="bg-transparent">
-                <Label text="START DATE" styleClass="field-label"/>
-                <DatePicker fx:id="_startPicker" maxWidth="Infinity"/>
-            </VBox>
-            <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="bg-transparent">
                 <Label text="END DATE" styleClass="field-label"/>
-                <DatePicker fx:id="_endPicker" maxWidth="Infinity"/>
+                <DatePicker fx:id="_endPicker" maxWidth="Infinity" editable="false"/>
             </VBox>
         </HBox>
         <Label fx:id="_errorLabel" styleClass="error-message" visible="false" managed="false"/>

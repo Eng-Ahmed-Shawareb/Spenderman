@@ -15,5 +15,6 @@ public enum EnEvenType {
     GOAL_DELETED,
     CYCLE_ADDED,
     CYCLE_UPDATED,
-    CYCLE_DELETED
+    CYCLE_DELETED,
+    PASSWORD_CHANGED
 }

@@ -33,8 +33,8 @@ public class ClsCycleDAO implements ICycleDAO {
             if (resultSet.next()) {
                 return Optional.of(new ClsCycle(resultSet.getInt("FK_UserID"), resultSet.getInt("ID"),
                         resultSet.getDouble("budget_amount"),
-                        resultSet.getObject("start_date", LocalDateTime.class),
-                        resultSet.getObject("end_date", LocalDateTime.class),
+                        resultSet.getTimestamp("start_date").toLocalDateTime(),
+                        resultSet.getTimestamp("end_date").toLocalDateTime(),
                         EnCycleState.valueOf(resultSet.getString("state").toUpperCase())));
             }
         } catch (SQLException es) {
@@ -54,8 +54,8 @@ public class ClsCycleDAO implements ICycleDAO {
             while (resultSet.next()) {
                 cycles.add(new ClsCycle(resultSet.getInt("FK_UserID"), resultSet.getInt("ID"),
                         resultSet.getDouble("budget_amount"),
-                        resultSet.getObject("start_date", LocalDateTime.class),
-                        resultSet.getObject("end_date", LocalDateTime.class),
+                        resultSet.getTimestamp("start_date").toLocalDateTime(),
+                        resultSet.getTimestamp("end_date").toLocalDateTime(),
                         EnCycleState.valueOf(resultSet.getString("state").toUpperCase())));
             }
             return cycles;
@@ -76,8 +76,8 @@ public class ClsCycleDAO implements ICycleDAO {
 
             statement.setInt(1, entity.get_userID());
             statement.setDouble(2, entity.get_budgetAmount());
-            statement.setObject(3, entity.get_startDate());
-            statement.setObject(4, entity.get_endDate());
+            statement.setTimestamp(3, Timestamp.valueOf(entity.get_startDate()));
+            statement.setTimestamp(4, Timestamp.valueOf(entity.get_endDate()));
             statement.setString(5, entity.get_state().name());
             if (statement.executeUpdate() > 0)
                 return true;
@@ -101,8 +101,8 @@ public class ClsCycleDAO implements ICycleDAO {
                 PreparedStatement statement = connection.prepareStatement(query);) {
             statement.setInt(1, entity.get_userID());
             statement.setDouble(2, entity.get_budgetAmount());
-            statement.setObject(3, entity.get_startDate());
-            statement.setObject(4, entity.get_endDate());
+            statement.setTimestamp(3, Timestamp.valueOf(entity.get_startDate()));
+            statement.setTimestamp(4, Timestamp.valueOf(entity.get_endDate()));
             statement.setString(5, entity.get_state().name());
             statement.setInt(6, entity.get_cycleID());
             if (statement.executeUpdate() > 0)
@@ -144,8 +144,8 @@ public class ClsCycleDAO implements ICycleDAO {
                 while (resultSet.next()) {
                     cycles.add(new ClsCycle(resultSet.getInt("FK_UserID"), resultSet.getInt("ID"),
                             resultSet.getDouble("budget_amount"),
-                            resultSet.getObject("start_date", LocalDateTime.class),
-                            resultSet.getObject("end_date", LocalDateTime.class),
+                            resultSet.getTimestamp("start_date").toLocalDateTime(),
+                            resultSet.getTimestamp("end_date").toLocalDateTime(),
                             EnCycleState.valueOf(resultSet.getString("state").toUpperCase())));
                 }
             }
@@ -174,8 +174,8 @@ public class ClsCycleDAO implements ICycleDAO {
                             resultSet.getInt("FK_UserID"),
                             resultSet.getInt("ID"),
                             resultSet.getDouble("budget_amount"),
-                            resultSet.getObject("start_date", LocalDateTime.class),
-                            resultSet.getObject("end_date", LocalDateTime.class),
+                            resultSet.getTimestamp("start_date").toLocalDateTime(),
+                            resultSet.getTimestamp("end_date").toLocalDateTime(),
                             EnCycleState.valueOf(resultSet.getString("state").toUpperCase())));
                 }
             }

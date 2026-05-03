@@ -2,6 +2,7 @@ package com.spenderman.ui.controller;
 
 import com.spenderman.Observer.EvenEnum.EnEvenType;
 import com.spenderman.Observer.interfaceClass.IObserver;
+import com.spenderman.service.ClsUserService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -93,6 +94,7 @@ public class ClsSettingsController extends ABaseController implements IObserver 
         }
 
         // TODO: Call userService.changePassword(userId, oldPw, newPw)
+
         _passwordFeedback.setText("✓ Password updated successfully");
         _passwordFeedback.getStyleClass().removeAll("text-red");
         _passwordFeedback.getStyleClass().add("text-green");
@@ -106,7 +108,9 @@ public class ClsSettingsController extends ABaseController implements IObserver 
 
     @FXML
     private void _handleLogout() {
+        $currentUser=null;
         $sceneManager.logout();
+
     }
 
     @Override

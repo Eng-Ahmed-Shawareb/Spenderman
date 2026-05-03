@@ -131,12 +131,15 @@ public class ClsUserDAO implements IRepositoryUsername {
             statement.setString(1, userName);
 
             ResultSet resultSet = statement.executeQuery();
+
             if (resultSet.next()) {
-                return Optional.of(new ClsUser(resultSet.getInt("ID"),
+                ClsUser user=new ClsUser(resultSet.getInt("ID"),
                         resultSet.getString("first_name"),
                         resultSet.getString("last_name"),
                         resultSet.getString("username")
-                ));
+                );
+                user.setPasswordHash(resultSet.getString("user_password"));
+                return Optional.of(user);
             }
         } catch (SQLException e) {
             System.err.println("Error findByID: " + e.getMessage());

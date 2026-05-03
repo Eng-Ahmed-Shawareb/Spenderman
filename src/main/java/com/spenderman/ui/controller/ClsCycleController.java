@@ -31,10 +31,10 @@ public class ClsCycleController extends ABaseController implements IObserver {
 
     @FXML private VBox _formPanel;
     @FXML private TextField _budgetField;
-    @FXML private DatePicker _startPicker;
     @FXML private DatePicker _endPicker;
     @FXML private VBox _cycleList;
     @FXML private Label _errorLabel;
+    @FXML private Button _newCycleBtn;
 
     private ClsCycleService cycleService;
 
@@ -45,6 +45,40 @@ public class ClsCycleController extends ABaseController implements IObserver {
     @Override
     public void initialize() {
         ClsAppEventBus.getInstance().addObserver(this);
+
+        if (_endPicker != null) {
+            // Disable manual keyboard input
+            _endPicker.setEditable(false);
+            _endPicker.getEditor().setEditable(false);
+            _endPicker.getEditor().setDisable(true);
+            _endPicker.getEditor().setOpacity(1.0); // Prevent text from looking grayed out
+
+            // Fix erratic Date Selection/Parsing Bug
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            _endPicker.setConverter(new javafx.util.StringConverter<LocalDate>() {
+                @Override
+                public String toString(LocalDate date) {
+                    if (date != null) {
+                        return formatter.format(date);
+                    } else {
+                        return "";
+                    }
+                }
+
+                @Override
+                public LocalDate fromString(String string) {
+                    if (string != null && !string.trim().isEmpty()) {
+                        try {
+                            return LocalDate.parse(string, formatter);
+                        } catch (Exception e) {
+                            return null;
+                        }
+                    } else {
+                        return null;
+                    }
+                }
+            });
+        }
     }
 
     @FXML
@@ -58,8 +92,8 @@ public class ClsCycleController extends ABaseController implements IObserver {
 
     @FXML
     private void _handleAddCycle() {
-        if (_budgetField.getText().trim().isEmpty() || _startPicker.getValue() == null || _endPicker.getValue() == null) {
-            _errorLabel.setText("⚠ Please provide a budget, start date, and end date.");
+        if (_budgetField.getText().trim().isEmpty() || _endPicker.getValue() == null) {
+            _errorLabel.setText("⚠ Please provide a budget and end date.");
             _errorLabel.setVisible(true);
             _errorLabel.setManaged(true);
             return;
@@ -81,7 +115,7 @@ public class ClsCycleController extends ABaseController implements IObserver {
             return;
         }
 
-        LocalDateTime start = _startPicker.getValue().atStartOfDay();
+        LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = _endPicker.getValue().atTime(23, 59, 59);
 
         if (end.isBefore(start)) {
@@ -91,20 +125,19 @@ public class ClsCycleController extends ABaseController implements IObserver {
             return;
         }
 
-        // Close any currently active cycle
-        java.util.Optional<ClsCycle> activeCycle = cycleService.getActiveCycle($currentUser.getUserID());
-        if (activeCycle.isPresent()) {
-            cycleService.closeCycle(activeCycle.get().get_cycleID());
-            ClsAppEventBus.getInstance().notifyObservers(EnEvenType.CYCLE_UPDATED, activeCycle.get());
-        }
-
         ClsCycle newCycle = new ClsCycle($currentUser.getUserID(), 0, budget, start, end, EnCycleState.ACTIVE);
 
-        cycleService.createCycle(newCycle);
+        boolean created = cycleService.createCycle(newCycle);
+        if (!created) {
+            _errorLabel.setText("⚠ Could not create cycle. An active cycle might already exist.");
+            _errorLabel.setVisible(true);
+            _errorLabel.setManaged(true);
+            return;
+        }
+
         ClsAppEventBus.getInstance().notifyObservers(EnEvenType.CYCLE_ADDED, newCycle);
 
         _budgetField.clear();
-        _startPicker.setValue(null);
         _endPicker.setValue(null);
         _toggleForm();
         _loadCycles();
@@ -116,6 +149,12 @@ public class ClsCycleController extends ABaseController implements IObserver {
 
         List<ClsCycle> cycles = cycleService.getByUser($currentUser.getUserID());
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM yyyy");
+
+        boolean hasActiveCycle = cycles.stream().anyMatch(c -> c.get_state() == EnCycleState.ACTIVE);
+        if (_newCycleBtn != null) {
+            _newCycleBtn.setVisible(!hasActiveCycle);
+            _newCycleBtn.setManaged(!hasActiveCycle);
+        }
 
         // Reverse the list to show newest first, assuming inserted chronologically
         java.util.Collections.reverse(cycles);
@@ -152,12 +191,10 @@ public class ClsCycleController extends ABaseController implements IObserver {
             status.getStyleClass().add(active ? "badge-green" : "badge-muted");
             badges.getChildren().add(status);
 
-            if (active) {
-                Button closeBtn = new Button("Close");
-                closeBtn.getStyleClass().add("btn-outline-small");
-                closeBtn.setOnAction(e -> _handleCloseCycle(cy));
-                badges.getChildren().add(closeBtn);
-            }
+            Button deleteBtn = new Button("Delete");
+            deleteBtn.getStyleClass().add("btn-outline-small");
+            deleteBtn.setOnAction(e -> _handleDeleteCycle(cy));
+            badges.getChildren().add(deleteBtn);
 
             titleRow.getChildren().addAll(titleInfo, badges);
 
@@ -199,11 +236,9 @@ public class ClsCycleController extends ABaseController implements IObserver {
         }
     }
 
-    private void _handleCloseCycle(ClsCycle cycle) {
-
-        cycleService.closeCycle(cycle.get_cycleID());
-        cycle = cycleService.getCycleByID(cycle.get_cycleID()).get();
-        ClsAppEventBus.getInstance().notifyObservers(EnEvenType.CYCLE_UPDATED, cycle);
+    private void _handleDeleteCycle(ClsCycle cycle) {
+        cycleService.deleteCycle(cycle.get_cycleID());
+        ClsAppEventBus.getInstance().notifyObservers(EnEvenType.CYCLE_DELETED, cycle);
         _loadCycles();
     }
 

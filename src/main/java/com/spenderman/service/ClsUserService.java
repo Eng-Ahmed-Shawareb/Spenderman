@@ -15,22 +15,29 @@ public class ClsUserService {
     }
 
     public Optional<ClsUser> login(String username, String password) {
-        return user_DAO.findByUserName(username);
+       return user_DAO.findByUserName(username)
+                .filter(user -> password != null && password.equals(user.getPasswordHash()));
     }
 
     public boolean register(ClsUser user) {
         return user_DAO.save(user);
     }
 
-    public boolean changePassowrd(int userID, String oldPassword, String newPassowrd) {
-        ClsUser user = user_DAO.findByID(userID).get();
-        if (!oldPassword.equals(user.getPasswordHash())) {
-            throw new RuntimeException("please enter old password correctly.");
+    public boolean changePassword(int userID, String oldPassword, String newPassword) {
+        Optional<ClsUser> oUser = user_DAO.findByID(userID);
+
+        if (oUser.isEmpty()) {
+            return false;
         }
-        if (oldPassword.equals(newPassowrd)) {
-            throw new RuntimeException("the old password equals with new password");
+
+        ClsUser user = oUser.get();
+
+        if (!oldPassword.equals(user.getPasswordHash()) || oldPassword.equals(newPassword)) {
+            return false;
         }
-        return true;
+
+        user.setPasswordHash(newPassword);
+        return user_DAO.update(user);
     }
 
     public void logout() {

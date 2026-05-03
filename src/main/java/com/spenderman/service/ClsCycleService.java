@@ -27,18 +27,15 @@ public class ClsCycleService {
     }
 
     public boolean createCycle(ClsCycle cycle) {
+        Optional<ClsCycle> activeCycle = getActiveCycle(cycle.get_userID());
+        if (activeCycle.isPresent()) {
+            return false;
+        }
         return _cycleDAO.save(cycle);
     }
 
-    public boolean closeCycle(int cycleID) {
-        Optional<ClsCycle> optionalCycle = _cycleDAO.findByID(cycleID);
-        if (optionalCycle.isPresent()) {
-            ClsCycle cycle = optionalCycle.get();
-            cycle.set_state(EnCycleState.PAST);
-            cycle.set_endDate(LocalDateTime.now());
-            return _cycleDAO.update(cycle);
-        }
-        return false;
+    public boolean deleteCycle(int cycleID) {
+        return _cycleDAO.delete(cycleID);
     }
 
     public double getTotalSpent(int cycleID) {

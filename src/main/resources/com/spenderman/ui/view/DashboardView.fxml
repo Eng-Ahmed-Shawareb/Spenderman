@@ -20,21 +20,8 @@
             <Label text="TOTAL BALANCE" styleClass="field-label"/>
             <Label fx:id="_totalBalanceLabel" text="EGP 58,450.00" styleClass="mono-large"/>
 
-            <!-- Wallet breakdown row -->
-            <HBox spacing="8" styleClass="bg-transparent">
-                <VBox styleClass="card-mini" HBox.hgrow="ALWAYS" spacing="2">
-                    <Label text="Main Bank" styleClass="text-muted"/>
-                    <Label text="EGP 12,400" styleClass="mono-xs, text-green"/>
-                </VBox>
-                <VBox styleClass="card-mini" HBox.hgrow="ALWAYS" spacing="2">
-                    <Label text="Pocket Cash" styleClass="text-muted"/>
-                    <Label text="EGP 850" styleClass="mono-xs, text-blue"/>
-                </VBox>
-                <VBox styleClass="card-mini" HBox.hgrow="ALWAYS" spacing="2">
-                    <Label text="Business" styleClass="text-muted"/>
-                    <Label text="EGP 45,200" styleClass="mono-xs, text-purple"/>
-                </VBox>
-            </HBox>
+        <!-- Wallet breakdown row — populated dynamically by controller -->
+            <HBox fx:id="_walletBreakdownRow" spacing="8" styleClass="bg-transparent"/>
         </VBox>
 
         <!-- ═══ ACTIVE CYCLE CARD ═══ -->
@@ -78,19 +65,19 @@
         </VBox>
 
         <!-- ═══ THREE CHART CARDS ═══ -->
-        <HBox spacing="10" styleClass="bg-transparent">
-            <VBox fx:id="expenseChartCard" styleClass="card" HBox.hgrow="ALWAYS" spacing="6">
+        <HBox spacing="10" styleClass="bg-transparent" VBox.vgrow="ALWAYS">
+            <VBox fx:id="expenseChartCard" styleClass="card" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" spacing="10" alignment="CENTER">
                 <Label text="EXPENSES BY CATEGORY" styleClass="field-label"/>
                 <!-- Chart content injected dynamically -->
-                <HBox fx:id="_expenseChartContent" spacing="8" alignment="CENTER_LEFT"/>
+                <HBox fx:id="_expenseChartContent" spacing="16" alignment="CENTER" VBox.vgrow="ALWAYS"/>
             </VBox>
-            <VBox fx:id="depositChartCard" styleClass="card" HBox.hgrow="ALWAYS" spacing="6">
+            <VBox fx:id="depositChartCard" styleClass="card" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" spacing="10" alignment="CENTER">
                 <Label text="DEPOSITS BY CATEGORY" styleClass="field-label"/>
-                <HBox fx:id="_depositChartContent" spacing="8" alignment="CENTER_LEFT"/>
+                <HBox fx:id="_depositChartContent" spacing="16" alignment="CENTER" VBox.vgrow="ALWAYS"/>
             </VBox>
-            <VBox fx:id="walletChartCard" styleClass="card" HBox.hgrow="ALWAYS" spacing="6">
+            <VBox fx:id="walletChartCard" styleClass="card" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" spacing="10" alignment="CENTER">
                 <Label text="BALANCE BY WALLET" styleClass="field-label"/>
-                <HBox fx:id="_walletChartContent" spacing="8" alignment="CENTER_LEFT"/>
+                <HBox fx:id="_walletChartContent" spacing="16" alignment="CENTER" VBox.vgrow="ALWAYS"/>
             </VBox>
         </HBox>
 

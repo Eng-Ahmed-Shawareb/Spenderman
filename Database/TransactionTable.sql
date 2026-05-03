@@ -7,7 +7,7 @@ create table UserTransaction(
     amount decimal(10 , 2) not null , 
     type varchar(20) not null , 
     note nvarchar(150) , 
-    transaction_date datetime default getdate() , 
+    transaction_date datetime not null , 
     foreign key(FK_SavingGoalID) references SavingGoal(ID) , 
     foreign key(FK_WalletID) references Wallet(ID) on delete cascade , 
     foreign key(FK_CategoryID) references Category(ID), 

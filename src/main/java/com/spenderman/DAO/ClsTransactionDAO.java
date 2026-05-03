@@ -79,7 +79,7 @@ public class ClsTransactionDAO implements ITransactionDAO {
     @Override
     public boolean save(ClsTransaction entity) {
         String query = "INSERT INTO UserTransaction(" +
-                "FK_WalletID , FK_SavingGoalID , FK_CategoryID , amount , type , note) VALUES(? , ? , ? , ? , ? , ?)";
+                "FK_WalletID , FK_SavingGoalID , FK_CategoryID , amount , type , note , transaction_date) VALUES(? , ? , ? , ? , ? , ? , ?)";
         Connection connection = _databaseConnection.getConnection();
         try (
                 PreparedStatement statement = connection.prepareStatement(query);
@@ -105,6 +105,7 @@ public class ClsTransactionDAO implements ITransactionDAO {
             statement.setDouble(4, entity.get_amount());
             statement.setString(5, entity.get_type().name());
             statement.setString(6, entity.get_note());
+            statement.setTimestamp(7, java.sql.Timestamp.valueOf(LocalDateTime.now()));
             
             if (statement.executeUpdate() > 0)
                 return true;
@@ -267,21 +268,20 @@ public class ClsTransactionDAO implements ITransactionDAO {
     }
 
     @Override
-    public double getTotalExpensesBetweenDates(int userID, LocalDate startDate, LocalDate endDate) {
+    public double getTotalExpensesBetweenDates(int userID, LocalDateTime startDate, LocalDateTime endDate) {
         double totalExpenses = 0.0;
 
         Connection connection = _databaseConnection.getConnection();
 
-        String query = "SELECT amount FROM UserTransaction WHERE transaction_date >= ? AND transaction_date < ? AND type = ?";
+        String query = "SELECT amount FROM UserTransaction WHERE " +
+                "FK_WalletID IN (SELECT ID FROM Wallet WHERE FK_UserID = ?) " +
+                "AND type = 'EXPENSE' " +
+                "AND transaction_date >= ? AND transaction_date <= ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            java.sql.Date sqlStartDate = java.sql.Date.valueOf(startDate);
-            LocalDate exclusiveEndDate = endDate.plusDays(1);
-            java.sql.Date sqlEndDate = java.sql.Date.valueOf(exclusiveEndDate);
-
-            statement.setDate(1, sqlStartDate);
-            statement.setDate(2, sqlEndDate);
-            statement.setString(3, String.valueOf(EnTransactionType.EXPENSE));
+            statement.setInt(1, userID);
+            statement.setTimestamp(2, Timestamp.valueOf(startDate));
+            statement.setTimestamp(3, Timestamp.valueOf(endDate));
 
             ResultSet resultSet = statement.executeQuery();
 

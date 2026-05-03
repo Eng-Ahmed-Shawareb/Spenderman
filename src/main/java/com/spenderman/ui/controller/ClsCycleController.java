@@ -7,6 +7,8 @@ import com.spenderman.model.ClsCycle;
 import com.spenderman.model.StatusEnums.EnCycleState;
 import com.spenderman.service.ClsCycleService;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javafx.fxml.FXML;
@@ -79,8 +81,8 @@ public class ClsCycleController extends ABaseController implements IObserver {
             return;
         }
 
-        LocalDate start = _startPicker.getValue();
-        LocalDate end = _endPicker.getValue();
+        LocalDateTime start = _startPicker.getValue().atStartOfDay();
+        LocalDateTime end = _endPicker.getValue().atTime(23, 59, 59);
 
         if (end.isBefore(start)) {
             _errorLabel.setText("⚠ End date cannot be before start date.");
@@ -139,7 +141,7 @@ public class ClsCycleController extends ABaseController implements IObserver {
             String title = cy.get_startDate().format(fmt);
             Label cycleTitle = new Label(title);
             cycleTitle.getStyleClass().add("section-title");
-            Label cycleDate = new Label(cy.get_startDate() + " → " + cy.get_endDate());
+            Label cycleDate = new Label(cy.get_startDate().toLocalDate() + " → " + cy.get_endDate().toLocalDate());
             cycleDate.getStyleClass().add("text-muted");
             titleInfo.getChildren().addAll(cycleTitle, cycleDate);
             HBox.setHgrow(titleInfo, Priority.ALWAYS);
@@ -198,6 +200,7 @@ public class ClsCycleController extends ABaseController implements IObserver {
     }
 
     private void _handleCloseCycle(ClsCycle cycle) {
+
         cycleService.closeCycle(cycle.get_cycleID());
         cycle = cycleService.getCycleByID(cycle.get_cycleID()).get();
         ClsAppEventBus.getInstance().notifyObservers(EnEvenType.CYCLE_UPDATED, cycle);

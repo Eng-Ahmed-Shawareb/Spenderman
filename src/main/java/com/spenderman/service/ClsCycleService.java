@@ -5,6 +5,7 @@ import com.spenderman.DAO.InterfaceClass.ICycleDAO;
 import com.spenderman.model.ClsCycle;
 import com.spenderman.model.StatusEnums.EnCycleState;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +35,7 @@ public class ClsCycleService {
         if (optionalCycle.isPresent()) {
             ClsCycle cycle = optionalCycle.get();
             cycle.set_state(EnCycleState.PAST);
+            cycle.set_endDate(LocalDateTime.now());
             return _cycleDAO.update(cycle);
         }
         return false;

@@ -2,7 +2,7 @@ package com.spenderman.DAO.InterfaceClass;
 
 import com.spenderman.model.ClsTransaction;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ITransactionDAO extends IRepository<ClsTransaction> {
@@ -12,5 +12,5 @@ public interface ITransactionDAO extends IRepository<ClsTransaction> {
 
     public List<ClsTransaction> getByUser(int userID);
 
-    public double getTotalExpensesBetweenDates(int userID , LocalDate startDate , LocalDate endDate);
+    public double getTotalExpensesBetweenDates(int userID , LocalDateTime startDate , LocalDateTime endDate);
 }

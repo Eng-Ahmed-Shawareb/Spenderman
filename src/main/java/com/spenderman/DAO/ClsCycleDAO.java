@@ -8,7 +8,7 @@ import com.spenderman.model.ClsSavingGoal;
 import com.spenderman.model.StatusEnums.EnCycleState;
 
 import java.sql.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,8 +33,8 @@ public class ClsCycleDAO implements ICycleDAO {
             if (resultSet.next()) {
                 return Optional.of(new ClsCycle(resultSet.getInt("FK_UserID"), resultSet.getInt("ID"),
                         resultSet.getDouble("budget_amount"),
-                        resultSet.getObject("start_date", LocalDate.class),
-                        resultSet.getObject("end_date", LocalDate.class),
+                        resultSet.getObject("start_date", LocalDateTime.class),
+                        resultSet.getObject("end_date", LocalDateTime.class),
                         EnCycleState.valueOf(resultSet.getString("state").toUpperCase())));
             }
         } catch (SQLException es) {
@@ -54,8 +54,8 @@ public class ClsCycleDAO implements ICycleDAO {
             while (resultSet.next()) {
                 cycles.add(new ClsCycle(resultSet.getInt("FK_UserID"), resultSet.getInt("ID"),
                         resultSet.getDouble("budget_amount"),
-                        resultSet.getObject("start_date", LocalDate.class),
-                        resultSet.getObject("end_date", LocalDate.class),
+                        resultSet.getObject("start_date", LocalDateTime.class),
+                        resultSet.getObject("end_date", LocalDateTime.class),
                         EnCycleState.valueOf(resultSet.getString("state").toUpperCase())));
             }
             return cycles;
@@ -144,8 +144,8 @@ public class ClsCycleDAO implements ICycleDAO {
                 while (resultSet.next()) {
                     cycles.add(new ClsCycle(resultSet.getInt("FK_UserID"), resultSet.getInt("ID"),
                             resultSet.getDouble("budget_amount"),
-                            resultSet.getObject("start_date", LocalDate.class),
-                            resultSet.getObject("end_date", LocalDate.class),
+                            resultSet.getObject("start_date", LocalDateTime.class),
+                            resultSet.getObject("end_date", LocalDateTime.class),
                             EnCycleState.valueOf(resultSet.getString("state").toUpperCase())));
                 }
             }
@@ -174,8 +174,8 @@ public class ClsCycleDAO implements ICycleDAO {
                             resultSet.getInt("FK_UserID"),
                             resultSet.getInt("ID"),
                             resultSet.getDouble("budget_amount"),
-                            resultSet.getObject("start_date", LocalDate.class),
-                            resultSet.getObject("end_date", LocalDate.class),
+                            resultSet.getObject("start_date", LocalDateTime.class),
+                            resultSet.getObject("end_date", LocalDateTime.class),
                             EnCycleState.valueOf(resultSet.getString("state").toUpperCase())));
                 }
             }

@@ -1,18 +1,18 @@
 package com.spenderman.model;
 import com.spenderman.model.StatusEnums.EnCycleState;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class ClsCycle {
     private int _cycleID;
     private int _userID;
     private double _budgetAmount;
-    private LocalDate _startDate;
-    private LocalDate _endDate;
+    private LocalDateTime _startDate;
+    private LocalDateTime _endDate;
     private EnCycleState _state;
 
 
-    public ClsCycle(int _userID, int _cycleID, double _budgetAmount, LocalDate _startDate, LocalDate _endDate,EnCycleState _state) {
+    public ClsCycle(int _userID, int _cycleID, double _budgetAmount, LocalDateTime _startDate, LocalDateTime _endDate,EnCycleState _state) {
         this._userID = _userID;
         this._cycleID = _cycleID;
         this._budgetAmount = _budgetAmount;
@@ -53,19 +53,19 @@ public class ClsCycle {
         this._budgetAmount = _budgetAmount;
     }
 
-    public LocalDate get_startDate() {
+    public LocalDateTime get_startDate() {
         return _startDate;
     }
 
-    public void set_startDate(LocalDate _startDate) {
+    public void set_startDate(LocalDateTime _startDate) {
         this._startDate = _startDate;
     }
 
-    public LocalDate get_endDate() {
+    public LocalDateTime get_endDate() {
         return _endDate;
     }
 
-    public void set_endDate(LocalDate _endDate) {
+    public void set_endDate(LocalDateTime _endDate) {
         this._endDate = _endDate;
     }
 }

@@ -6,7 +6,7 @@ import com.spenderman.model.ClsTransaction;
 import com.spenderman.model.StatusEnums.EnTransactionType;
 
 import java.sql.Connection;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,7 +68,7 @@ public class ClsTransactionService {
         return success;
     }
 
-    public double getTotalExpensesBetweenDates(int userID, LocalDate startDate, LocalDate endDate) {
+    public double getTotalExpensesBetweenDates(int userID, LocalDateTime startDate, LocalDateTime endDate) {
         return _transactionDAO.getTotalExpensesBetweenDates(userID , startDate , endDate);
     }
 

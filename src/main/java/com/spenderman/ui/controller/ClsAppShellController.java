@@ -1,5 +1,6 @@
 package com.spenderman.ui.controller;
 
+import com.spenderman.ui.manager.ClsSceneManager;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -29,6 +30,7 @@ public class ClsAppShellController extends ABaseController {
     @FXML private Button _navCategories;
     @FXML private Button _navCycles;
     @FXML private Button _navGoals;
+    @FXML private Button _navAiChat; // 👈 1. ضفنا تعريف الزرار الجديد هنا
     @FXML private Button _navSettings;
 
     private Map<String, Button> _navButtons;
@@ -43,6 +45,7 @@ public class ClsAppShellController extends ABaseController {
         _navButtons.put("categories", _navCategories);
         _navButtons.put("cycles", _navCycles);
         _navButtons.put("goals", _navGoals);
+        _navButtons.put("ChatView", _navAiChat); // 👈 2. ضفناه في الماب عشان لونه يتغير لما تدوس عليه
         _navButtons.put("settings", _navSettings);
     }
 
@@ -61,6 +64,8 @@ public class ClsAppShellController extends ABaseController {
         this._activeScreenId = screenId;
         for (Map.Entry<String, Button> entry : _navButtons.entrySet()) {
             Button btn = entry.getValue();
+            if(btn == null) continue; // حماية إضافية لو الزرار مش موجود
+
             if (entry.getKey().equals(screenId)) {
                 btn.getStyleClass().removeAll("nav-button");
                 if (!btn.getStyleClass().contains("nav-button-active")) {
@@ -82,6 +87,10 @@ public class ClsAppShellController extends ABaseController {
     @FXML private void _navToCategories()   { $sceneManager.switchTo("categories"); }
     @FXML private void _navToCycles()       { $sceneManager.switchTo("cycles"); }
     @FXML private void _navToGoals()        { $sceneManager.switchTo("goals"); }
+
+    // 👈 3. ظبطنا الدالة دي عشان تبقى زي إخواتها بالظبط وتفتح الشاشة
+    @FXML private void _onAiChatClick()     { $sceneManager.switchTo("ChatView"); }
+
     @FXML private void _navToSettings()     { $sceneManager.switchTo("settings"); }
 
     @Override

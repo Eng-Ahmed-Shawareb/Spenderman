@@ -2,6 +2,8 @@ module com.spenderman {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
+    requires org.json;
+    requires java.net.http;
 
     // Allow JavaFX to reflectively access controllers and the main app
     opens com.spenderman to javafx.fxml;

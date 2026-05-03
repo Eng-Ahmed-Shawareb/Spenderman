@@ -9,16 +9,13 @@
       styleClass="bg-root"
       fillHeight="true">
 
-    <!-- ═══ SIDEBAR ═══ -->
     <VBox styleClass="sidebar" fillWidth="true">
 
-        <!-- Logo section -->
         <VBox styleClass="sidebar-logo" spacing="2">
             <Label text="\$penderman" styleClass="app-logo-sidebar"/>
             <Label text="Personal Finance" styleClass="text-muted"/>
         </VBox>
 
-        <!-- Navigation buttons -->
         <VBox fx:id="_navBox" styleClass="sidebar-nav" VBox.vgrow="ALWAYS" fillWidth="true">
             <Button fx:id="_navDashboard"    text="⊞ Dashboard"    styleClass="nav-button" onAction="#_navToDashboard"    maxWidth="Infinity"/>
             <Button fx:id="_navTransactions" text="↕ Transactions" styleClass="nav-button" onAction="#_navToTransactions" maxWidth="Infinity"/>
@@ -26,10 +23,12 @@
             <Button fx:id="_navCategories"   text="◉ Categories"   styleClass="nav-button" onAction="#_navToCategories"   maxWidth="Infinity"/>
             <Button fx:id="_navCycles"       text="◎ Cycles"       styleClass="nav-button" onAction="#_navToCycles"       maxWidth="Infinity"/>
             <Button fx:id="_navGoals"        text="◇ Goals"        styleClass="nav-button" onAction="#_navToGoals"        maxWidth="Infinity"/>
+
+            <Button fx:id="_navAiChat"       text="✨ AI Chat"      styleClass="nav-button" onAction="#_onAiChatClick"     maxWidth="Infinity"/>
+
             <Button fx:id="_navSettings"     text="⚙ Settings"     styleClass="nav-button" onAction="#_navToSettings"     maxWidth="Infinity"/>
         </VBox>
 
-        <!-- ClsUser profile footer -->
         <HBox styleClass="sidebar-footer" spacing="8" alignment="CENTER_LEFT">
             <StackPane prefWidth="28" prefHeight="28">
                 <javafx.scene.shape.Circle radius="14" styleClass="avatar-circle"/>
@@ -43,9 +42,7 @@
 
     </VBox>
 
-    <!-- ═══ CONTENT AREA ═══ -->
     <StackPane fx:id="_contentArea" styleClass="content-area" HBox.hgrow="ALWAYS">
-        <!-- Content screens will be loaded here dynamically -->
     </StackPane>
 
 </HBox>

@@ -21,12 +21,6 @@ import com.spenderman.Observer.Singleton.ClsAppEventBus;
 
 /**
  * Singleton scene manager for handling screen navigation and state.
- * Loads FXML views, applies global CSS stylesheet, and manages the app shell.
- *
- * UML: ClsSceneManager (Singleton)
- *   - switchTo(fxmlPath) : void
- *   - showDialog(fxmlPath) : void
- *   - getController(key) : ABaseController
  */
 public class ClsSceneManager implements IObserver {
     private static ClsSceneManager _instance;
@@ -37,11 +31,11 @@ public class ClsSceneManager implements IObserver {
     private ClsAppShellController _shellController;
     private boolean _isDarkTheme = true;
 
-    // ═══ PATHS — must match your exact resources directory structure ═══
+    // ═══ PATHS ═══
     private static final String _VIEWS_BASE = "/com/spenderman/ui/view/";
     private static final String _CSS_PATH   = "/com/spenderman/ui/style/style.css";
 
-    // Screen ID to FXML filename mapping
+
     private static final Map<String, String> _SCREEN_MAP = Map.of(
             "login",        "LoginView.fxml",
             "signup",       "SignUpView.fxml",
@@ -51,12 +45,13 @@ public class ClsSceneManager implements IObserver {
             "categories",   "CategoryView.fxml",
             "cycles",       "CycleView.fxml",
             "goals",        "GoalView.fxml",
-            "settings",     "SettingsView.fxml"
+            "settings",     "SettingsView.fxml",
+            "ChatView",     "ChatView.fxml"   // <--- السطر الجديد
     );
 
-    // Screens that live inside the AppShell (not standalone)
+
     private static final Set<String> _SHELL_SCREENS = Set.of(
-            "dashboard", "transactions", "wallets", "categories", "cycles", "goals", "settings"
+            "dashboard", "transactions", "wallets", "categories", "cycles", "goals", "settings", "ChatView"
     );
 
     private ClsSceneManager() {
@@ -74,11 +69,6 @@ public class ClsSceneManager implements IObserver {
         this._primaryStage = stage;
     }
 
-    /**
-     * Switch to a screen by its ID.
-     * Auth screens (login, signup) are loaded as full-page views.
-     * All other screens are loaded inside the AppShell sidebar layout.
-     */
     public void switchTo(String screenId) {
         try {
             if (_SHELL_SCREENS.contains(screenId)) {
@@ -92,9 +82,6 @@ public class ClsSceneManager implements IObserver {
         }
     }
 
-    /**
-     * Load a standalone screen (login, signup) — no sidebar.
-     */
     private void _switchToStandaloneScreen(String screenId) throws IOException {
         String fxmlFile = _SCREEN_MAP.get(screenId);
         if (fxmlFile == null) {
@@ -106,7 +93,6 @@ public class ClsSceneManager implements IObserver {
         URL fxmlUrl = getClass().getResource(fullPath);
         if (fxmlUrl == null) {
             System.err.println("❌ FXML file not found at: " + fullPath);
-            System.err.println("   Verify this file exists in src/main/resources" + fullPath);
             return;
         }
 
@@ -130,15 +116,10 @@ public class ClsSceneManager implements IObserver {
             _applyThemeToRoot();
         }
 
-        // Clear shell reference when going to standalone screens
         _shellController = null;
     }
 
-    /**
-     * Load a screen inside the AppShell (sidebar + content area).
-     */
     private void _switchToShellScreen(String screenId) throws IOException {
-        // Load the shell if not already loaded
         if (_shellController == null) {
             String shellPath = _VIEWS_BASE + "AppShell.fxml";
             URL shellUrl = getClass().getResource(shellPath);
@@ -164,7 +145,6 @@ public class ClsSceneManager implements IObserver {
             }
         }
 
-        // Now load the content screen into the shell's content area
         String fxmlFile = _SCREEN_MAP.get(screenId);
         String fullPath = _VIEWS_BASE + fxmlFile;
         URL contentUrl = getClass().getResource(fullPath);
@@ -183,32 +163,22 @@ public class ClsSceneManager implements IObserver {
             _controllerCache.put(screenId, controller);
         }
 
-        // Set the content into the shell
         _shellController.setContent(contentRoot);
         _shellController.setActiveNav(screenId);
     }
 
-    /**
-     * Apply CSS stylesheet to the scene. Logs a warning if the file is not found.
-     */
     private void _applyCss(Scene scene) {
         URL cssUrl = getClass().getResource(_CSS_PATH);
         if (cssUrl != null) {
             scene.getStylesheets().add(cssUrl.toExternalForm());
-            System.out.println("✅ CSS loaded: " + _CSS_PATH);
-        } else {
-            System.err.println("⚠️ CSS not found at: " + _CSS_PATH);
-            System.err.println("   Verify this file exists in src/main/resources" + _CSS_PATH);
         }
     }
 
     @Override
     public void update(EnEvenType evenType, Object data) {
-        if (evenType == EnEvenType.THEME_CHANGED) {
-            if (data instanceof Boolean) {
-                _isDarkTheme = (Boolean) data;
-                _applyThemeToRoot();
-            }
+        if (evenType == EnEvenType.THEME_CHANGED && data instanceof Boolean) {
+            _isDarkTheme = (Boolean) data;
+            _applyThemeToRoot();
         }
     }
 
@@ -217,10 +187,8 @@ public class ClsSceneManager implements IObserver {
             Parent root = _mainScene.getRoot();
             if (_isDarkTheme) {
                 root.getStyleClass().remove("light-theme");
-            } else {
-                if (!root.getStyleClass().contains("light-theme")) {
-                    root.getStyleClass().add("light-theme");
-                }
+            } else if (!root.getStyleClass().contains("light-theme")) {
+                root.getStyleClass().add("light-theme");
             }
         }
     }
@@ -232,19 +200,8 @@ public class ClsSceneManager implements IObserver {
         switchTo("login");
     }
 
-    public void setCurrentUser(ClsUser user) {
-        this._currentUser = user;
-    }
-
-    public ClsUser getCurrentUser() {
-        return _currentUser;
-    }
-
-    public Stage getPrimaryStage() {
-        return _primaryStage;
-    }
-
-    public ABaseController getController(String key) {
-        return _controllerCache.get(key);
-    }
+    public void setCurrentUser(ClsUser user) { this._currentUser = user; }
+    public ClsUser getCurrentUser() { return _currentUser; }
+    public Stage getPrimaryStage() { return _primaryStage; }
+    public ABaseController getController(String key) { return _controllerCache.get(key); }
 }

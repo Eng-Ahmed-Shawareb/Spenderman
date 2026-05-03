@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.spenderman.ui.controller.ClsChatController"
+      spacing="12" styleClass="bg-root"> <padding><Insets top="0" right="0" bottom="16" left="0"/></padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <Label text="AI Financial Assistant" styleClass="page-title" HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <ScrollPane fx:id="_scrollPane" VBox.vgrow="ALWAYS" fitToWidth="true" styleClass="scroll-pane">
+        <VBox fx:id="_chatBox" spacing="15" style="-fx-padding: 15px; -fx-background-color: transparent;"/>
+    </ScrollPane>
+
+    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="card">
+        <TextField fx:id="_messageInput" HBox.hgrow="ALWAYS" promptText="Ask me about your budget..."
+                   onAction="#_handleSendMessage" />
+
+        <Button text="Send" styleClass="btn-primary" onAction="#_handleSendMessage"/>
+    </HBox>
+
+</VBox>

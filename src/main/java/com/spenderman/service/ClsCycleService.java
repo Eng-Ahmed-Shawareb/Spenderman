@@ -11,12 +11,13 @@ import java.util.Optional;
 public class ClsCycleService {
     private ICycleDAO _cycleDAO;
     private ClsTransactionService _transactionService;
+
     public ClsCycleService() {
         this._cycleDAO = new ClsCycleDAO();
         this._transactionService = new ClsTransactionService();
     }
 
-    public Optional<ClsCycle> getActiveCycle(int userID){
+    public Optional<ClsCycle> getActiveCycle(int userID) {
         return _cycleDAO.findActiveCycle(userID);
     }
 
@@ -39,43 +40,46 @@ public class ClsCycleService {
     }
 
     public double getTotalSpent(int cycleID) {
-        double totalSpent=0;
-        Optional<ClsCycle> optionalCycle=_cycleDAO.findByID(cycleID);
-        if(optionalCycle.isPresent()){
-            ClsCycle cycle=optionalCycle.get();
-            totalSpent= _transactionService.getTotalExpensesBetweenDates(
+        double totalSpent = 0;
+        Optional<ClsCycle> optionalCycle = _cycleDAO.findByID(cycleID);
+        if (optionalCycle.isPresent()) {
+            ClsCycle cycle = optionalCycle.get();
+            totalSpent = _transactionService.getTotalExpensesBetweenDates(
                     cycle.get_userID(),
                     cycle.get_startDate(),
-                    cycle.get_endDate()
-            );
+                    cycle.get_endDate());
         }
         return totalSpent;
     }
 
-    public double getRemainingBudget(int cycleID){
-        double remainingBudget=0;
-        Optional<ClsCycle> optionalCycle=_cycleDAO.findByID(cycleID);
-        if(optionalCycle.isPresent()){
-            ClsCycle cycle=optionalCycle.get();
-            double totalSpent=getTotalSpent(cycleID),budget=cycle.get_budgetAmount();
-            remainingBudget=-totalSpent + budget;
+    public double getRemainingBudget(int cycleID) {
+        double remainingBudget = 0;
+        Optional<ClsCycle> optionalCycle = _cycleDAO.findByID(cycleID);
+        if (optionalCycle.isPresent()) {
+            ClsCycle cycle = optionalCycle.get();
+            double totalSpent = getTotalSpent(cycleID), budget = cycle.get_budgetAmount();
+            remainingBudget = -totalSpent + budget;
         }
         return remainingBudget;
     }
 
     public double getSpentPercentage(int cycleID) {
         Optional<ClsCycle> optionalCycle = _cycleDAO.findByID(cycleID);
-        double spentPercentage=0.0;
+        double spentPercentage = 0.0;
         if (optionalCycle.isPresent()) {
             ClsCycle cycle = optionalCycle.get();
             double budget = cycle.get_budgetAmount();
 
-            if (budget <= 0) return spentPercentage;
+            if (budget <= 0)
+                return spentPercentage;
 
             double spent = getTotalSpent(cycleID);
-            spentPercentage= (spent / budget) * 100.0;
+            spentPercentage = (spent / budget) * 100.0;
         }
         return spentPercentage;
     }
 
+    public Optional<ClsCycle> getCycleByID(int cycleID){
+        return _cycleDAO.findByID(cycleID);
+    }
 }

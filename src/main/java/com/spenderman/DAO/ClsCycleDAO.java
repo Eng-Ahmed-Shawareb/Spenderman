@@ -26,19 +26,16 @@ public class ClsCycleDAO implements ICycleDAO {
         Connection connection = _databaseConnection.getConnection();
 
         try (
-                PreparedStatement statement = connection.prepareStatement(query);
-        ) {
+                PreparedStatement statement = connection.prepareStatement(query);) {
             statement.setInt(1, ID);
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                return Optional.of(new ClsCycle(resultSet.getInt("FK_UserID")
-                        , resultSet.getInt("ID"),
+                return Optional.of(new ClsCycle(resultSet.getInt("FK_UserID"), resultSet.getInt("ID"),
                         resultSet.getDouble("budget_amount"),
                         resultSet.getObject("start_date", LocalDate.class),
                         resultSet.getObject("end_date", LocalDate.class),
-                        EnCycleState.valueOf(resultSet.getString("state").toUpperCase())
-                ));
+                        EnCycleState.valueOf(resultSet.getString("state").toUpperCase())));
             }
         } catch (SQLException es) {
             System.out.println("Exception" + es.getMessage());
@@ -52,17 +49,14 @@ public class ClsCycleDAO implements ICycleDAO {
         List<ClsCycle> cycles = new ArrayList<ClsCycle>();
         Connection connection = _databaseConnection.getConnection();
         try (
-                PreparedStatement statement = connection.prepareStatement(query);
-        ) {
+                PreparedStatement statement = connection.prepareStatement(query);) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                cycles.add(new ClsCycle(resultSet.getInt("FK_UserID")
-                        , resultSet.getInt("ID"),
+                cycles.add(new ClsCycle(resultSet.getInt("FK_UserID"), resultSet.getInt("ID"),
                         resultSet.getDouble("budget_amount"),
                         resultSet.getObject("start_date", LocalDate.class),
                         resultSet.getObject("end_date", LocalDate.class),
-                        EnCycleState.valueOf(resultSet.getString("state").toUpperCase())
-                ));
+                        EnCycleState.valueOf(resultSet.getString("state").toUpperCase())));
             }
             return cycles;
 
@@ -78,8 +72,7 @@ public class ClsCycleDAO implements ICycleDAO {
                 "FK_UserID,budget_amount,start_date,end_date,state) VALUES(?,?,?,?,?)";
         Connection connection = _databaseConnection.getConnection();
         try (
-                PreparedStatement statement = connection.prepareStatement(query);
-        ) {
+                PreparedStatement statement = connection.prepareStatement(query);) {
 
             statement.setInt(1, entity.get_userID());
             statement.setDouble(2, entity.get_budgetAmount());
@@ -105,8 +98,7 @@ public class ClsCycleDAO implements ICycleDAO {
                 "WHERE ID=?";
         Connection connection = _databaseConnection.getConnection();
         try (
-                PreparedStatement statement = connection.prepareStatement(query);
-        ) {
+                PreparedStatement statement = connection.prepareStatement(query);) {
             statement.setInt(1, entity.get_userID());
             statement.setDouble(2, entity.get_budgetAmount());
             statement.setObject(3, entity.get_startDate());
@@ -140,7 +132,6 @@ public class ClsCycleDAO implements ICycleDAO {
     public List<ClsCycle> findByUserID(int userID) {
         List<ClsCycle> cycles = new ArrayList<>();
 
-
         String query = "SELECT * FROM Cycle WHERE FK_UserID = ?";
 
         Connection connection = _databaseConnection.getConnection();
@@ -151,13 +142,11 @@ public class ClsCycleDAO implements ICycleDAO {
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    cycles.add(new ClsCycle(resultSet.getInt("FK_UserID")
-                            , resultSet.getInt("ID"),
+                    cycles.add(new ClsCycle(resultSet.getInt("FK_UserID"), resultSet.getInt("ID"),
                             resultSet.getDouble("budget_amount"),
                             resultSet.getObject("start_date", LocalDate.class),
                             resultSet.getObject("end_date", LocalDate.class),
-                            EnCycleState.valueOf(resultSet.getString("state").toUpperCase())
-                    ));
+                            EnCycleState.valueOf(resultSet.getString("state").toUpperCase())));
                 }
             }
 
@@ -187,8 +176,7 @@ public class ClsCycleDAO implements ICycleDAO {
                             resultSet.getDouble("budget_amount"),
                             resultSet.getObject("start_date", LocalDate.class),
                             resultSet.getObject("end_date", LocalDate.class),
-                            EnCycleState.valueOf(resultSet.getString("state").toUpperCase())
-                    ));
+                            EnCycleState.valueOf(resultSet.getString("state").toUpperCase())));
                 }
             }
         } catch (SQLException es) {

@@ -199,6 +199,7 @@ public class ClsCycleController extends ABaseController implements IObserver {
 
     private void _handleCloseCycle(ClsCycle cycle) {
         cycleService.closeCycle(cycle.get_cycleID());
+        cycle = cycleService.getCycleByID(cycle.get_cycleID()).get();
         ClsAppEventBus.getInstance().notifyObservers(EnEvenType.CYCLE_UPDATED, cycle);
         _loadCycles();
     }

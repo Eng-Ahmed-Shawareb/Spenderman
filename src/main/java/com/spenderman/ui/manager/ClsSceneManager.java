@@ -3,6 +3,7 @@ package com.spenderman.ui.manager;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import com.spenderman.ui.controller.ABaseController;
@@ -185,6 +186,19 @@ public class ClsSceneManager implements IObserver {
     private void _applyThemeToRoot() {
         if (_mainScene != null && _mainScene.getRoot() != null) {
             Parent root = _mainScene.getRoot();
+            String iconPath = "/utils/darkmodeicon.png";
+            
+            // Update window icon if stage is available
+            if (_primaryStage != null) {
+                _primaryStage.getIcons().clear();
+                _primaryStage.getIcons().add(new Image(getClass().getResourceAsStream(iconPath)));
+            }
+
+            // Update sidebar logo if shell is active
+            if (_shellController != null && _shellController.getSidebarLogo() != null) {
+                _shellController.getSidebarLogo().setImage(new Image(getClass().getResourceAsStream(iconPath)));
+            }
+
             if (_isDarkTheme) {
                 root.getStyleClass().remove("light-theme");
             } else if (!root.getStyleClass().contains("light-theme")) {

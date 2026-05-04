@@ -2,6 +2,7 @@ package com.spenderman;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import com.spenderman.ui.manager.ClsSceneManager;
 
@@ -14,6 +15,7 @@ public class ClsSpendermanApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Spenderman — Personal Finance");
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/utils/darkmodeicon.png")));
         primaryStage.setWidth(1000);
         primaryStage.setHeight(700);
         primaryStage.setMinWidth(860);

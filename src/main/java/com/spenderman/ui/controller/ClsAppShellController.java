@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
@@ -22,6 +23,7 @@ public class ClsAppShellController extends ABaseController {
     @FXML private VBox _navBox;
     @FXML private Label _userNameLabel;
     @FXML private Label _avatarInitials;
+    @FXML private ImageView _sidebarLogo;
 
     // Nav buttons
     @FXML private Button _navDashboard;
@@ -101,4 +103,6 @@ public class ClsAppShellController extends ABaseController {
             _avatarInitials.setText($currentUser.getInitials());
         }
     }
+
+    public ImageView getSidebarLogo() { return _sidebarLogo; }
 }

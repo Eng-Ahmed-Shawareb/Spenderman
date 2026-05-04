@@ -3,6 +3,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
 <HBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.spenderman.ui.controller.ClsAppShellController"
@@ -11,9 +13,14 @@
 
     <VBox styleClass="sidebar" fillWidth="true">
 
-        <VBox styleClass="sidebar-logo" spacing="2">
-            <Label text="\$penderman" styleClass="app-logo-sidebar"/>
-            <Label text="Personal Finance" styleClass="text-muted"/>
+        <VBox styleClass="sidebar-logo" spacing="6">
+            <ImageView fx:id="_sidebarLogo" fitWidth="24" fitHeight="24" pickOnBounds="true" preserveRatio="true">
+                <Image url="@../../../../utils/darkmodeicon.png"/>
+            </ImageView>
+            <VBox spacing="0">
+                <Label text="\$penderman" styleClass="app-logo-sidebar"/>
+                <Label text="Personal Finance" styleClass="text-muted" style="-fx-font-size: 9px;"/>
+            </VBox>
         </VBox>
 
         <VBox fx:id="_navBox" styleClass="sidebar-nav" VBox.vgrow="ALWAYS" fillWidth="true">
@@ -36,7 +43,6 @@
             </StackPane>
             <VBox spacing="1" styleClass="bg-transparent">
                 <Label fx:id="_userNameLabel" text="Ahmed" styleClass="text-primary" style="-fx-font-size: 11px;"/>
-                <Label text="🌙 Dark Mode" styleClass="text-muted" style="-fx-font-size: 9px;"/>
             </VBox>
         </HBox>
 

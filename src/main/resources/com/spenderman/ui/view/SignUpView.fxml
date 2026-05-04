@@ -3,6 +3,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.spenderman.ui.controller.ClsSignUpController"
@@ -11,7 +13,10 @@
       fillWidth="true">
 
     <!-- Header: Logo + subtitle (above the card) -->
-    <VBox styleClass="auth-header" alignment="TOP_CENTER" spacing="4">
+    <VBox styleClass="auth-header" alignment="TOP_CENTER" spacing="8">
+        <ImageView fitWidth="60" fitHeight="60" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../../../../utils/darkmodeicon.png"/>
+        </ImageView>
         <Label text="\$penderman" styleClass="app-logo"/>
         <Label text="Create your account" styleClass="text-muted"/>
     </VBox>

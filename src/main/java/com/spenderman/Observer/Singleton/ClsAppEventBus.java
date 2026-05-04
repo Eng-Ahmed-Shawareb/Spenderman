@@ -38,4 +38,10 @@ public class ClsAppEventBus implements IObservable {
                 observer.update(evenType , data);
             }
     }
+
+    public void clearAllObservers() {
+        if (_observers != null) {
+            _observers.clear();
+        }
+    }
 }

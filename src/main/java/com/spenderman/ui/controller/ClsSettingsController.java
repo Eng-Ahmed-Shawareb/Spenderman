@@ -128,7 +128,6 @@ public class ClsSettingsController extends ABaseController implements IObserver 
 
     @FXML
     private void _handleLogout() {
-        ClsAppEventBus.getInstance().removeObserver(this);
         $currentUser = null;
         $sceneManager.logout();
     }

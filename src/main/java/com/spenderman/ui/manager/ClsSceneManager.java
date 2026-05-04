@@ -197,6 +197,14 @@ public class ClsSceneManager implements IObserver {
         _currentUser = null;
         _controllerCache.clear();
         _shellController = null;
+        
+        // 1. Wipe all controllers from the event bus (frees memory & stops ghost updates)
+        ClsAppEventBus.getInstance().clearAllObservers();
+        
+        // 2. Re-register SceneManager so it can still handle THEME_CHANGED events
+        ClsAppEventBus.getInstance().addObserver(this);
+        
+        // 3. Route back to login screen
         switchTo("login");
     }
 

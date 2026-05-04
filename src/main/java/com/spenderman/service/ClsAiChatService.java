@@ -38,11 +38,10 @@ public class ClsAiChatService {
     private String _prepareFinancialContext(int userId) {
         StringBuilder context = new StringBuilder();
         try {
-            // 1. Wallets (إجمالي الرصيد)
+
             double totalBalance = _walletService.getTotalBalance(userId);
             context.append(String.format("Total balance: %.2f EGP. ", totalBalance));
 
-            // 2. Transactions (المعاملات: إيرادات ومصروفات)
             try {
                 double totalIncome = 0, totalExpenses = 0;
                 List<ClsTransaction> transactions = _transactionService.getByUser(userId);
@@ -54,7 +53,6 @@ public class ClsAiChatService {
                         totalIncome, totalExpenses, transactions.size()));
             } catch (Exception e) {}
 
-            // 3. Budget Cycles (الميزانية الحالية الدورية)
             try {
                 Optional<ClsCycle> activeCycle = _cycleService.getActiveCycle(userId);
                 if (activeCycle.isPresent()) {
@@ -64,7 +62,6 @@ public class ClsAiChatService {
                 }
             } catch (Exception e) {}
 
-            // 4. Saving Goals (أهداف الادخار)
             try {
                 List<ClsSavingGoal> goals = _savingGoalService.getByUser(userId);
                 if (!goals.isEmpty()) {
@@ -78,7 +75,6 @@ public class ClsAiChatService {
                 }
             } catch (Exception e) {}
 
-            // 5. Categories (الفئات) - محطوطة في try لأنها بترمي Exception لو مفيش فئات
             try {
                 List<ClsCategory> categories = _categoryService.getByUser(userId);
                 context.append(String.format("User has configured %d custom categories. ", categories.size()));

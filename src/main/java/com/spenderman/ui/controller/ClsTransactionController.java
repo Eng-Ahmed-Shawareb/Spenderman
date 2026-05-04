@@ -5,6 +5,7 @@ import com.spenderman.Observer.interfaceClass.IObserver;
 import com.spenderman.Observer.Singleton.ClsAppEventBus;
 import com.spenderman.model.*;
 import com.spenderman.model.StatusEnums.EnTransactionType;
+import com.spenderman.model.StatusEnums.EnGoalState;
 import com.spenderman.service.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -114,7 +115,10 @@ public class ClsTransactionController extends ABaseController implements IObserv
             if (newToggle == _targetWallet && _wallets != null) {
                 _targetCombo.getItems().addAll(_wallets.stream().map(ClsWallet::get_name).collect(Collectors.toList()));
             } else if (_goals != null) {
-                _targetCombo.getItems().addAll(_goals.stream().map(ClsSavingGoal::get_name).collect(Collectors.toList()));
+                _targetCombo.getItems().addAll(_goals.stream()
+                        .filter(g -> g.getStatus() == EnGoalState.ACTIVE)
+                        .map(ClsSavingGoal::get_name)
+                        .collect(Collectors.toList()));
             }
         });
 
@@ -144,7 +148,10 @@ public class ClsTransactionController extends ABaseController implements IObserv
             if (newToggle == _editTargetWallet && _wallets != null) {
                 _editTargetCombo.getItems().addAll(_wallets.stream().map(ClsWallet::get_name).collect(Collectors.toList()));
             } else if (_goals != null) {
-                _editTargetCombo.getItems().addAll(_goals.stream().map(ClsSavingGoal::get_name).collect(Collectors.toList()));
+                _editTargetCombo.getItems().addAll(_goals.stream()
+                        .filter(g -> g.getStatus() == EnGoalState.ACTIVE)
+                        .map(ClsSavingGoal::get_name)
+                        .collect(Collectors.toList()));
             }
         });
 
@@ -401,7 +408,10 @@ public class ClsTransactionController extends ABaseController implements IObserv
         if (selected == _targetWallet && _wallets != null) {
             _targetCombo.getItems().addAll(_wallets.stream().map(ClsWallet::get_name).collect(Collectors.toList()));
         } else if (_goals != null) {
-            _targetCombo.getItems().addAll(_goals.stream().map(ClsSavingGoal::get_name).collect(Collectors.toList()));
+            _targetCombo.getItems().addAll(_goals.stream()
+                    .filter(g -> g.getStatus() == EnGoalState.ACTIVE)
+                    .map(ClsSavingGoal::get_name)
+                    .collect(Collectors.toList()));
         }
 
         ToggleButton editSelected = (ToggleButton) _editTargetGroup.getSelectedToggle();
@@ -409,7 +419,10 @@ public class ClsTransactionController extends ABaseController implements IObserv
         if (editSelected == _editTargetWallet && _wallets != null) {
             _editTargetCombo.getItems().addAll(_wallets.stream().map(ClsWallet::get_name).collect(Collectors.toList()));
         } else if (_goals != null) {
-            _editTargetCombo.getItems().addAll(_goals.stream().map(ClsSavingGoal::get_name).collect(Collectors.toList()));
+            _editTargetCombo.getItems().addAll(_goals.stream()
+                    .filter(g -> g.getStatus() == EnGoalState.ACTIVE)
+                    .map(ClsSavingGoal::get_name)
+                    .collect(Collectors.toList()));
         }
 
         _loadTransactions();

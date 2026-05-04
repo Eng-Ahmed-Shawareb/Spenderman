@@ -294,4 +294,19 @@ public class ClsTransactionDAO implements ITransactionDAO {
 
         return totalExpenses;
     }
+
+    @Override
+    public boolean deleteByGoalID(int goalID) {
+        String query = "DELETE FROM UserTransaction WHERE FK_SavingGoalID = ?";
+        Connection connection = _databaseConnection.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, goalID);
+            statement.executeUpdate();
+            System.out.println("Deleted transactions for goalID=" + goalID);
+            return true;
+        } catch (SQLException es) {
+            System.err.println("Exception deleteByGoalID: " + es.getMessage());
+            return false;
+        }
+    }
 }

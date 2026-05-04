@@ -234,7 +234,10 @@ public class ClsDashboardController extends ABaseController implements IObserver
     private void _loadWalletChart() {
         List<ClsWallet> wallets = _walletService.getByUser($currentUser.getUserID());
 
-        double grandTotal = wallets.stream().mapToDouble(ClsWallet::get_balance).sum();
+        // Clamp negative balances to 0 so they don't distort the chart
+        double grandTotal = wallets.stream()
+                .mapToDouble(w -> Math.max(0, w.get_balance()))
+                .sum();
 
         if (wallets.isEmpty() || grandTotal == 0) {
             _walletChartContent.getChildren().clear();
@@ -247,11 +250,12 @@ public class ClsDashboardController extends ABaseController implements IObserver
         double[][] segs   = new double[wallets.size()][4];
         String[]   labels = new String[wallets.size()];
         for (int i = 0; i < wallets.size(); i++) {
-            ClsWallet w = wallets.get(i);
-            double pct  = grandTotal > 0 ? (w.get_balance() / grandTotal) * 100.0 : 0;
-            Color c     = _parseHex(PALETTE[i % PALETTE.length]);
-            segs[i]     = new double[]{pct, c.getRed() * 255, c.getGreen() * 255, c.getBlue() * 255};
-            labels[i]   = w.get_name();
+            ClsWallet w    = wallets.get(i);
+            double balance = Math.max(0, w.get_balance()); // treat negative as 0
+            double pct     = (balance / grandTotal) * 100.0;
+            Color c        = _parseHex(PALETTE[i % PALETTE.length]);
+            segs[i]        = new double[]{pct, c.getRed() * 255, c.getGreen() * 255, c.getBlue() * 255};
+            labels[i]      = w.get_name();
         }
         _buildDonutChart(_walletChartContent, segs, labels);
     }

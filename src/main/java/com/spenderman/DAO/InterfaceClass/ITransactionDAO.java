@@ -13,4 +13,6 @@ public interface ITransactionDAO extends IRepository<ClsTransaction> {
     public List<ClsTransaction> getByUser(int userID);
 
     public double getTotalExpensesBetweenDates(int userID , LocalDateTime startDate , LocalDateTime endDate);
+
+    public boolean deleteByGoalID(int goalID);
 }

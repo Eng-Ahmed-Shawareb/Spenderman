@@ -1,6 +1,7 @@
 package com.spenderman.service;
 
 import com.spenderman.DAO.ClsSavingGoalDAO;
+import com.spenderman.DAO.ClsTransactionDAO;
 import com.spenderman.DAO.InterfaceClass.ISavingGoalDAO;
 import com.spenderman.model.ClsSavingGoal;
 import com.spenderman.model.StatusEnums.EnGoalState;
@@ -10,9 +11,11 @@ import java.util.Optional;
 
 public class ClsSavingGoalService {
     private ISavingGoalDAO _savingGoalDAO;
+    private ClsTransactionDAO _transactionDAO;
 
     public ClsSavingGoalService() {
-        this._savingGoalDAO = new ClsSavingGoalDAO();
+        this._savingGoalDAO  = new ClsSavingGoalDAO();
+        this._transactionDAO = new ClsTransactionDAO();
     }
 
     public List<ClsSavingGoal> getByUser(int userID){
@@ -57,5 +60,10 @@ public class ClsSavingGoalService {
         }else{
             return false;
         }
+    }
+    public boolean deleteGoal(int goalID) {
+        // Must remove all linked transactions first (no DB cascade on this FK)
+        _transactionDAO.deleteByGoalID(goalID);
+        return _savingGoalDAO.delete(goalID);
     }
 }

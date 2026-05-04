@@ -139,7 +139,15 @@ public class ClsSavingGoalController extends ABaseController implements IObserve
                 badges.getChildren().add(addBtn);
             }
 
-            titleRow.getChildren().addAll(dot, goalName, badges);
+            // Spacer to push Delete to the far right (matches wallet card layout)
+            javafx.scene.layout.Region spacer = new javafx.scene.layout.Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
+
+            Button deleteBtn = new Button("Delete");
+            deleteBtn.getStyleClass().add("btn-danger");
+            deleteBtn.setOnAction(e -> _handleDeleteGoal(g));
+
+            titleRow.getChildren().addAll(dot, goalName, badges, spacer, deleteBtn);
 
             // Amounts row
             HBox amounts = new HBox(12);
@@ -225,6 +233,14 @@ public class ClsSavingGoalController extends ABaseController implements IObserve
 
         // Insert after titleRow (index 1), but before amounts
         card.getChildren().add(1, addRow);
+    }
+
+    private void _handleDeleteGoal(ClsSavingGoal goal) {
+        boolean success = goalService.deleteGoal(goal.get_goalID());
+        if (success) {
+            ClsAppEventBus.getInstance().notifyObservers(EnEvenType.GOAL_DELETED, goal);
+            _loadGoals();
+        }
     }
 
     @Override

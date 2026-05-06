@@ -11,7 +11,7 @@
 
 The system empowers users to manage multiple custom wallets, categorize transactions with personalized color-coding, and allocate funds directly to specific saving goals. With secure multi-user authentication, strict data integrity rules, and persistent UI customization, $penderman delivers a polished and reliable toolkit for building better financial habits.
 
-> **🎥 [Watch the Full Video Demonstration Here](#)** *(Link your YouTube/LinkedIn video here once recorded!)*
+> **🎥 [Watch the Full Video Demonstration Here](https://www.youtube.com/watch?v=disy_VrYJek)** 
 
 ---
 

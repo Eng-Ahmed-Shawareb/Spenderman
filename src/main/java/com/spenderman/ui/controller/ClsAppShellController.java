@@ -9,35 +9,63 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * App shell controller — manages the sidebar and content area.
- * The sidebar navigation buttons switch between content screens.
+ * Class representing ClsAppShellController.
+ *
+ * @author Spenderman Team
+ * @version 1.0
  */
 public class ClsAppShellController extends ABaseController {
 
-    @FXML private StackPane _contentArea;
-    @FXML private VBox _navBox;
-    @FXML private Label _userNameLabel;
-    @FXML private Label _avatarInitials;
-    @FXML private ImageView _sidebarLogo;
+    @FXML
+    private StackPane _contentArea;
 
-    // Nav buttons
-    @FXML private Button _navDashboard;
-    @FXML private Button _navTransactions;
-    @FXML private Button _navWallets;
-    @FXML private Button _navCategories;
-    @FXML private Button _navCycles;
-    @FXML private Button _navGoals;
-    @FXML private Button _navAiChat; // 👈 1. ضفنا تعريف الزرار الجديد هنا
-    @FXML private Button _navSettings;
+    @FXML
+    private VBox _navBox;
+
+    @FXML
+    private Label _userNameLabel;
+
+    @FXML
+    private Label _avatarInitials;
+
+    @FXML
+    private ImageView _sidebarLogo;
+
+    @FXML
+    private Button _navDashboard;
+
+    @FXML
+    private Button _navTransactions;
+
+    @FXML
+    private Button _navWallets;
+
+    @FXML
+    private Button _navCategories;
+
+    @FXML
+    private Button _navCycles;
+
+    @FXML
+    private Button _navGoals;
+
+    @FXML
+    private Button _navAiChat;
+
+    @FXML
+    private Button _navSettings;
 
     private Map<String, Button> _navButtons;
+
     private String _activeScreenId = "dashboard";
 
+    /**
+     * Method to initialize.
+     */
     @Override
     public void initialize() {
         _navButtons = new HashMap<>();
@@ -47,12 +75,14 @@ public class ClsAppShellController extends ABaseController {
         _navButtons.put("categories", _navCategories);
         _navButtons.put("cycles", _navCycles);
         _navButtons.put("goals", _navGoals);
-        _navButtons.put("ChatView", _navAiChat); // 👈 2. ضفناه في الماب عشان لونه يتغير لما تدوس عليه
+        _navButtons.put("ChatView", _navAiChat);
         _navButtons.put("settings", _navSettings);
     }
 
     /**
-     * Set the content pane to show a loaded FXML $root.
+     * Method to setContent.
+     *
+     * @param content the content
      */
     public void setContent(Parent content) {
         _contentArea.getChildren().clear();
@@ -60,14 +90,16 @@ public class ClsAppShellController extends ABaseController {
     }
 
     /**
-     * Update the active navigation button styling.
+     * Method to setActiveNav.
+     *
+     * @param screenId the screenId
      */
     public void setActiveNav(String screenId) {
         this._activeScreenId = screenId;
         for (Map.Entry<String, Button> entry : _navButtons.entrySet()) {
             Button btn = entry.getValue();
-            if(btn == null) continue; // حماية إضافية لو الزرار مش موجود
-
+            if (btn == null)
+                continue;
             if (entry.getKey().equals(screenId)) {
                 btn.getStyleClass().removeAll("nav-button");
                 if (!btn.getStyleClass().contains("nav-button-active")) {
@@ -82,27 +114,87 @@ public class ClsAppShellController extends ABaseController {
         }
     }
 
-    // ─── Navigation handlers ─────────────────────────────────────────────
-    @FXML private void _navToDashboard()    { $sceneManager.switchTo("dashboard"); }
-    @FXML private void _navToTransactions() { $sceneManager.switchTo("transactions"); }
-    @FXML private void _navToWallets()      { $sceneManager.switchTo("wallets"); }
-    @FXML private void _navToCategories()   { $sceneManager.switchTo("categories"); }
-    @FXML private void _navToCycles()       { $sceneManager.switchTo("cycles"); }
-    @FXML private void _navToGoals()        { $sceneManager.switchTo("goals"); }
+    /**
+     * Method to _navToDashboard.
+     */
+    @FXML
+    private void _navToDashboard() {
+        $sceneManager.switchTo("dashboard");
+    }
 
-    // 👈 3. ظبطنا الدالة دي عشان تبقى زي إخواتها بالظبط وتفتح الشاشة
-    @FXML private void _onAiChatClick()     { $sceneManager.switchTo("ChatView"); }
+    /**
+     * Method to _navToTransactions.
+     */
+    @FXML
+    private void _navToTransactions() {
+        $sceneManager.switchTo("transactions");
+    }
 
-    @FXML private void _navToSettings()     { $sceneManager.switchTo("settings"); }
+    /**
+     * Method to _navToWallets.
+     */
+    @FXML
+    private void _navToWallets() {
+        $sceneManager.switchTo("wallets");
+    }
 
+    /**
+     * Method to _navToCategories.
+     */
+    @FXML
+    private void _navToCategories() {
+        $sceneManager.switchTo("categories");
+    }
+
+    /**
+     * Method to _navToCycles.
+     */
+    @FXML
+    private void _navToCycles() {
+        $sceneManager.switchTo("cycles");
+    }
+
+    /**
+     * Method to _navToGoals.
+     */
+    @FXML
+    private void _navToGoals() {
+        $sceneManager.switchTo("goals");
+    }
+
+    /**
+     * Method to _onAiChatClick.
+     */
+    @FXML
+    private void _onAiChatClick() {
+        $sceneManager.switchTo("ChatView");
+    }
+
+    /**
+     * Method to _navToSettings.
+     */
+    @FXML
+    private void _navToSettings() {
+        $sceneManager.switchTo("settings");
+    }
+
+    /**
+     * Method to refreshData.
+     */
     @Override
     public void refreshData() {
-        // Update user info if available
         if ($currentUser != null) {
             _userNameLabel.setText($currentUser.getFirstName());
             _avatarInitials.setText($currentUser.getInitials());
         }
     }
 
-    public ImageView getSidebarLogo() { return _sidebarLogo; }
+    /**
+     * Method to getSidebarLogo.
+     *
+     * @return the ImageView
+     */
+    public ImageView getSidebarLogo() {
+        return _sidebarLogo;
+    }
 }

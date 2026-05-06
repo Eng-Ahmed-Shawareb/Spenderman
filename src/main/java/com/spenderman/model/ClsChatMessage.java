@@ -2,9 +2,18 @@ package com.spenderman.model;
 
 import java.time.LocalTime;
 
+/**
+ * Class representing ClsChatMessage.
+ *
+ * @author Spenderman Team
+ * @version 1.0
+ */
 public class ClsChatMessage {
+
     private String _messageText;
-    private boolean _isFromUser; // true = User, false = AI
+
+    private boolean _isFromUser;
+
     private LocalTime _timestamp;
 
     public ClsChatMessage(String messageText, boolean isFromUser) {
@@ -13,7 +22,30 @@ public class ClsChatMessage {
         this._timestamp = LocalTime.now();
     }
 
-    public String get_messageText() { return _messageText; }
-    public boolean isFromUser() { return _isFromUser; }
-    public LocalTime get_timestamp() { return _timestamp; }
+    /**
+     * Method to get_messageText.
+     *
+     * @return the String
+     */
+    public String get_messageText() {
+        return _messageText;
+    }
+
+    /**
+     * Method to isFromUser.
+     *
+     * @return the boolean
+     */
+    public boolean isFromUser() {
+        return _isFromUser;
+    }
+
+    /**
+     * Method to get_timestamp.
+     *
+     * @return the LocalTime
+     */
+    public LocalTime get_timestamp() {
+        return _timestamp;
+    }
 }

@@ -4,15 +4,23 @@ import com.spenderman.DAO.ClsTransactionDAO;
 import com.spenderman.DAO.InterfaceClass.ITransactionDAO;
 import com.spenderman.model.ClsTransaction;
 import com.spenderman.model.StatusEnums.EnTransactionType;
-
 import java.sql.Connection;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Class representing ClsTransactionService.
+ *
+ * @author Spenderman Team
+ * @version 1.0
+ */
 public class ClsTransactionService {
+
     private ITransactionDAO _transactionDAO;
+
     private ClsWalletService _walletService;
+
     private ClsSavingGoalService _savingGoalService;
 
     public ClsTransactionService() {
@@ -21,7 +29,13 @@ public class ClsTransactionService {
         this._savingGoalService = new ClsSavingGoalService();
     }
 
-    public boolean addTransaction(ClsTransaction transaction){
+    /**
+     * Method to addTransaction.
+     *
+     * @param transaction the transaction
+     * @return the boolean
+     */
+    public boolean addTransaction(ClsTransaction transaction) {
         boolean success = _transactionDAO.save(transaction);
         if (success) {
             applyTransactionEffect(transaction, false);
@@ -29,38 +43,66 @@ public class ClsTransactionService {
         return success;
     }
 
-    public boolean updateTransaction(ClsTransaction transaction){
+    /**
+     * Method to updateTransaction.
+     *
+     * @param transaction the transaction
+     * @return the boolean
+     */
+    public boolean updateTransaction(ClsTransaction transaction) {
         Optional<ClsTransaction> oldTransactionOpt = _transactionDAO.findByID(transaction.get_transactionID());
         if (oldTransactionOpt.isEmpty()) {
             return false;
         }
-
         boolean success = _transactionDAO.update(transaction);
         if (success) {
-            applyTransactionEffect(oldTransactionOpt.get(), true); // Revert old
-            applyTransactionEffect(transaction, false); // Apply new
+            applyTransactionEffect(oldTransactionOpt.get(), true);
+            applyTransactionEffect(transaction, false);
         }
         return success;
     }
 
-    public List<ClsTransaction> getByWallet(int walletID){
+    /**
+     * Method to getByWallet.
+     *
+     * @param walletID the walletID
+     * @return the List<ClsTransaction>
+     */
+    public List<ClsTransaction> getByWallet(int walletID) {
         return _transactionDAO.getByWallet(walletID);
     }
 
-    public List<ClsTransaction> getByGoal(int goalID){
+    /**
+     * Method to getByGoal.
+     *
+     * @param goalID the goalID
+     * @return the List<ClsTransaction>
+     */
+    public List<ClsTransaction> getByGoal(int goalID) {
         return _transactionDAO.getByGoal(goalID);
     }
 
-    public List<ClsTransaction> getByUser(int userID){
+    /**
+     * Method to getByUser.
+     *
+     * @param userID the userID
+     * @return the List<ClsTransaction>
+     */
+    public List<ClsTransaction> getByUser(int userID) {
         return _transactionDAO.getByUser(userID);
     }
 
-    public boolean deleteTransaction(int transactionID){
+    /**
+     * Method to deleteTransaction.
+     *
+     * @param transactionID the transactionID
+     * @return the boolean
+     */
+    public boolean deleteTransaction(int transactionID) {
         Optional<ClsTransaction> oldTransactionOpt = _transactionDAO.findByID(transactionID);
         if (oldTransactionOpt.isEmpty()) {
             return false;
         }
-
         boolean success = _transactionDAO.delete(transactionID);
         if (success) {
             applyTransactionEffect(oldTransactionOpt.get(), true);
@@ -68,14 +110,27 @@ public class ClsTransactionService {
         return success;
     }
 
+    /**
+     * Method to getTotalExpensesBetweenDates.
+     *
+     * @param userID the userID
+     * @param startDate the startDate
+     * @param endDate the endDate
+     * @return the double
+     */
     public double getTotalExpensesBetweenDates(int userID, LocalDateTime startDate, LocalDateTime endDate) {
-        return _transactionDAO.getTotalExpensesBetweenDates(userID , startDate , endDate);
+        return _transactionDAO.getTotalExpensesBetweenDates(userID, startDate, endDate);
     }
 
+    /**
+     * Method to applyTransactionEffect.
+     *
+     * @param transaction the transaction
+     * @param isRevert the isRevert
+     */
     private void applyTransactionEffect(ClsTransaction transaction, boolean isRevert) {
         double amount = transaction.get_amount();
         int multiplier = isRevert ? -1 : 1;
-        
         if (transaction.get_walletID() > 0) {
             if (transaction.get_type() == EnTransactionType.EXPENSE) {
                 _walletService.updateBalance(transaction.get_walletID(), -amount * multiplier);

@@ -10,61 +10,67 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 
 /**
- * Sign up screen controller.
- * UML: ClsSignUpController extends ABaseController implements IObserver
- * Fields: _userService, _firstNameField, _lastNameField, _usernameField, _passwordField, signUpButton, _errorLabel, goLoginLink
+ * Class representing ClsSignUpController.
+ *
+ * @author Spenderman Team
+ * @version 1.0
  */
 public class ClsSignUpController extends ABaseController implements IObserver {
 
     private ClsUserService _userService;
 
-    @FXML private TextField _firstNameField;
-    @FXML private TextField _lastNameField;
-    @FXML private TextField _usernameField;
-    @FXML private PasswordField _passwordField;
-    @FXML private Label _errorLabel;
-    @FXML private Label _successLabel;
+    @FXML
+    private TextField _firstNameField;
 
-    // private UserService _userService; // TODO: inject when service layer exists
+    @FXML
+    private TextField _lastNameField;
 
-    public ClsSignUpController(){
+    @FXML
+    private TextField _usernameField;
+
+    @FXML
+    private PasswordField _passwordField;
+
+    @FXML
+    private Label _errorLabel;
+
+    @FXML
+    private Label _successLabel;
+
+    public ClsSignUpController() {
         _userService = new ClsUserService();
     }
 
+    /**
+     * Method to initialize.
+     */
     @Override
     public void initialize() {
-        // FXML auto-calls this after loading
     }
 
+    /**
+     * Method to _handleSignUp.
+     */
     @FXML
     private void _handleSignUp() {
         String firstName = _firstNameField.getText().trim();
         String lastName = _lastNameField.getText().trim();
         String username = _usernameField.getText().trim();
         String password = _passwordField.getText();
-
         if (firstName.isEmpty() || lastName.isEmpty() || username.isEmpty() || password.isEmpty()) {
             _showError("All fields are required.");
             return;
         }
-
         if (password.length() < 6) {
             _showError("Password must be at least 6 characters.");
             return;
         }
-
-        ClsUser newUser = new ClsUser(0 , firstName , lastName , username);
+        ClsUser newUser = new ClsUser(0, firstName, lastName, username);
         newUser.setPasswordHash(password);
-
         boolean isRegistered = _userService.register(newUser);
-
-        // 3. Handle the boolean result
         if (isRegistered) {
-            // Success
             _clearError();
             _showSuccess("✓ Account created! Signing you in…");
-
-            // Simulate brief delay then navigate
             new Thread(() -> {
                 try {
                     Thread.sleep(900);
@@ -82,32 +88,25 @@ public class ClsSignUpController extends ABaseController implements IObserver {
                 }
             }).start();
         } else {
-            // Failure (e.g., username already taken)
             _showError("Registration failed. The username might already be in use.");
             _successLabel.setVisible(false);
             _successLabel.setManaged(false);
         }
-
-//        _clearError();
-//        _showSuccess("✓ Account created! Signing you in…");
-//
-//        // TODO: Call _userService.register()
-//        // Simulate brief delay then navigate
-//        new Thread(() -> {
-//            try {
-//                Thread.sleep(900);
-//                javafx.application.Platform.runLater(() -> $sceneManager.switchTo("dashboard"));
-//            } catch (InterruptedException e) {
-//                Thread.currentThread().interrupt();
-//            }
-//        }).start();
     }
 
+    /**
+     * Method to _handleGoLogin.
+     */
     @FXML
     private void _handleGoLogin() {
         $sceneManager.switchTo("login");
     }
 
+    /**
+     * Method to _showError.
+     *
+     * @param message the message
+     */
     private void _showError(String message) {
         _errorLabel.setText("⚠ " + message);
         _errorLabel.setVisible(true);
@@ -116,6 +115,11 @@ public class ClsSignUpController extends ABaseController implements IObserver {
         _successLabel.setManaged(false);
     }
 
+    /**
+     * Method to _showSuccess.
+     *
+     * @param message the message
+     */
     private void _showSuccess(String message) {
         _successLabel.setText(message);
         _successLabel.setVisible(true);
@@ -124,18 +128,28 @@ public class ClsSignUpController extends ABaseController implements IObserver {
         _errorLabel.setManaged(false);
     }
 
+    /**
+     * Method to _clearError.
+     */
     private void _clearError() {
         _errorLabel.setVisible(false);
         _errorLabel.setManaged(false);
     }
 
+    /**
+     * Method to refreshData.
+     */
     @Override
     public void refreshData() {
-        // No-op for signup screen
     }
 
+    /**
+     * Method to update.
+     *
+     * @param evenType the evenType
+     * @param data the data
+     */
     @Override
     public void update(EnEvenType evenType, Object data) {
-
     }
 }

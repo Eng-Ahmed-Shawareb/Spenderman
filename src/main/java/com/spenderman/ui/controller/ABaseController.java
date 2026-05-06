@@ -5,49 +5,72 @@ import com.spenderman.ui.manager.ClsSceneManager;
 import com.spenderman.model.ClsUser;
 
 /**
- * Abstract base class for all screen controllers.
- * Matches UML: ABaseController with $currentUser, $eventBus, $sceneManager.
- * All controllers extend this and implement IObserver (when observer layer exists).
+ * Class representing ABaseController.
+ *
+ * @author Spenderman Team
+ * @version 1.0
  */
 public abstract class ABaseController {
-    protected ClsSceneManager $sceneManager;
-    protected ClsUser $currentUser;
-    protected Pane $root;
-    // protected AppEventBus $eventBus; // TODO: wire when observer layer is implemented
 
+    protected ClsSceneManager $sceneManager;
+
+    protected ClsUser $currentUser;
+
+    protected Pane $root;
+
+    /**
+     * Method to setSceneManager.
+     *
+     * @param $sceneManager the $sceneManager
+     */
     public void setSceneManager(ClsSceneManager $sceneManager) {
         this.$sceneManager = $sceneManager;
     }
 
+    /**
+     * Method to setCurrentUser.
+     *
+     * @param user the user
+     */
     public void setCurrentUser(ClsUser user) {
         this.$currentUser = user;
         refreshData();
     }
 
+    /**
+     * Method to getCurrentUser.
+     *
+     * @return the ClsUser
+     */
     public ClsUser getCurrentUser() {
         return $currentUser;
     }
 
+    /**
+     * Method to getRoot.
+     *
+     * @return the Pane
+     */
     public Pane getRoot() {
         return $root;
     }
 
     /**
-     * Initialize the controller and build the UI.
-     * Called when the screen is about to be displayed.
+     * Method to initialize.
      */
     public abstract void initialize();
 
     /**
-     * Refresh the UI data. Called when the model notifies of changes.
+     * Method to refreshData.
      */
     public abstract void refreshData();
 
     /**
-     * Observer callback — will be called by AppEventBus.
-     * TODO: implement IObserver interface when observer layer exists.
+     * Method to update.
+     *
+     * @param eventType the eventType
+     * @param data the data
      */
     public void update(String eventType, Object data) {
-        // Default no-op; subclasses override as needed
     }
 }

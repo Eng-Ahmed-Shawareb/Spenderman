@@ -1,0 +1,14 @@
+module:com.spenderman
+com.spenderman
+com.spenderman.DAO
+com.spenderman.DAO.InterfaceClass
+com.spenderman.DAO.Singleton
+com.spenderman.model
+com.spenderman.model.StatusEnums
+com.spenderman.Observer.EvenEnum
+com.spenderman.Observer.interfaceClass
+com.spenderman.Observer.Singleton
+com.spenderman.service
+com.spenderman.ui.component
+com.spenderman.ui.controller
+com.spenderman.ui.manager

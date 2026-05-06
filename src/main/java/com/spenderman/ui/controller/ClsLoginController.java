@@ -11,84 +11,102 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 import javafx.scene.layout.VBox;
 import com.spenderman.service.ClsUserService;
-
 import java.util.Optional;
 
 /**
- * Login screen controller.
- * UML: ClsLoginController extends ABaseController implements IObserver
- * Fields: _userService, _usernameField, _passwordField, loginButton, _errorLabel, goSignUpLink
+ * Class representing ClsLoginController.
+ *
+ * @author Spenderman Team
+ * @version 1.0
  */
 public class ClsLoginController extends ABaseController implements IObserver {
 
     private ClsUserService _userService;
 
-    @FXML private TextField _usernameField;
-    @FXML private PasswordField _passwordField;
-    @FXML private Label _errorLabel;
+    @FXML
+    private TextField _usernameField;
 
-    // private UserService _userService; // TODO: inject when service layer exists
+    @FXML
+    private PasswordField _passwordField;
 
-    public ClsLoginController(){
+    @FXML
+    private Label _errorLabel;
+
+    public ClsLoginController() {
         _userService = new ClsUserService();
     }
 
+    /**
+     * Method to initialize.
+     */
     @Override
     public void initialize() {
-        // FXML auto-calls this after loading
     }
 
+    /**
+     * Method to _handleLogin.
+     */
     @FXML
     private void _handleLogin() {
         String username = _usernameField.getText().trim();
         String password = _passwordField.getText();
-
         if (username.isEmpty() || password.isEmpty()) {
             _showError("Please fill in both fields.");
             return;
         }
-
-        Optional<ClsUser> user = _userService.login(username , password);
-
-        // TODO: Call _userService.login(username, password)
-        // For now, proceed to dashboard with dummy user
+        Optional<ClsUser> user = _userService.login(username, password);
         if (user.isPresent()) {
-            // Login successful
             ClsUser loggedInUser = user.get();
             System.out.println("User logged in successfully: " + loggedInUser.getUsername());
-
             $sceneManager.setCurrentUser(loggedInUser);
             _clearError();
             $sceneManager.switchTo("dashboard");
         } else {
-            // Login failed
             _showError("Invalid username or password.");
         }
     }
 
+    /**
+     * Method to _handleGoSignUp.
+     */
     @FXML
     private void _handleGoSignUp() {
         $sceneManager.switchTo("signup");
     }
 
+    /**
+     * Method to _showError.
+     *
+     * @param message the message
+     */
     private void _showError(String message) {
         _errorLabel.setText("⚠ " + message);
         _errorLabel.setVisible(true);
         _errorLabel.setManaged(true);
     }
 
+    /**
+     * Method to _clearError.
+     */
     private void _clearError() {
         _errorLabel.setVisible(false);
         _errorLabel.setManaged(false);
     }
 
+    /**
+     * Method to refreshData.
+     */
     @Override
     public void refreshData() {
-        // No-op for login screen
     }
 
+    /**
+     * Method to update.
+     *
+     * @param evenType the evenType
+     * @param data the data
+     */
     @Override
     public void update(EnEvenType evenType, Object data) {
-
     }
 }

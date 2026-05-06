@@ -24,18 +24,27 @@ import javafx.scene.layout.Priority;
 import javafx.scene.shape.Circle;
 
 /**
- * Wallets screen controller.
- * UML: ClsWalletController extends ABaseController implements IObserver
- * Services: walletService
+ * Class representing ClsWalletController.
+ *
+ * @author Spenderman Team
+ * @version 1.0
  */
 public class ClsWalletController extends ABaseController implements IObserver {
 
-    @FXML private VBox _formPanel;
-    @FXML private TextField _nameField;
-    @FXML private GridPane _walletGrid;
-    @FXML private Label _errorLabel;
+    @FXML
+    private VBox _formPanel;
+
+    @FXML
+    private TextField _nameField;
+
+    @FXML
+    private GridPane _walletGrid;
+
+    @FXML
+    private Label _errorLabel;
 
     private ClsWalletService _walletService;
+
     private ClsTransactionService _transactionService;
 
     public ClsWalletController() {
@@ -43,6 +52,9 @@ public class ClsWalletController extends ABaseController implements IObserver {
         _transactionService = new ClsTransactionService();
     }
 
+    /**
+     * Method to initialize.
+     */
     @Override
     public void initialize() {
         ClsAppEventBus.getInstance().addObserver(this);
@@ -51,6 +63,9 @@ public class ClsWalletController extends ABaseController implements IObserver {
         }
     }
 
+    /**
+     * Method to _toggleForm.
+     */
     @FXML
     private void _toggleForm() {
         boolean show = !_formPanel.isVisible();
@@ -60,6 +75,9 @@ public class ClsWalletController extends ABaseController implements IObserver {
         _errorLabel.setManaged(false);
     }
 
+    /**
+     * Method to _handleAddWallet.
+     */
     @FXML
     private void _handleAddWallet() {
         if (_nameField.getText().trim().isEmpty()) {
@@ -68,40 +86,33 @@ public class ClsWalletController extends ABaseController implements IObserver {
             _errorLabel.setManaged(true);
             return;
         }
-
         ClsWallet wallet = new ClsWallet(0, $currentUser.getUserID(), _nameField.getText().trim(), 0.0);
         _walletService.createWallet(wallet);
-        
         ClsAppEventBus.getInstance().notifyObservers(EnEvenType.WALLET_ADDED, wallet);
-        
         _nameField.clear();
         _toggleForm();
         _loadWallets();
     }
 
+    /**
+     * Method to _loadWallets.
+     */
     private void _loadWallets() {
         _walletGrid.getChildren().clear();
-        if ($currentUser == null) return;
-
+        if ($currentUser == null)
+            return;
         List<ClsWallet> wallets = _walletService.getByUser($currentUser.getUserID());
         List<ClsTransaction> allTxs = _transactionService.getByUser($currentUser.getUserID());
-
-        String[] colors = {"#22C97A", "#4B9EF8", "#8875F5", "#F5A623", "#F472B6"};
-
+        String[] colors = { "#22C97A", "#4B9EF8", "#8875F5", "#F5A623", "#F472B6" };
         for (int i = 0; i < wallets.size(); i++) {
             ClsWallet w = wallets.get(i);
             String color = colors[i % colors.length];
-            
             long txCount = allTxs.stream().filter(tx -> tx.get_walletID() == w.get_walletID()).count();
-
             VBox card = new VBox(8);
             card.getStyleClass().add("card-padded");
-
-            // Top row: icon + delete button
             HBox top = new HBox();
             top.setSpacing(12);
             top.setAlignment(Pos.CENTER_LEFT);
-
             Region icon = new Region();
             icon.getStyleClass().add("wallet-icon");
             icon.setStyle("-fx-background-color: " + color + "22;");
@@ -109,53 +120,55 @@ public class ClsWalletController extends ABaseController implements IObserver {
             iconLabel.setStyle("-fx-text-fill: " + color + "; -fx-font-size: 16px;");
             StackPane iconPane = new StackPane(icon, iconLabel);
             iconPane.setPrefSize(36, 36);
-
             Pane fill = new Pane();
             HBox.setHgrow(fill, Priority.ALWAYS);
-
             Button delBtn = new Button("Delete");
             delBtn.getStyleClass().add("btn-danger");
             delBtn.setOnAction(e -> _handleDeleteWallet(w));
-
             top.getChildren().addAll(iconPane, fill, delBtn);
-
-            // Wallet name
             Label name = new Label(w.get_name());
             name.getStyleClass().add("text-muted");
-
-            // Amount
             Label amount = new Label("EGP " + w.get_balance());
             amount.getStyleClass().addAll("mono-medium");
             amount.setStyle("-fx-text-fill: " + color + ";");
-
-            // Separator + tx count
             Separator sep = new Separator();
             Label txLabel = new Label(txCount + " transactions");
             txLabel.getStyleClass().add("text-muted");
             txLabel.setStyle("-fx-font-size: 9px;");
-
             card.getChildren().addAll(top, name, amount, sep, txLabel);
-
             _walletGrid.add(card, i % 2, i / 2);
             GridPane.setHgrow(card, Priority.ALWAYS);
         }
     }
 
+    /**
+     * Method to _handleDeleteWallet.
+     *
+     * @param w the w
+     */
     private void _handleDeleteWallet(ClsWallet w) {
         _walletService.deleteWallet(w.get_walletID());
         ClsAppEventBus.getInstance().notifyObservers(EnEvenType.WALLET_DELETED, w);
         _loadWallets();
     }
 
+    /**
+     * Method to refreshData.
+     */
     @Override
     public void refreshData() {
         _loadWallets();
     }
 
+    /**
+     * Method to update.
+     *
+     * @param evenType the evenType
+     * @param data the data
+     */
     @Override
     public void update(EnEvenType evenType, Object data) {
-        if (evenType == EnEvenType.WALLET_ADDED || evenType == EnEvenType.WALLET_DELETED || 
-            evenType == EnEvenType.TRANSACTION_ADDED || evenType == EnEvenType.TRANSACTION_UPDATED || evenType == EnEvenType.TRANSACTION_DELETED) {
+        if (evenType == EnEvenType.WALLET_ADDED || evenType == EnEvenType.WALLET_DELETED || evenType == EnEvenType.TRANSACTION_ADDED || evenType == EnEvenType.TRANSACTION_UPDATED || evenType == EnEvenType.TRANSACTION_DELETED) {
             refreshData();
         }
     }

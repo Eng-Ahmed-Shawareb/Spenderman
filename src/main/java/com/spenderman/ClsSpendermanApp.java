@@ -7,11 +7,18 @@ import javafx.stage.Stage;
 import com.spenderman.ui.manager.ClsSceneManager;
 
 /**
- * Main entry point for Spenderman JavaFX desktop application.
- * Initializes the application window and loads the login screen.
+ * Class representing ClsSpendermanApp.
+ *
+ * @author Spenderman Team
+ * @version 1.0
  */
 public class ClsSpendermanApp extends Application {
 
+    /**
+     * Method to start.
+     *
+     * @param primaryStage the primaryStage
+     */
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Spenderman — Personal Finance");
@@ -20,18 +27,17 @@ public class ClsSpendermanApp extends Application {
         primaryStage.setHeight(700);
         primaryStage.setMinWidth(860);
         primaryStage.setMinHeight(600);
-
-        // Initialize ClsSceneManager with the primary stage
         ClsSceneManager $sceneManager = ClsSceneManager.getInstance();
         $sceneManager.initialize(primaryStage);
-
-        // Load and display login screen
         $sceneManager.switchTo("login");
-
         primaryStage.show();
-
     }
 
+    /**
+     * Method to main.
+     *
+     * @param args the args
+     */
     public static void main(String[] args) {
         launch(args);
     }

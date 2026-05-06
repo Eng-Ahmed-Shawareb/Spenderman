@@ -1,7 +1,6 @@
 package com.spenderman.model.StatusEnums;
 
 public enum EnGoalState {
-    ACTIVE ,
-    COMPLETED ,
-    CANCELLED
+
+    ACTIVE, COMPLETED, CANCELLED
 }

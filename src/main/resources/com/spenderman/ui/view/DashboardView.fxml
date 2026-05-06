@@ -53,13 +53,13 @@
             </HBox>
 
             <ProgressBar fx:id="_cycleProgressBar" progress="0.64" maxWidth="Infinity" styleClass="progress-bar"/>
-            <Label fx:id="_cyclePercentLabel" text="64% of budget used" styleClass="text-muted" style="-fx-font-size: 9px;"/>
+            <Label fx:id="_cyclePercentLabel" text="64% of budget used" styleClass="text-muted" style="-fx-font-size: 11px;"/>
         </VBox>
 
         <!-- No cycle placeholder (hidden by default) -->
         <VBox fx:id="_noCycleCard" styleClass="card" alignment="CENTER" spacing="4" visible="false" managed="false">
             <padding><Insets top="16" bottom="16"/></padding>
-            <Label text="◎" styleClass="text-muted" style="-fx-font-size: 16px;"/>
+            <Label text="◎" styleClass="text-muted" style="-fx-font-size: 18px;"/>
             <Label text="No Active Cycle" styleClass="text-sub" style="-fx-font-weight: bold;"/>
             <Label text="Create a cycle to start tracking your budget" styleClass="text-muted"/>
         </VBox>

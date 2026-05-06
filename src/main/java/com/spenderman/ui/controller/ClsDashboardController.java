@@ -38,40 +38,56 @@ import java.util.Optional;
 /**
  * Dashboard screen controller.
  * UML: ClsDashboardController extends ABaseController implements IObserver
- * Services: walletService, transactionService, cycleService, goalService, categoryService
+ * Services: walletService, transactionService, cycleService, goalService,
+ * categoryService
  */
 public class ClsDashboardController extends ABaseController implements IObserver {
 
     // ── Services ──────────────────────────────────────────────────────────
-    private final ClsWalletService      _walletService      = new ClsWalletService();
+    private final ClsWalletService _walletService = new ClsWalletService();
     private final ClsTransactionService _transactionService = new ClsTransactionService();
-    private final ClsCycleService       _cycleService       = new ClsCycleService();
-    private final ClsSavingGoalService  _savingGoalService  = new ClsSavingGoalService();
-    private final ClsCategoryService    _categoryService    = new ClsCategoryService();
+    private final ClsCycleService _cycleService = new ClsCycleService();
+    private final ClsSavingGoalService _savingGoalService = new ClsSavingGoalService();
+    private final ClsCategoryService _categoryService = new ClsCategoryService();
 
     // ── FXML fields ───────────────────────────────────────────────────────
-    @FXML private Label       _totalBalanceLabel;
-    @FXML private HBox        _walletBreakdownRow;
+    @FXML
+    private Label _totalBalanceLabel;
+    @FXML
+    private HBox _walletBreakdownRow;
 
-    @FXML private VBox        _cycleCard;
-    @FXML private VBox        _noCycleCard;
-    @FXML private Label       _cycleTitleLabel;
-    @FXML private Label       _cycleDateLabel;
-    @FXML private Label       _cycleStatusBadge;
-    @FXML private Label       _cycleBudgetLabel;
-    @FXML private Label       _cycleSpentLabel;
-    @FXML private Label       _cycleRemainingLabel;
-    @FXML private ProgressBar _cycleProgressBar;
-    @FXML private Label       _cyclePercentLabel;
+    @FXML
+    private VBox _cycleCard;
+    @FXML
+    private VBox _noCycleCard;
+    @FXML
+    private Label _cycleTitleLabel;
+    @FXML
+    private Label _cycleDateLabel;
+    @FXML
+    private Label _cycleStatusBadge;
+    @FXML
+    private Label _cycleBudgetLabel;
+    @FXML
+    private Label _cycleSpentLabel;
+    @FXML
+    private Label _cycleRemainingLabel;
+    @FXML
+    private ProgressBar _cycleProgressBar;
+    @FXML
+    private Label _cyclePercentLabel;
 
-    @FXML private HBox _expenseChartContent;
-    @FXML private HBox _depositChartContent;
-    @FXML private HBox _walletChartContent;
+    @FXML
+    private HBox _expenseChartContent;
+    @FXML
+    private HBox _depositChartContent;
+    @FXML
+    private HBox _walletChartContent;
 
     // Colour palette rotated for categories without a stored hex colour
     private static final String[] PALETTE = {
-        "#F5A623", "#8875F5", "#F472B6", "#4B9EF8",
-        "#22C97A", "#EF4444", "#F59E0B", "#6366F1"
+            "#F5A623", "#8875F5", "#F472B6", "#4B9EF8",
+            "#22C97A", "#EF4444", "#F59E0B", "#6366F1"
     };
 
     @Override
@@ -90,7 +106,7 @@ public class ClsDashboardController extends ABaseController implements IObserver
         _walletBreakdownRow.getChildren().clear();
         List<ClsWallet> wallets = _walletService.getByUser($currentUser.getUserID());
 
-        String[] balanceStyles = {"text-green", "text-blue", "text-purple", "text-amber"};
+        String[] balanceStyles = { "text-green", "text-blue", "text-purple", "text-amber" };
         int idx = 0;
 
         for (ClsWallet w : wallets) {
@@ -119,7 +135,8 @@ public class ClsDashboardController extends ABaseController implements IObserver
         _noCycleCard.setVisible(!hasCycle);
         _noCycleCard.setManaged(!hasCycle);
 
-        if (!hasCycle) return;
+        if (!hasCycle)
+            return;
 
         ClsCycle cycle = optCycle.get();
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM d");
@@ -127,10 +144,10 @@ public class ClsDashboardController extends ABaseController implements IObserver
         _cycleTitleLabel.setText(cycle.get_startDate().format(DateTimeFormatter.ofPattern("MMMM yyyy")));
         _cycleDateLabel.setText(cycle.get_startDate().format(fmt) + " \u2192 " + cycle.get_endDate().format(fmt));
 
-        double budget    = cycle.get_budgetAmount();
-        double spent     = _cycleService.getTotalSpent(cycle.get_cycleID());
+        double budget = cycle.get_budgetAmount();
+        double spent = _cycleService.getTotalSpent(cycle.get_cycleID());
         double remaining = budget - spent;
-        double pct       = budget > 0 ? Math.min((spent / budget) * 100.0, 100.0) : 0;
+        double pct = budget > 0 ? Math.min((spent / budget) * 100.0, 100.0) : 0;
 
         _cycleBudgetLabel.setText("EGP " + String.format("%,.0f", budget));
         _cycleSpentLabel.setText("EGP " + String.format("%,.0f", spent));
@@ -148,13 +165,12 @@ public class ClsDashboardController extends ABaseController implements IObserver
 
     // ── Charts ────────────────────────────────────────────────────────────
 
-    private void _loadExpenseChart() {
-        List<ClsTransaction> txns = _transactionService.getByUser($currentUser.getUserID());
-        List<ClsCategory> cats    = _categoryService.getByUser($currentUser.getUserID());
+    private void _loadExpenseChart(List<ClsTransaction> txns, List<ClsCategory> cats) {
 
         // Build category name map
         Map<Integer, ClsCategory> catMap = new HashMap<>();
-        for (ClsCategory c : cats) catMap.put(c.get_categoryID(), c);
+        for (ClsCategory c : cats)
+            catMap.put(c.get_categoryID(), c);
 
         // Sum expenses by category
         Map<Integer, Double> totals = new HashMap<>();
@@ -175,8 +191,8 @@ public class ClsDashboardController extends ABaseController implements IObserver
         }
 
         // Convert to segments
-        double[][] segs   = new double[totals.size()][4];
-        String[]   labels = new String[totals.size()];
+        double[][] segs = new double[totals.size()][4];
+        String[] labels = new String[totals.size()];
         int i = 0;
         for (Map.Entry<Integer, Double> e : totals.entrySet()) {
             double pct = (e.getValue() / grandTotal) * 100.0;
@@ -184,19 +200,18 @@ public class ClsDashboardController extends ABaseController implements IObserver
                     ? catMap.get(e.getKey()).get_hexColor()
                     : PALETTE[i % PALETTE.length];
             Color c = _parseHex(hex);
-            segs[i]   = new double[]{pct, c.getRed() * 255, c.getGreen() * 255, c.getBlue() * 255};
+            segs[i] = new double[] { pct, c.getRed() * 255, c.getGreen() * 255, c.getBlue() * 255 };
             labels[i] = catMap.containsKey(e.getKey()) ? catMap.get(e.getKey()).get_name() : "Cat " + e.getKey();
             i++;
         }
         _buildDonutChart(_expenseChartContent, segs, labels);
     }
 
-    private void _loadDepositChart() {
-        List<ClsTransaction> txns = _transactionService.getByUser($currentUser.getUserID());
-        List<ClsCategory> cats    = _categoryService.getByUser($currentUser.getUserID());
+    private void _loadDepositChart(List<ClsTransaction> txns, List<ClsCategory> cats) {
 
         Map<Integer, ClsCategory> catMap = new HashMap<>();
-        for (ClsCategory c : cats) catMap.put(c.get_categoryID(), c);
+        for (ClsCategory c : cats)
+            catMap.put(c.get_categoryID(), c);
 
         Map<Integer, Double> totals = new HashMap<>();
         double grandTotal = 0;
@@ -215,8 +230,8 @@ public class ClsDashboardController extends ABaseController implements IObserver
             return;
         }
 
-        double[][] segs   = new double[totals.size()][4];
-        String[]   labels = new String[totals.size()];
+        double[][] segs = new double[totals.size()][4];
+        String[] labels = new String[totals.size()];
         int i = 0;
         for (Map.Entry<Integer, Double> e : totals.entrySet()) {
             double pct = (e.getValue() / grandTotal) * 100.0;
@@ -224,7 +239,7 @@ public class ClsDashboardController extends ABaseController implements IObserver
                     ? catMap.get(e.getKey()).get_hexColor()
                     : PALETTE[i % PALETTE.length];
             Color c = _parseHex(hex);
-            segs[i]   = new double[]{pct, c.getRed() * 255, c.getGreen() * 255, c.getBlue() * 255};
+            segs[i] = new double[] { pct, c.getRed() * 255, c.getGreen() * 255, c.getBlue() * 255 };
             labels[i] = catMap.containsKey(e.getKey()) ? catMap.get(e.getKey()).get_name() : "Cat " + e.getKey();
             i++;
         }
@@ -247,15 +262,15 @@ public class ClsDashboardController extends ABaseController implements IObserver
             return;
         }
 
-        double[][] segs   = new double[wallets.size()][4];
-        String[]   labels = new String[wallets.size()];
+        double[][] segs = new double[wallets.size()][4];
+        String[] labels = new String[wallets.size()];
         for (int i = 0; i < wallets.size(); i++) {
-            ClsWallet w    = wallets.get(i);
+            ClsWallet w = wallets.get(i);
             double balance = Math.max(0, w.get_balance()); // treat negative as 0
-            double pct     = (balance / grandTotal) * 100.0;
-            Color c        = _parseHex(PALETTE[i % PALETTE.length]);
-            segs[i]        = new double[]{pct, c.getRed() * 255, c.getGreen() * 255, c.getBlue() * 255};
-            labels[i]      = w.get_name();
+            double pct = (balance / grandTotal) * 100.0;
+            Color c = _parseHex(PALETTE[i % PALETTE.length]);
+            segs[i] = new double[] { pct, c.getRed() * 255, c.getGreen() * 255, c.getBlue() * 255 };
+            labels[i] = w.get_name();
         }
         _buildDonutChart(_walletChartContent, segs, labels);
     }
@@ -270,7 +285,7 @@ public class ClsDashboardController extends ABaseController implements IObserver
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         double cx = size / 2.0, cy = size / 2.0;
-        double r  = cx - strokeWidth / 2.0 - 4;
+        double r = cx - strokeWidth / 2.0 - 4;
 
         double startAngle = 90;
         for (double[] seg : segs) {
@@ -287,9 +302,13 @@ public class ClsDashboardController extends ABaseController implements IObserver
         gc.fillOval(cx - innerR, cy - innerR, innerR * 2, innerR * 2);
 
         // Centre text — biggest segment
-        int topIdx = 0; double topPct = 0;
+        int topIdx = 0;
+        double topPct = 0;
         for (int i = 0; i < segs.length; i++) {
-            if (segs[i][0] > topPct) { topPct = segs[i][0]; topIdx = i; }
+            if (segs[i][0] > topPct) {
+                topPct = segs[i][0];
+                topIdx = i;
+            }
         }
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setFill(Color.web("#DCE1EE"));
@@ -339,38 +358,49 @@ public class ClsDashboardController extends ABaseController implements IObserver
             if (hex != null && hex.startsWith("#") && (hex.length() == 7 || hex.length() == 4)) {
                 return Color.web(hex);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         return Color.web("#4A5268"); // fallback muted
     }
 
     private String _toHex(Color c) {
         return String.format("#%02X%02X%02X",
-                (int) (c.getRed()   * 255),
+                (int) (c.getRed() * 255),
                 (int) (c.getGreen() * 255),
-                (int) (c.getBlue()  * 255));
+                (int) (c.getBlue() * 255));
     }
 
     // ── ABaseController / IObserver ───────────────────────────────────────
 
     @Override
     public void refreshData() {
-        if ($currentUser == null) return;
+        if ($currentUser == null)
+            return;
         _loadTotalBalance();
         _loadWalletBreakdown();
         _loadCycleSummary();
-        _loadExpenseChart();
-        _loadDepositChart();
         _loadWalletChart();
+
+        List<ClsTransaction> allTxns = _transactionService.getByUser($currentUser.getUserID());
+        List<ClsCategory> allCats = _categoryService.getByUser($currentUser.getUserID());
+
+        _loadExpenseChart(allTxns, allCats);
+        _loadDepositChart(allTxns, allCats);
     }
 
     @Override
     public void update(EnEvenType evenType, Object data) {
         // Re-render whenever any financial data changes
-        if (evenType == EnEvenType.TRANSACTION_ADDED  || evenType == EnEvenType.TRANSACTION_UPDATED || evenType == EnEvenType.TRANSACTION_DELETED
-         || evenType == EnEvenType.WALLET_ADDED       || evenType == EnEvenType.WALLET_UPDATED      || evenType == EnEvenType.WALLET_DELETED
-         || evenType == EnEvenType.GOAL_ADDED         || evenType == EnEvenType.GOAL_UPDATED        || evenType == EnEvenType.GOAL_DELETED
-         || evenType == EnEvenType.CYCLE_ADDED        || evenType == EnEvenType.CYCLE_UPDATED       || evenType == EnEvenType.CYCLE_DELETED
-         || evenType == EnEvenType.CATEGORY_ADDED     || evenType == EnEvenType.CATEGORY_UPDATED    || evenType == EnEvenType.CATEGORY_DELETED) {
+        if (evenType == EnEvenType.TRANSACTION_ADDED || evenType == EnEvenType.TRANSACTION_UPDATED
+                || evenType == EnEvenType.TRANSACTION_DELETED
+                || evenType == EnEvenType.WALLET_ADDED || evenType == EnEvenType.WALLET_UPDATED
+                || evenType == EnEvenType.WALLET_DELETED
+                || evenType == EnEvenType.GOAL_ADDED || evenType == EnEvenType.GOAL_UPDATED
+                || evenType == EnEvenType.GOAL_DELETED
+                || evenType == EnEvenType.CYCLE_ADDED || evenType == EnEvenType.CYCLE_UPDATED
+                || evenType == EnEvenType.CYCLE_DELETED
+                || evenType == EnEvenType.CATEGORY_ADDED || evenType == EnEvenType.CATEGORY_UPDATED
+                || evenType == EnEvenType.CATEGORY_DELETED) {
             refreshData();
         }
     }

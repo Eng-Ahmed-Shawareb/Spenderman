@@ -28,32 +28,30 @@ public class ClsSceneManager implements IObserver {
     private Stage _primaryStage;
     private Scene _mainScene;
     private Map<String, ABaseController> _controllerCache = new HashMap<>();
+    private Map<String, Parent> _contentCache = new HashMap<>();
     private ClsUser _currentUser;
     private ClsAppShellController _shellController;
     private boolean _isDarkTheme = true;
 
     // ═══ PATHS ═══
     private static final String _VIEWS_BASE = "/com/spenderman/ui/view/";
-    private static final String _CSS_PATH   = "/com/spenderman/ui/style/style.css";
-
+    private static final String _CSS_PATH = "/com/spenderman/ui/style/style.css";
 
     private static final Map<String, String> _SCREEN_MAP = Map.of(
-            "login",        "LoginView.fxml",
-            "signup",       "SignUpView.fxml",
-            "dashboard",    "DashboardView.fxml",
+            "login", "LoginView.fxml",
+            "signup", "SignUpView.fxml",
+            "dashboard", "DashboardView.fxml",
             "transactions", "TransactionView.fxml",
-            "wallets",      "WalletView.fxml",
-            "categories",   "CategoryView.fxml",
-            "cycles",       "CycleView.fxml",
-            "goals",        "GoalView.fxml",
-            "settings",     "SettingsView.fxml",
-            "ChatView",     "ChatView.fxml"   // <--- السطر الجديد
+            "wallets", "WalletView.fxml",
+            "categories", "CategoryView.fxml",
+            "cycles", "CycleView.fxml",
+            "goals", "GoalView.fxml",
+            "settings", "SettingsView.fxml",
+            "ChatView", "ChatView.fxml" // <--- السطر الجديد
     );
-
 
     private static final Set<String> _SHELL_SCREENS = Set.of(
-            "dashboard", "transactions", "wallets", "categories", "cycles", "goals", "settings", "ChatView"
-    );
+            "dashboard", "transactions", "wallets", "categories", "cycles", "goals", "settings", "ChatView");
 
     private ClsSceneManager() {
         ClsAppEventBus.getInstance().addObserver(this);
@@ -146,26 +144,34 @@ public class ClsSceneManager implements IObserver {
             }
         }
 
-        String fxmlFile = _SCREEN_MAP.get(screenId);
-        String fullPath = _VIEWS_BASE + fxmlFile;
-        URL contentUrl = getClass().getResource(fullPath);
-        if (contentUrl == null) {
-            System.err.println("❌ FXML not found at: " + fullPath);
-            return;
+        if (!_controllerCache.containsKey(screenId)) {
+            String fxmlFile = _SCREEN_MAP.get(screenId);
+            String fullPath = _VIEWS_BASE + fxmlFile;
+            URL contentUrl = getClass().getResource(fullPath);
+            if (contentUrl == null) {
+                System.err.println("❌ FXML not found at: " + fullPath);
+                return;
+            }
+
+            FXMLLoader contentLoader = new FXMLLoader(contentUrl);
+            Parent contentRoot = contentLoader.load();
+
+            ABaseController controller = contentLoader.getController();
+            if (controller != null) {
+                controller.setSceneManager(this);
+                controller.setCurrentUser(_currentUser);
+                _controllerCache.put(screenId, controller);
+                _contentCache.put(screenId, contentRoot);
+            }
         }
 
-        FXMLLoader contentLoader = new FXMLLoader(contentUrl);
-        Parent contentRoot = contentLoader.load();
-
-        ABaseController controller = contentLoader.getController();
-        if (controller != null) {
-            controller.setSceneManager(this);
-            controller.setCurrentUser(_currentUser);
-            _controllerCache.put(screenId, controller);
-        }
-
-        _shellController.setContent(contentRoot);
+        _shellController.setContent(_contentCache.get(screenId));
         _shellController.setActiveNav(screenId);
+
+        ABaseController cachedController = _controllerCache.get(screenId);
+        if (cachedController != null) {
+            cachedController.refreshData();
+        }
     }
 
     private void _applyCss(Scene scene) {
@@ -187,7 +193,7 @@ public class ClsSceneManager implements IObserver {
         if (_mainScene != null && _mainScene.getRoot() != null) {
             Parent root = _mainScene.getRoot();
             String iconPath = "/utils/darkmodeicon.png";
-            
+
             // Update window icon if stage is available
             if (_primaryStage != null) {
                 _primaryStage.getIcons().clear();
@@ -210,20 +216,33 @@ public class ClsSceneManager implements IObserver {
     public void logout() {
         _currentUser = null;
         _controllerCache.clear();
+        _contentCache.clear();
         _shellController = null;
-        
-        // 1. Wipe all controllers from the event bus (frees memory & stops ghost updates)
+
+        // 1. Wipe all controllers from the event bus (frees memory & stops ghost
+        // updates)
         ClsAppEventBus.getInstance().clearAllObservers();
-        
+
         // 2. Re-register SceneManager so it can still handle THEME_CHANGED events
         ClsAppEventBus.getInstance().addObserver(this);
-        
+
         // 3. Route back to login screen
         switchTo("login");
     }
 
-    public void setCurrentUser(ClsUser user) { this._currentUser = user; }
-    public ClsUser getCurrentUser() { return _currentUser; }
-    public Stage getPrimaryStage() { return _primaryStage; }
-    public ABaseController getController(String key) { return _controllerCache.get(key); }
+    public void setCurrentUser(ClsUser user) {
+        this._currentUser = user;
+    }
+
+    public ClsUser getCurrentUser() {
+        return _currentUser;
+    }
+
+    public Stage getPrimaryStage() {
+        return _primaryStage;
+    }
+
+    public ABaseController getController(String key) {
+        return _controllerCache.get(key);
+    }
 }

@@ -42,13 +42,16 @@ public class ClsCycleService {
         double totalSpent = 0;
         Optional<ClsCycle> optionalCycle = _cycleDAO.findByID(cycleID);
         if (optionalCycle.isPresent()) {
-            ClsCycle cycle = optionalCycle.get();
-            totalSpent = _transactionService.getTotalExpensesBetweenDates(
-                    cycle.get_userID(),
-                    cycle.get_startDate(),
-                    cycle.get_endDate());
+            totalSpent = getTotalSpent(optionalCycle.get());
         }
         return totalSpent;
+    }
+
+    public double getTotalSpent(ClsCycle cycle) {
+        return _transactionService.getTotalExpensesBetweenDates(
+                cycle.get_userID(),
+                cycle.get_startDate(),
+                cycle.get_endDate());
     }
 
     public double getRemainingBudget(int cycleID) {
@@ -56,7 +59,7 @@ public class ClsCycleService {
         Optional<ClsCycle> optionalCycle = _cycleDAO.findByID(cycleID);
         if (optionalCycle.isPresent()) {
             ClsCycle cycle = optionalCycle.get();
-            double totalSpent = getTotalSpent(cycleID), budget = cycle.get_budgetAmount();
+            double totalSpent = getTotalSpent(cycle), budget = cycle.get_budgetAmount();
             remainingBudget = -totalSpent + budget;
         }
         return remainingBudget;
@@ -72,13 +75,13 @@ public class ClsCycleService {
             if (budget <= 0)
                 return spentPercentage;
 
-            double spent = getTotalSpent(cycleID);
+            double spent = getTotalSpent(cycle);
             spentPercentage = (spent / budget) * 100.0;
         }
         return spentPercentage;
     }
 
-    public Optional<ClsCycle> getCycleByID(int cycleID){
+    public Optional<ClsCycle> getCycleByID(int cycleID) {
         return _cycleDAO.findByID(cycleID);
     }
 }

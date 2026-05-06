@@ -21,10 +21,10 @@
         <HBox styleClass="card" spacing="14" alignment="CENTER_LEFT">
             <StackPane prefWidth="44" prefHeight="44">
                 <javafx.scene.shape.Circle radius="22" styleClass="profile-avatar"/>
-                <Label fx:id="_profileInitials" text="AH" styleClass="avatar-initials" style="-fx-font-size: 14px;"/>
+                <Label fx:id="_profileInitials" text="AH" styleClass="avatar-initials" style="-fx-font-size: 16px;"/>
             </StackPane>
             <VBox spacing="2" styleClass="bg-transparent">
-                <Label fx:id="_profileNameLabel" text="Ahmed Hassan" styleClass="section-title" style="-fx-font-size: 14px;"/>
+                <Label fx:id="_profileNameLabel" text="Ahmed Hassan" styleClass="section-title" style="-fx-font-size: 16px;"/>
                 <Label fx:id="_profileSubLabel" text="@ahmed · Member since Jan 2025" styleClass="text-muted"/>
             </VBox>
         </HBox>
@@ -41,9 +41,9 @@
                         <Label fx:id="_themeStatusLabel" text="Currently: Dark Mode" styleClass="text-muted"/>
                     </VBox>
                     <HBox spacing="8" alignment="CENTER">
-                        <Label text="☀" styleClass="text-amber" style="-fx-font-size: 11px;"/>
+                        <Label text="☀" styleClass="text-amber" style="-fx-font-size: 13px;"/>
                         <ToggleButton fx:id="_themeToggle" styleClass="theme-toggle" selected="true" onAction="#_handleThemeToggle"/>
-                        <Label text="☽" styleClass="text-blue" style="-fx-font-size: 11px;"/>
+                        <Label text="☽" styleClass="text-blue" style="-fx-font-size: 13px;"/>
                     </HBox>
                 </HBox>
             </VBox>
@@ -67,7 +67,7 @@
                         <PasswordField fx:id="_confirmPasswordField" promptText="Repeat new password"/>
                     </VBox>
                 </HBox>
-                <Label fx:id="_passwordFeedback" styleClass="text-muted" visible="false" managed="false" style="-fx-font-size: 10px;"/>
+                <Label fx:id="_passwordFeedback" styleClass="text-muted" visible="false" managed="false" style="-fx-font-size: 12px;"/>
                 <Button text="Update Password" styleClass="btn-primary-full" onAction="#_handleChangePassword" maxWidth="Infinity"/>
             </VBox>
 

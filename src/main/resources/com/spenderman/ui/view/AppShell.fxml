@@ -19,7 +19,7 @@
             </ImageView>
             <VBox spacing="0">
                 <Label text="\$penderman" styleClass="app-logo-sidebar"/>
-                <Label text="Personal Finance" styleClass="text-muted" style="-fx-font-size: 9px;"/>
+                <Label text="Personal Finance" styleClass="text-muted" style="-fx-font-size: 11px;"/>
             </VBox>
         </VBox>
 
@@ -42,7 +42,7 @@
                 <Label fx:id="_avatarInitials" text="AH" styleClass="avatar-initials"/>
             </StackPane>
             <VBox spacing="1" styleClass="bg-transparent">
-                <Label fx:id="_userNameLabel" text="Ahmed" styleClass="text-primary" style="-fx-font-size: 11px;"/>
+                <Label fx:id="_userNameLabel" text="Ahmed" styleClass="text-primary" style="-fx-font-size: 13px;"/>
             </VBox>
         </HBox>
 
